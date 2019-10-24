@@ -237,7 +237,7 @@
 
 </div>
 
-    <a data-url="/2018/10/26/20181026-Lianxi/" data-id="ck24rrfrx001qlgqjgjt46u2v" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/10/26/20181026-Lianxi/" data-id="ck24s90q4001hqgqjxsvr5fo5" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -364,7 +364,7 @@
 
 </div>
 
-    <a data-url="/2018/09/10/20181023-TheBrain/" data-id="ck24rrfrw001olgqj981oekol" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/09/10/20181023-TheBrain/" data-id="ck24s90q3001eqgqj2olowgnj" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -489,7 +489,7 @@
 
 </div>
 
-    <a data-url="/2018/09/10/20180910-Qinghai/" data-id="ck24rrfru001llgqj1eju9mdh" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/09/10/20180910-Qinghai/" data-id="ck24s90q2001cqgqjfbs2lyjn" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -615,134 +615,7 @@
 
 </div>
 
-    <a data-url="/2018/08/08/20180808-TimePower/" data-id="ck24rrg2x0031lgqji9l7k85d" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20180620-RealityCapture" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/06/20/20180620-RealityCapture/">三维重建与游戏制作 Reality Capture</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/06/20/20180620-RealityCapture/">
-            <time datetime="2018-06-19T16:00:00.000Z" itemprop="datePublished">2018-06-20</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p>
-<p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p></p>
-            <p class="article-more-link">
-                <a href="/2018/06/20/20180620-RealityCapture/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2018/06/20/20180620-RealityCapture/" data-id="ck24rrfrt001jlgqjx06g91tf" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/08/08/20180808-TimePower/" data-id="ck24s90r00036qgqjhujghc1t" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -871,7 +744,134 @@
 
 </div>
 
-    <a data-url="/2018/06/20/20180620-HunterXHunter/" data-id="ck24rrfrr001glgqju1jbn28v" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/06/20/20180620-HunterXHunter/" data-id="ck24s90q00019qgqj65iudhpu" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-20180620-RealityCapture" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/06/20/20180620-RealityCapture/">三维重建与游戏制作 Reality Capture</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/06/20/20180620-RealityCapture/">
+            <time datetime="2018-06-19T16:00:00.000Z" itemprop="datePublished">2018-06-20</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p>
+<p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p></p>
+            <p class="article-more-link">
+                <a href="/2018/06/20/20180620-RealityCapture/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2018/06/20/20180620-RealityCapture/" data-id="ck24s90pz0017qgqjds09b46j" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -997,7 +997,7 @@
 
 </div>
 
-    <a data-url="/2018/06/05/20180605-Naodong/" data-id="ck24rrfrr001elgqjouut9nyv" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/06/05/20180605-Naodong/" data-id="ck24s90q9001tqgqjcsrhsm0c" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1124,7 +1124,7 @@
 
 </div>
 
-    <a data-url="/2018/05/26/20180526-ApproximateSSS/" data-id="ck24rrfro001blgqjwgbcw1d7" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/05/26/20180526-ApproximateSSS/" data-id="ck24s90px0014qgqj0ob0atgu" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1251,7 +1251,7 @@
 
 </div>
 
-    <a data-url="/2018/05/25/20180525-BRDF/" data-id="ck24rrfrn0019lgqjhip1whbj" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/05/25/20180525-BRDF/" data-id="ck24s90pw0012qgqj1p09edx8" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1377,7 +1377,7 @@
 
 </div>
 
-    <a data-url="/2018/05/04/20180504-Jiandan/" data-id="ck24rrfrm0016lgqjrmzzi501" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/05/04/20180504-Jiandan/" data-id="ck24s90pv000zqgqjwl39uc0y" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

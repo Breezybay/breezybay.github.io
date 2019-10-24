@@ -388,31 +388,6 @@
   </entry>
   
   <entry>
-    <title>三维重建与游戏制作 Reality Capture</title>
-    <link href="/2018/06/20/20180620-RealityCapture/"/>
-    <id>/2018/06/20/20180620-RealityCapture/</id>
-    <published>2018-06-19T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.391Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p><p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p><a id="more"></a><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image17.gif" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;今天看到Unity的一篇博客文章 &lt;a href=&quot;https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Book of the Dead: Photogrammetry Assets, Trees, VFX&lt;/a&gt;&lt;br&gt;三维重建渐渐的实用化了。&lt;br&gt;想起大学在虚国重的日子，竟然已经十年了……&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
-      <category term="Unity" scheme="/tags/Unity/"/>
-    
-      <category term="Graphics" scheme="/tags/Graphics/"/>
-    
-  </entry>
-  
-  <entry>
     <title>HUNTERxHUNTER(猎人) 观后感</title>
     <link href="/2018/06/20/20180620-HunterXHunter/"/>
     <id>/2018/06/20/20180620-HunterXHunter/</id>
@@ -435,6 +410,31 @@
     
     
       <category term="观后感" scheme="/tags/%E8%A7%82%E5%90%8E%E6%84%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>三维重建与游戏制作 Reality Capture</title>
+    <link href="/2018/06/20/20180620-RealityCapture/"/>
+    <id>/2018/06/20/20180620-RealityCapture/</id>
+    <published>2018-06-19T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p><p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p><a id="more"></a><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image17.gif" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;今天看到Unity的一篇博客文章 &lt;a href=&quot;https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Book of the Dead: Photogrammetry Assets, Trees, VFX&lt;/a&gt;&lt;br&gt;三维重建渐渐的实用化了。&lt;br&gt;想起大学在虚国重的日子，竟然已经十年了……&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
     
   </entry>
   
