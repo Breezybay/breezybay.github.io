@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    <title>乐趣理论读书笔记 (Notes of A Theory of Fun) | Breezy Bay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="A Theory of Fun for Game Design">
+<meta name="keywords" content="读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="乐趣理论读书笔记 (Notes of A Theory of Fun)">
+<meta property="og:url" content="/2017/06/06/20170606-theoryoffun/index.html">
+<meta property="og:site_name" content="Breezy Bay">
+<meta property="og:description" content="A Theory of Fun for Game Design">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-31T02:20:59.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="乐趣理论读书笔记 (Notes of A Theory of Fun)">
+<meta name="twitter:description" content="A Theory of Fun for Game Design">
+    
+
+    
+
+    
+        <link rel="icon" href="/img/logo40.png">
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+</html>
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Breezy Bay</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/games">Games</a>
+                
+                    <a class="main-nav-link" href="/misc">Misc</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/img/Ruby_idle_214.png" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/games">Games</a></td>
+                
+                    <td><a class="main-nav-link" href="/misc">Misc</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/img/Ruby_idle_214.png" />
+            <h2 id="name">甩萝卜兔 (Robotu)</h2>
+            <h3 id="title">Game Developer</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>Hangzhou, China</span>
+            <!-- <a id="follow" target="_blank" href="undefined">关注</a> -->
+        </div>
+<!--         <div class="article-info profile-block">
+            <div class="article-info-block">
+                39
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div> -->
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/arnfinch/" target="_blank" title="linkedin" class=tooltip>
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/arnzhan" target="_blank" title="weibo" class=tooltip>
+                            <i class="fab fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20170606-theoryoffun" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            乐趣理论读书笔记 (Notes of A Theory of Fun)
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2017/06/06/20170606-theoryoffun/">
+            <time datetime="2017-06-05T16:00:00.000Z" itemprop="datePublished">2017-06-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><a href="https://www.theoryoffun.com/" target="_blank" rel="noopener">A Theory of Fun for Game Design</a></p>
+<a id="more"></a>
+<h3 id="How-the-Brain-Works"><a href="#How-the-Brain-Works" class="headerlink" title="How the Brain Works"></a>How the Brain Works</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">People dislike chaos. We like order (with a bit of texture or variation)</span><br></pre></td></tr></table></figure>
+<p>“人们不喜欢混乱，我们喜欢（丰富多彩的）”<br>无法理解的事物等于<strong>噪音</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Practice to Build up a Library, Routine</span><br></pre></td></tr></table></figure>
+<p>“通过训练建立<strong>流程</strong>“<br>理解<strong>训练</strong>，很重要<br>新玩法须考虑玩家学习成本</p>
+<h3 id="What-Games-Are"><a href="#What-Games-Are" class="headerlink" title="What Games Are"></a>What Games Are</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. concentrated chunks, abstracted, iconic, exclude distracting extra details</span><br><span class="line">2. very fundamental and powerful learning tools</span><br><span class="line">3. Games that fail to exercise the brain become boring (tic-tac-toe)</span><br><span class="line">4. learning is the drug</span><br></pre></td></tr></table></figure>
+<p>会使人沉迷上瘾的，正是<strong>学习</strong>本身。应当和解开一道很难的数学/物理题的感觉是类似的，通过长期学习训练掌握了解题方法并通过活用而取得成果，的那种快感。</p>
+<h3 id="What-Games-Are-Not"><a href="#What-Games-Are-Not" class="headerlink" title="What Games Are Not"></a>What Games Are Not</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fun is the act of mastering a problem mentally</span><br></pre></td></tr></table></figure>
+<h3 id="Different-Fun-for-Differnt-Folks"><a href="#Different-Fun-for-Differnt-Folks" class="headerlink" title="Different Fun for Differnt Folks"></a>Different Fun for Differnt Folks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">People will usually choose to play the games they are already good at, that reflect their strengths.</span><br></pre></td></tr></table></figure>
+<p>人们通常选择玩那些他们擅长的，能体现他们能力的游戏<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if people are to achieve their maximum potential, they need to do the hard work of playing the games they don’t get, the games that don’t appeal to their natures.</span><br></pre></td></tr></table></figure></p>
+<p>然而大多数人可能会选择放弃</p>
+<h3 id="The-Problem-with-Learning"><a href="#The-Problem-with-Learning" class="headerlink" title="The Problem with Learning"></a>The Problem with Learning</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Human mind want to take shortcuts</span><br><span class="line">When a player cheats in a game, she is choosing a battlefield that is broader in context than the game itself.</span><br><span class="line">That’s what games are...package up the unpredictable and the learning experience into a space and time where there is no risk.</span><br><span class="line">It’s outright unnatural for a human being to see another human being succeeding at something and not want to compete.</span><br><span class="line">The human mind is goal-driven</span><br><span class="line">Rewards are one of the key components of a successful game activity</span><br></pre></td></tr></table></figure>
+<h5 id="Successful-games-tend-to-incorporate-the-following-elements"><a href="#Successful-games-tend-to-incorporate-the-following-elements" class="headerlink" title="Successful games tend to incorporate the following elements:"></a>Successful games tend to incorporate the following elements:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1. Preparation</span><br><span class="line">2. A sense of space</span><br><span class="line">3. A solid core mechanic</span><br><span class="line">4. A range of challenges</span><br><span class="line">5. A range of abilities required to solve the encounter</span><br><span class="line">6. Skill required in using the abilities</span><br><span class="line"></span><br><span class="line">If there’s no sense of space, we call it trivial.</span><br><span class="line">If there’s no core mechanic, there’s no game system at all.</span><br><span class="line">If there’s no range of challenges, we exhaust it quickly.</span><br><span class="line">If there aren’t multiple choices to make, it’s simplistic.</span><br><span class="line">And if skill isn’t required, it’s tedious.</span><br></pre></td></tr></table></figure>
+<h5 id="To-make-the-experience-a-learning-experience"><a href="#To-make-the-experience-a-learning-experience" class="headerlink" title="To make the experience a learning experience:"></a>To make the experience a learning experience:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. A variable feedback system.</span><br><span class="line">2. The Mastery Problem must be dealt with.</span><br><span class="line">3. Failure must have a cost.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Most long-lasting games in the past have been competitive, because they lead to an endless supply of similar yet slightly varied puzzles.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Designers of games need to be careful not to make the game demand too much skill. They must keep in mind that players are always trying to reduce the difficulty of a task. The easiest way to do that is to not play.</span><br></pre></td></tr></table></figure>
+<h5 id="Tool-for-checking-for-the-absence-of-fun"><a href="#Tool-for-checking-for-the-absence-of-fun" class="headerlink" title="Tool for checking for the absence of fun:"></a>Tool for checking for the absence of fun:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1. Do you have to prepare before taking on the challenge?</span><br><span class="line">2. Can you prepare in different ways and still succeed?</span><br><span class="line">3. Does the environment in which the challenge takes place affect the challenge?</span><br><span class="line">4. Are there solid rules defined for the challenge you undertake?</span><br><span class="line">5. Can the core mechanic support multiple types of challenges?</span><br><span class="line">6. Can the player bring multiple abilities to bear on the challenge?</span><br><span class="line">7. At high levels of difficulty, does the player have to bring multiple abilities to bear on the challenge?</span><br><span class="line">8. Is there skill involved in using an ability? (If not, is this a fundamental “move” in the game, like moving one checker piece?)</span><br><span class="line">9. Are there multiple success states to overcoming the challenge? (In other words, success should not have a single guaranteed result.)</span><br><span class="line">10. Do advanced players get no benefit from tackling easy challenges?</span><br><span class="line">11. Does failing at the challenge at the very least make you have to try again?</span><br><span class="line">If your answer to any of the above questions is “no,” then the game system is probably worth readdressing.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your sole responsibility is to know what the game is about and to ensure that the game teaches that thing. That one thing, the theme, the core, the heart of the game...no system should be in the game that does not contribute towards that lesson</span><br></pre></td></tr></table></figure>
+<h3 id="The-Problem-with-People"><a href="#The-Problem-with-People" class="headerlink" title="The Problem with People"></a>The Problem with People</h3><h5 id="Tactics-to-make-games-self-refreshing"><a href="#Tactics-to-make-games-self-refreshing" class="headerlink" title="Tactics to make games self-refreshing:"></a>Tactics to make games self-refreshing:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. “Emergent behavior”</span><br><span class="line">2. Storytelling</span><br><span class="line">3. Placing players head-to-head</span><br><span class="line">4. Using players to generate content</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The real problem with people is that: PEOPLE ARE LAZY.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The problem with people isn’t that they work to undermine games and make them boring.</span><br><span class="line">We’re reluctant to abandon known solutions.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Because games exist within the confines of “let’s pretend,” They let you be a godlet. They can offer false positive feedback to keep a player playing.</span><br><span class="line">Making you feel good about yourself in a pretend arena isn’t what games are for.</span><br><span class="line">Games are for offering challenges. Going back through defeated challenges in order to pass time isn’t a productive exercise of your brain’s abilities.</span><br><span class="line">Nonetheless, lots of people do it.</span><br></pre></td></tr></table></figure>
+<p>赞同作者贯穿本书的一个观点：游戏的目的是学习<br>我之前也有相同的想法，所以看到ToF之后有种同道的感觉。Raph对于游戏的寄望是纯粹的，令人敬仰，但这种纯粹其实是我不同意的。<br>人性既然如此，如何在这客观条件下引导，达成学到东西这一目的，才是设计者(教育者)应当做的。<br>我同意游戏的目的是使玩家挑战自己并不断学习，但我同时认为给人带来快乐也是游戏的目的，<br>作为引导学习的更好的方式，也许是 <strong>在快乐的游戏中学习</strong></p>
+<p>Basically, game designers suffer from what I call “designeritis.” They build up encyclopedic recollections of games past and present, and they then theoretically use these to make new games.<br>其实能从过往抽象出一些经验，这个未必不正确，比如如果对技术和美术了解的情况下，对于可行性判断乃至整个设计都会很有帮助。</p>
+<p>The most creative and fertile game designers working today tend to be the ones who make a point of not focusing too much on other games for inspiration.<br>即游戏设计者要广涉猎，比如电影，漫画，小说，以及其它很多事物</p>
+<h3 id="Games-in-Context"><a href="#Games-in-Context" class="headerlink" title="Games in Context"></a>Games in Context</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UserGoal		[ Constructive, Experiential, Destructive ]</span><br><span class="line">Interaction 	[ Collaborative, Competitive, Solo ]</span><br></pre></td></tr></table></figure>
+<p>Modding is just playing the game in another way<br>我最近也在想这个，比如做M&amp;B或者Paradox的历史游戏的Mod，再或者Dominions的Mod，的时候，确实非常有趣，不亚于玩游戏本身。</p>
+<p>The chills are not always enjoyable…engaging in interaction with games need not be fun, either, but might indeed be fulfilling, thought-provoking, challenging, and also difficult, painful, and even compulsive.<br>并不仅有快乐使人觉得一款游戏好</p>
+<p>Mere entertainment becomes art when the communicative element in the work is either novel or exceptionally well done.<br>The analogy for a game would be one you can replay over and over again, and still discover new things.<br>Choosing constraints is one of the most fruitful ways to creativity.</p>
+<p>Entertainment and Art<br>若以学习为目的，则应靠向Entertainment，但游戏本身则不受这限制，二者皆可。</p>
+<h3 id="The-Ethics-of-Entertainment"><a href="#The-Ethics-of-Entertainment" class="headerlink" title="The Ethics of Entertainment"></a>The Ethics of Entertainment</h3><p>画面、音效等等也是用户体验的一部分，也非常重要</p>
+<p>The constructive thing to do is to push the boundary gently so that it doesn’t backfire. That’s how we got Lolita, Catcher in the Rye, and Apocalypse Now.</p>
+<h3 id="Where-Games-Should-Go"><a href="#Where-Games-Should-Go" class="headerlink" title="Where Games Should Go"></a>Where Games Should Go</h3><p>Mastery of the medium of games will have to imply authorial intent. The formal systems must be capable of invoking desired learning patterns.<br>If they can’t, then games are a second-rate art form, and always will be.</p>
+<h3 id="Taking-Their-Rightful-Place"><a href="#Taking-Their-Rightful-Place" class="headerlink" title="Taking Their Rightful Place"></a>Taking Their Rightful Place</h3><p>…games do need to illuminate aspects of ourselves that we do not understand fully.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The gap between those who want games to entertain and those who want games to be art does not exist.</span><br></pre></td></tr></table></figure>
+<p>Art and entertainment are not terms of <strong>type</strong> — they are terms of <strong>intensity</strong>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Most people ... are very willing to settle for easy entertainment</span><br><span class="line">We call this “pop music.” We call it “mass market.”</span><br></pre></td></tr></table></figure>
+<p>如果大部分人喜欢轻松的娱乐，而轻松娱乐与有突破性相抵，则对大多数人来说寓教于乐为不可能。<br>似乎并非如此，权力的游戏可能就是一个例外，吉卜力的作品可能大部都是例外。<br>还是要明确目的，掌控方法。<br>寓教于乐，最差的情况下，只要比现行教科书生动有趣，就是一种进步。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Popular ... is largely an accident of history</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In the end, if I can say with a straight face after a day’s work making games that one person out there learned to be a better leader, a better parent, a better co-worker, learned a new skill that kept her her job, a new skill that helped him advance the state of the art in his chosen field, a new skill that made their her grow a little…</span><br><span class="line">Then I will know that my work was valuable. It was worthwhile. It was a contribution to society.</span><br><span class="line"></span><br><span class="line">I MAKE GAMES, AND I&apos;M PROUD OF I T.</span><br></pre></td></tr></table></figure>
+<h3 id="Epilogue"><a href="#Epilogue" class="headerlink" title="Epilogue"></a>Epilogue</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Film was once trashy kinetoscopes at the penny arcade</span><br><span class="line">``</span><br><span class="line"></span><br><span class="line">### Ten Years Later</span><br></pre></td></tr></table></figure>
+<p>But after ten years, I look back on it all and I see games as not just a swirl of systems,<br>but as a space between the dust from which we come and the dust we shall be,<br>a space in which we can engage in that grand pursuit of happiness.<br><code>`</code></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2017/06/06/20170606-theoryoffun/" data-id="ck24rrg2p002wlgqjolpud36z" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/08/05/20170805-Lianpengguai/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    莲蓬怪，看新闻得脑洞
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/06/05/20170605-ShaderGUI/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Unity ShaderGUI</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/20190915-PostprocessMSPaint/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/MSPaint_MSPaint.jpg)" alt="Resize Textures with MSPaint Algorithm via Postprocess" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/09/15/20190915-PostprocessMSPaint/" class="title">Resize Textures with MSPaint Algorithm via Postprocess</a></p>
+                            <p class="item-date"><time datetime="2019-09-14T16:00:00.000Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/18/20190818-TexelDensity/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/TexelDensityViewMode1.jpg)" alt="Texel Density View Mode" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/18/20190818-TexelDensity/" class="title">Texel Density View Mode</a></p>
+                            <p class="item-date"><time datetime="2019-08-17T16:00:00.000Z" itemprop="datePublished">2019-08-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/17/20190817-PBRTextureGuideline/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f)" alt="PBR 贴图制作准则" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/17/20190817-PBRTextureGuideline/" class="title">PBR 贴图制作准则</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T16:00:00.000Z" itemprop="datePublished">2019-08-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/27/20190727-ShadowProxy/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/ShadowProxyComarison.jpg)" alt="阴影代理 (Shadow Proxy)" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/27/20190727-ShadowProxy/" class="title">阴影代理 (Shadow Proxy)</a></p>
+                            <p class="item-date"><time datetime="2019-07-26T16:00:00.000Z" itemprop="datePublished">2019-07-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="title">植被制作流程 Vegetation and SpeedTree</a></p>
+                            <p class="item-date"><time datetime="2019-07-05T16:00:00.000Z" itemprop="datePublished">2019-07-06</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Game-Dev/">Game Dev</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Graphics/">Graphics</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/">Unity</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/照片/">照片</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/画/">画</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/脑洞/">脑洞</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观后感/">观后感</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Game-Dev/" style="font-size: 18.33px;">Game Dev</a> <a href="/tags/Graphics/" style="font-size: 20px;">Graphics</a> <a href="/tags/Unity/" style="font-size: 13.33px;">Unity</a> <a href="/tags/照片/" style="font-size: 11.67px;">照片</a> <a href="/tags/画/" style="font-size: 16.67px;">画</a> <a href="/tags/脑洞/" style="font-size: 13.33px;">脑洞</a> <a href="/tags/观后感/" style="font-size: 10px;">观后感</a> <a href="/tags/读书笔记/" style="font-size: 15px;">读书笔记</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="/breezybay">Breezy Bay</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://zhanstudio.weebly.com">ZhanStudio (旧博客)</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Breezy Bay<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

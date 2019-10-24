@@ -1,0 +1,87 @@
+body {
+    background-color: #ffffff;
+    background-image: -webkit-linear-gradient(#83b8c0, #f5f4e8);
+    background-image: linear--gradient(#83b8c0, #f5f4e8);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-size: 25px;
+    line-height: 31px;
+    color: rgb(73, 72, 100);
+    height: 100%; margin: 0; 
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::selection {
+    background: #ff455f;
+    color: #fff;
+}
+::-moz-selection {
+    background: #ff455f;
+    color: #fff;
+}
+a {
+    color: rgb(96, 131, 224);
+    text-decoration: none !important;
+    outline: none;
+    -webkit-transition: all 225ms ease;
+    -moz-transition: all 225ms ease;
+    transition: all 225ms ease;
+}
+a:hover {
+    color: rgb(78, 127, 255);
+}
+li {
+    font-size: 21px;
+    line-height: 25px;
+    margin-bottom: 12px;
+    font-weight: 300;
+}
+
+section#sec_title {
+}
+
+img,
+
+.cloud_container { position: absolute; top: 250px; left: 50%; }
+
+.cloud1 { transform-origin: 50% 100%; width: 1245px; margin-left: -1000px; margin-top: -400px; rotateZ(0deg); }
+.cloud2 { transform-origin: 50% 100%; width: 1671px; margin-left: -2770px; margin-top: -150px; rotateZ(0deg); }
+.cloud3 { transform-origin: 50% 100%; width: 1455px; margin-left: -3560px; margin-top: -650px; rotateZ(0deg); }
+
+.title_container { position: absolute; margin-top: 250px; margin-left: 50%; }
+.titleLogo { position: absolute; margin-left: -313px; margin-top: 300px; }
+.titleRing { position: absolute; margin-left: -225px; margin-top: -141px; rotateZ(0deg); }
+
+.sunflower1 { transform-origin: 50% 100%; margin-left: -95px; margin-top: -157px; rotateZ(0deg); }
+.sunflower2 { transform-origin: 50% 100%; margin-left: 143px; margin-top: -125px; rotateZ(0deg); }
+
+.snailhead { transform-origin: 0% 90%; margin-left: -32px; margin-top: -135px; rotateZ(0deg); }
+.snailshell { transform-origin: 50% 100%; margin-left: -60px; margin-top: -130px; rotateZ(0deg); }
+
+
+.breezy { transform-origin: 50% 50%; margin-left: -242px; margin-top: -112px; rotateZ(0deg); }
+.bay { transform-origin: 50% 50%; margin-left: -130px; margin-top: 27px; rotateZ(0deg); }
+
+
+
+.trailerVideo_container { position: absolute; margin-left: 50%; margin-top: 520px; rotateZ(0deg); }
+.trailerVideo { position: absolute; margin-left: -360px; margin-top: 0px; rotateZ(0deg); }
+
+
+.land_container { position: absolute; margin-left: 50%; margin-top: 500px; rotateZ(0deg); }
+
+.tree { transform-origin: 50% 100%; width: 436px; margin-left: -700px; margin-top: 0px; rotateZ(0deg); }
+.pingtree { transform-origin: 50% 100%; width: 570px; margin-left: 242px; margin-top: 0px; rotateZ(0deg); }
+
+.grassrow1 {
+    background-image: url("../img/grassrow1.png");
+    background-size: 12%;
+    background-repeat:repeat-x; 
+    position: absolute;
+    transform-origin: 50% 100%;
+    height: 60px;
+    width: 4200px;
+    bottom: -750px;
+    margin-left: -2100px;
+}

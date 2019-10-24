@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    <title>PBR 贴图制作准则 | Breezy Bay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Metal / Roughness Workflow 总结纯金属  (Metallic &amp;gt; 235) BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB 如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流  介电质/绝缘体： BaseColor暗部不应低于30-50 sRGB, 亮部不">
+<meta name="keywords" content="Game Dev,Graphics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PBR 贴图制作准则">
+<meta property="og:url" content="/2019/08/17/20190817-PBRTextureGuideline/index.html">
+<meta property="og:site_name" content="Breezy Bay">
+<meta property="og:description" content="Metal / Roughness Workflow 总结纯金属  (Metallic &amp;gt; 235) BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB 如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流  介电质/绝缘体： BaseColor暗部不应低于30-50 sRGB, 亮部不">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f">
+<meta property="og:updated_time" content="2019-10-20T09:06:27.884Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PBR 贴图制作准则">
+<meta name="twitter:description" content="Metal / Roughness Workflow 总结纯金属  (Metallic &amp;gt; 235) BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB 如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流  介电质/绝缘体： BaseColor暗部不应低于30-50 sRGB, 亮部不">
+<meta name="twitter:image" content="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f">
+    
+
+    
+
+    
+        <link rel="icon" href="/img/logo40.png">
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+</html>
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Breezy Bay</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/games">Games</a>
+                
+                    <a class="main-nav-link" href="/misc">Misc</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/img/Ruby_idle_214.png" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/games">Games</a></td>
+                
+                    <td><a class="main-nav-link" href="/misc">Misc</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/img/Ruby_idle_214.png" />
+            <h2 id="name">甩萝卜兔 (Robotu)</h2>
+            <h3 id="title">Game Developer</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>Hangzhou, China</span>
+            <!-- <a id="follow" target="_blank" href="undefined">关注</a> -->
+        </div>
+<!--         <div class="article-info profile-block">
+            <div class="article-info-block">
+                39
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div> -->
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/arnfinch/" target="_blank" title="linkedin" class=tooltip>
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/arnzhan" target="_blank" title="weibo" class=tooltip>
+                            <i class="fab fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20190817-PBRTextureGuideline" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            PBR 贴图制作准则
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2019/08/17/20190817-PBRTextureGuideline/">
+            <time datetime="2019-08-16T16:00:00.000Z" itemprop="datePublished">2019-08-17</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) -->
+<h2 id="Metal-Roughness-Workflow-总结"><a href="#Metal-Roughness-Workflow-总结" class="headerlink" title="Metal / Roughness Workflow 总结"></a>Metal / Roughness Workflow 总结</h2><h4 id="纯金属-Metallic-gt-235"><a href="#纯金属-Metallic-gt-235" class="headerlink" title="纯金属  (Metallic &gt; 235)"></a>纯金属  (Metallic &gt; 235)</h4><ul>
+<li>BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB</li>
+<li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流</li>
+</ul>
+<h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4><ul>
+<li>BaseColor暗部<strong>不应低于30-50 sRGB</strong>, 亮部<strong>不应高于 240 sRGB</strong></li>
+</ul>
+<p>符合PBR规则可以使素材<strong>在任何光照条件下都有合理的表现</strong></p>
+<ul>
+<li>注意,不等于不符合规则的贴图一定看起来不好（在特定光照下有可能看起也合理）</li>
+</ul>
+<p>根据以上原则，制作一个批量排查工具<br><img src="/img/graphics/pbrCheck.jpg" alt></p>
+<a id="more"></a>
+<p>Substance Painter 用PBR检查工具: <a href="https://share.substance3d.com/libraries/824The" target="_blank" rel="noopener">PBR Validate</a><br><img src="https://share.substance3d.com/libraries/824The" alt></p>
+<p>Substance Disigner 可以使用 PBR Metal/Roughness Validate Node<br>位置在Material Filters &gt; PBR Utilities<br><img src="https://cdn.allegorithmic.com/images/academy/bb52362f-6370-4f89-a2f4-633f59868c90" alt></p>
+<p>Source: <a href="https://academy.substance3d.com/courses/the-pbr-guide-part-2" target="_blank" rel="noopener">Practical Guidelines For Creating PBR Textures</a><br>官方中文版：<a href="https://academy.substance3d.com/courses/the-pbr-guide-part2-zh" target="_blank" rel="noopener">创建PBR纹理实用指南</a><br><!--
+Two most common workflows, which are metal/roughness and specular/glossiness
+![](https://cdn.allegorithmic.com/images/academy/5fc12cd8-9467-4062-b609-507788d0cbc3)
+--></p>
+<h2 id="Metal-Roughness-Workflow"><a href="#Metal-Roughness-Workflow" class="headerlink" title="Metal / Roughness Workflow"></a>Metal / Roughness Workflow</h2><h3 id="Dielectric-介电质-绝缘体-F0"><a href="#Dielectric-介电质-绝缘体-F0" class="headerlink" title="Dielectric (介电质/绝缘体) F0"></a>Dielectric (介电质/绝缘体) F0</h3><p>普通绝缘体的 <em>F0</em> 通常设置为 0.04 (linear) 4% 反射。在金属度/粗糙度工作流中，该数值是hardcode在Shader中的。<br>某些金/粗实现中，比如 <em>Substance toolset</em> 和 <em>Unreal Engine 4</em>，提供了Specular控制，使美术可以对绝缘体的 <em>F0</em> 常量进行改变。在Substance中，该输出被标记为 “specularLevel” 并且由一个 texture sampler 提供给shader。如下图，它提供了0.0-0.08的范围。该范围在shader中被映射到0.0～1.0，其中 0.5 对应 4% 反射率。</p>
+<p><img src="https://cdn.allegorithmic.com/images/academy/c16e1e22-42b2-4f5a-af0d-f28b080d325f" alt></p>
+<!--more-->
+<h3 id="基础色-Base-Color-RGB-sRGB"><a href="#基础色-Base-Color-RGB-sRGB" class="headerlink" title="基础色 Base Color (RGB - sRGB)"></a>基础色 Base Color (RGB - sRGB)</h3><p><img src="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f" alt></p>
+<p>Base Color是一张RGB贴图，可以有两种信息：</p>
+<ul>
+<li>绝缘体的漫反射颜色(diffuse reflected color)</li>
+<li>金属反射值</li>
+</ul>
+<p>颜色代表了绝缘体反射的波长，而当一块区域是金属时，金属反射值生效</p>
+<h4 id="制作准则"><a href="#制作准则" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>基础色(Base Color)可以被想成一张在色调上很”平”的图。就是说，它的对比度比传统diffuse贴图要低。在这张图上不建议出现过亮或过暗的地方。物体在色调上会比我们通常印象中的要更明亮。</p>
+<p>就亮度范围来说，我们基本上指绝缘体。在下图中，你可以看到脏迹的数值低于正确亮度范围。对暗部来说，<strong>不应低于30-50 sRGB</strong>。暗部数值宽松的说应该大于30，严格地说大于50。对亮部来说，<strong>不应高于 240 sRGB</strong>。<br><img src="https://cdn.allegorithmic.com/images/academy/86a711f0-2e07-4109-9027-33a21ce3d51a" alt></p>
+<p>我们说过base color包含绝缘体表面反射光的信息，所以它不应包含像AO这样的光照信息。可以有一些例外，比如细微的遮蔽（当shader无法仅仅通过ao来体现这一精度的细节时），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/1e92ba2c-d8b0-476d-ae3c-34c133e16b7d" alt></p>
+<p>金属的反射值应当从现实测量数值中获取。这些数值应当在 <strong>70-100% specular</strong>左右，对应<strong>sRGB范围在 180-255</strong>。</p>
+<p>Sébastien Lagarde的图表是个很好的资源(DONTNOD Physically based rendering chart for Unreal Engine 4](<a href="https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)" target="_blank" rel="noopener">https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)</a>)</p>
+<p><strong>金属的反射值应当从现实测量数值中获取</strong></p>
+<ul>
+<li>颜色代表非金属材质的Albedo，与金属材质的反射值</li>
+<li>基础色(Base color)应该避免包含光照信息，除了微遮蔽(micro-occlusion)</li>
+<li>暗部应该不低于 30 sRGB(宽松下限) 到 50 sRGB(严格下限)</li>
+<li>亮部不应高于240 sRGB</li>
+<li>纯金属的反射很高，在70%-100%，对应 180-255 SRGB</li>
+</ul>
+<p>在接下来的金属段落中你会读到，基础色(base color)包含了金属反射值，如果尘土或锈迹被加在基础色上。会导致该处的金属反射值降低到不可被认定是纯金属的范围。</p>
+<p>金属度贴图(Metallic map)必须考虑尘土和锈迹的情况，这些地方的金属度必须降低以体现这些地方不再被认定为是纯金属。在下图中你可以看到在金属度贴图中锈蚀的地方被当作绝缘体设置成黑色。尘土的地方也设置成了灰色。所以考虑到比如尘土的这种情况，金属度贴图并不总是非黑即白的0/1贴图。<br><img src="https://cdn.allegorithmic.com/images/academy/f155be69-8480-4070-9e05-cb266051d19f" alt></p>
+<p><strong>金属度贴图类似于一张mask，它告诉shader如何处理基础色(base color)中的信息</strong></p>
+<h3 id="金属度-Metallic-Grayscale-Linear"><a href="#金属度-Metallic-Grayscale-Linear" class="headerlink" title="金属度 Metallic (Grayscale - Linear)"></a>金属度 Metallic (Grayscale - Linear)</h3><p>金属贴图用于定义哪些区域是纯金属。作为一张灰度图，它的作用类似于一张mask，告知shader如何处理基础色(base color)中的信息。</p>
+<p><img src="https://cdn.allegorithmic.com/images/academy/08294dc6-f38d-4cd6-af7f-fca8e9c00dda" alt></p>
+<p>金属度贴图中的信息并不直接包含真实世界中的信息。它只是告知shader，基础色的哪些区域应当被作为漫反射颜色(绝缘体)，哪些区域应当被当作金属反射值。在金属度贴图中，0.0 (black – 0 sRGB) 表示非金属，而 1.0 (white – 255 sRGB) 代表纯金属。在实际操作中，当shader发现金属度贴图上的值是白色，它就将Base color贴图上相应的部分当作金属反射值来使用。</p>
+<h4 id="制作准则-1"><a href="#制作准则-1" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>金属表面有两个与贴图相关的方面：</p>
+<ul>
+<li>第一，它们的反射值很高，在 70%-100% 范围；</li>
+<li>第二，有些金属可以生锈。<br>我们讨论制作准则时会分别检视这两个方面。</li>
+</ul>
+<h5 id="纯金属"><a href="#纯金属" class="headerlink" title="纯金属"></a><em>纯金属</em></h5><p>大致上，我们定义金属度贴图上灰度值 <strong>235-255</strong> 的范围为<em>纯金属</em>，在这一区间的金属需要它的Base color有 70-100% 的反射值，或者说 180-255 sRGB。如下图。再次说明，这些数值来源于真实世界的测量数据。<br><img src="https://cdn.allegorithmic.com/images/academy/94624c56-0119-4a99-95c3-45b877aca57d" alt></p>
+<h5 id="锈蚀或绝缘体"><a href="#锈蚀或绝缘体" class="headerlink" title="锈蚀或绝缘体"></a><em>锈蚀或绝缘体</em></h5><p>当你制作一个表面时，需要考虑该金属的氧化情况，或者其它环境因素如尘土及污垢。当一个喷漆的金属某些部分被刮坏或者掉漆了的时候，暴露的金属是纯金属（金属度贴图中为白色），喷漆表面是绝缘层（金属度贴图中为黑色），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/ec724b25-74e5-4c89-bbfb-e5e6edde440a" alt></p>
+<p>金属度贴图可以体现金属及非金属之间的过渡状态（灰度）。如果金属度低于 235 sRGB 的时候你需要降低base color上的反射值。想想一个部分盖住金属的尘土层，如下图。尘土是绝缘体，如果你保留纯白的金属度，shader会将这些尘土在base color上的值用作金属的反射值。尘土的颜色远低于光滑金属所需要的70%-100%范围。通过降低尘土区域的金属度，你才能制作出合适的介于绝缘体和金属反射值之间的过渡。<br><img src="https://cdn.allegorithmic.com/images/academy/ef553e0e-adeb-4f8c-b471-5e778875bc74" alt></p>
+<p>在Substance Designer中可以使用Material Color Blend节点制作尘土效果。</p>
+<h3 id="粗糙度-Roughness-Grayscale-Linear"><a href="#粗糙度-Roughness-Grayscale-Linear" class="headerlink" title="粗糙度 Roughness (Grayscale - Linear)"></a>粗糙度 Roughness (Grayscale - Linear)</h3><p>粗糙度贴图描述物体因为表面不规则导致的光线散射，反射的方向是随机的。这改变了光的方向，但是光的总体强度是保持不变的。粗糙的表面有面积更大、更暗的高光。光滑的表面会使高光反射保持聚集，看起来更亮更强，虽然总体反光量是相同的。<br><img src="https://cdn.allegorithmic.com/images/academy/fbc09194-da18-4478-b119-cd0a84be4930" alt></p>
+<p>粗糙度贴图是最具创作性的贴图，它允许美术在视觉上定义一个表面的特征。使我们可以创造性的讲述这个表面的情况。它的环境是怎样的？它被好好珍藏还是粗暴对待？它曾被暴露在某些情况下吗？一个物体表面的情况可以告诉我们很多关于它所在的环境的故事，并因此与我们想要设计的这个物体，以及想要创造的整体世界相联系起来。</p>
+<h4 id="制作准则-2"><a href="#制作准则-2" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>保持创造性，讲述一个关于该表面的故事。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2019/08/17/20190817-PBRTextureGuideline/" data-id="ck24rrg300033lgqjwr9iva3p" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/08/18/20190818-TexelDensity/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Texel Density View Mode
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2019/07/27/20190727-ShadowProxy/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">阴影代理 (Shadow Proxy)</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/20190915-PostprocessMSPaint/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/MSPaint_MSPaint.jpg)" alt="Resize Textures with MSPaint Algorithm via Postprocess" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/09/15/20190915-PostprocessMSPaint/" class="title">Resize Textures with MSPaint Algorithm via Postprocess</a></p>
+                            <p class="item-date"><time datetime="2019-09-14T16:00:00.000Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/18/20190818-TexelDensity/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/TexelDensityViewMode1.jpg)" alt="Texel Density View Mode" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/18/20190818-TexelDensity/" class="title">Texel Density View Mode</a></p>
+                            <p class="item-date"><time datetime="2019-08-17T16:00:00.000Z" itemprop="datePublished">2019-08-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/17/20190817-PBRTextureGuideline/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f)" alt="PBR 贴图制作准则" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/17/20190817-PBRTextureGuideline/" class="title">PBR 贴图制作准则</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T16:00:00.000Z" itemprop="datePublished">2019-08-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/27/20190727-ShadowProxy/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/ShadowProxyComarison.jpg)" alt="阴影代理 (Shadow Proxy)" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/27/20190727-ShadowProxy/" class="title">阴影代理 (Shadow Proxy)</a></p>
+                            <p class="item-date"><time datetime="2019-07-26T16:00:00.000Z" itemprop="datePublished">2019-07-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="title">植被制作流程 Vegetation and SpeedTree</a></p>
+                            <p class="item-date"><time datetime="2019-07-05T16:00:00.000Z" itemprop="datePublished">2019-07-06</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Game-Dev/">Game Dev</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Graphics/">Graphics</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/">Unity</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/照片/">照片</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/画/">画</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/脑洞/">脑洞</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观后感/">观后感</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Game-Dev/" style="font-size: 18.33px;">Game Dev</a> <a href="/tags/Graphics/" style="font-size: 20px;">Graphics</a> <a href="/tags/Unity/" style="font-size: 13.33px;">Unity</a> <a href="/tags/照片/" style="font-size: 11.67px;">照片</a> <a href="/tags/画/" style="font-size: 16.67px;">画</a> <a href="/tags/脑洞/" style="font-size: 13.33px;">脑洞</a> <a href="/tags/观后感/" style="font-size: 10px;">观后感</a> <a href="/tags/读书笔记/" style="font-size: 15px;">读书笔记</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="/breezybay">Breezy Bay</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://zhanstudio.weebly.com">ZhanStudio (旧博客)</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Breezy Bay<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

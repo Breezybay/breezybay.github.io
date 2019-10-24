@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"> 
+  <meta name="viewport" content="width=500" />
+
+	<title>Breezy Bay</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"           content="width=700">
+
+  <link rel="stylesheet" href="css/breezybay.css">
+
+  <!-- Baidu Tongji -->
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?d14f27b606ed6bdb123e0a1252feeab6";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+  <script src="js/lib/greensock/TweenMax.min.js"></script>
+  <script src="js/lib/greensock/plugins/ScrollToPlugin.min.js"></script>
+  <script src="js/lib/jquery.min.js"></script>
+  <script src="js/lib/modernizr.custom.min.js"></script>
+  <script src="js/lib/iscroll-probe.js"></script>
+  <script src="js/scrollmagic/minified/ScrollMagic.min.js"></script>
+  <script src="js/scrollmagic/minified/plugins/animation.gsap.min.js"></script>
+  <script src="js/scrollmagic/minified/plugins/debug.addIndicators.min.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/examples.js"></script>
+</head>
+
+<body>
+<div id="content-wrapper">
+  <span id="overlay"></span>
+
+  <script>
+    var controller;
+    var isMobile = (function(a){return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))})(navigator.userAgent||navigator.vendor||window.opera);
+
+    if (isMobile) {
+      var myScroll;
+      $(document).ready(function () {
+
+      // wrap for iscroll
+      $("#content-wrapper")
+      .addClass("scrollContainer")
+      .wrapInner('<div class="scrollContent"></div>');
+
+      // add iScroll
+      myScroll = new IScroll('#content-wrapper', {scrollX: false, scrollY: true, scrollbars: true, useTransform: false, useTransition: false, probeType: 3, click: true});
+
+      // update container on scroll
+      myScroll.on("scroll", function () {
+        controller.update();
+      });
+
+      // overwrite scroll position calculation to use child's offset instead of parents scrollTop();
+      controller.scrollPos(function () {
+        return -myScroll.y;
+      });
+
+      // refresh height, so all is included.
+      setTimeout(function () {
+        myScroll.refresh();
+      }, 0);
+
+      // manual set hight (so height 100% is available within scroll container)
+      $(document).on("orientationchange", function () {
+        $("section")
+        .css("min-height", $(window).height())
+        .parent(".scrollmagic-pin-spacer").css("min-height", $(window).height());
+      });
+                    $(document).trigger("orientationchange"); // trigger to init
+                  });
+      // init the controller
+      controller = new ScrollMagic.Controller({
+        container: "#content-wrapper",
+        globalSceneOptions: {
+          triggerHook: "onLeave"
+        }
+      });
+    } else {
+      // init the controller
+      controller = new ScrollMagic.Controller({
+        globalSceneOptions: {
+          triggerHook: "onLeave"
+        }
+      });
+    }
+
+  </script>
+
+
+  <!-- #################################################################### -->
+
+  <section id="sec_title">
+
+    <div class="cloud_container">
+
+      <img class="cloud1" src="img/cloud1.png">
+      <img class="cloud2" src="img/cloud2.png">
+      <img class="cloud3" src="img/cloud3.png">
+
+      <script>
+      var _cloud1 = $('.cloud1');
+      var _cloud2 = $('.cloud2');
+      var _cloud3 = $('.cloud3');
+
+      var tl_cloud1 = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl_cloud1.duration())}});
+
+      tl_cloud1.add([
+        TweenMax.to(_cloud1, 31, {x: 3100, delay: 0.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_cloud1, 0, {x: -3345, delay: 31, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_cloud1, 33, {x: 0, delay: 31, force3D: false, ease: Linear.easeNone}),
+      ]);
+
+      var tl_cloud2 = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl_cloud2.duration())}});
+
+      tl_cloud2.add([
+        TweenMax.to(_cloud2, 45, {x: 4545, delay: 0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_cloud2, 0, {x: -1000, delay: 45, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_cloud2, 61.5, {x: 0, delay: 45, force3D: false, ease: Linear.easeNone}),
+      ]);
+
+      var tl_cloud3 = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl_cloud3.duration())}});
+
+      tl_cloud3.add([
+        TweenMax.to(_cloud3, 60, {x: 5545, delay: 1.0, force3D: false, ease: Linear.easeNone}),
+      ]);
+
+      </script>
+
+    </div>
+
+    <div id="title_container">
+      <!-- img id="title_logo" class="titleLogo" src="img/Title.png" -->
+
+      <img class="titleRing" src="img/titleRing2.png">
+      <img class="sunflower1" src="img/SunFlower.png">
+      <img class="sunflower2" src="img/SunFlower.png">
+
+      <img class="snailhead" src="img/SnailHead.png">
+      <img class="snailshell" src="img/SnailShell.png">
+
+
+      <img class="breezy" src="img/breezy.png">
+      <img class="bay" src="img/bay.png">
+      
+      <script>
+      var _titleRing = $('.titleRing');
+      var _sunflower1 = $('.sunflower1');
+      var _sunflower2 = $('.sunflower2');
+      var _breezy = $('.breezy');
+      var _bay = $('.bay');
+
+      var tl_sunflower1 = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl.duration())}});
+      tl_sunflower1.add([
+        TweenMax.to(_sunflower1, 1.6, {rotation: -16, x: -1, y: -1, delay: 0.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower1, 3.2, {rotation: -2, x: 0, y: 2, delay: 1.6, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower1, 2.4, {rotation: 10, x: 1, y: 0.5, delay: 4.8, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower1, 3.0, {rotation: 0, x: 0, y: 0, delay:7.2, force3D: false, ease: Linear.easeNone}),
+        ]);
+
+      var tl_sunflower2 = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl.duration())}});
+      tl_sunflower2.add([
+        TweenMax.to(_sunflower2, 2.0, {rotation: 14, x: 1, y: 1, delay: 0.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower2, 1.0, {rotation: 11, x: 1, y: -1, delay: 2.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower2, 2.5, {rotation: -2, x: 0, y: 0, delay: 3.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower2, 1.4, {rotation: -8, x: -1, y: 1, delay: 5.5, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_sunflower2, 1.5, {rotation: 0, x: 0, y: 0, delay:6.9, force3D: false, ease: Linear.easeNone}),
+        ]);
+
+      var tl_breezy = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl.duration())}});
+
+      tl_breezy.add([
+        TweenMax.to(_breezy, 2.0, {rotationZ: -0.2, x: -1, y: 1.5, delay: 0.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_breezy, 2.0, {rotationZ: -0.4, x: 0, y: 3, delay: 2.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_breezy, 2.0, {rotationZ: -0.1, x: 1, y: 2, delay: 4.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_breezy, 2.0, {rotationZ: 0.1, x: 0, y: -2, delay: 6.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_breezy, 2.0, {rotationZ: 0.3, x: -1, y: -4, delay: 8.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_breezy, 3.0, {rotationZ: 0, x: 0, y: 0, delay: 10.0, force3D: true, ease: Linear.easeNone}),
+        ]);
+
+      var tl_bay = new TimelineMax({repeat: -1, delay: 0.4});
+
+      tl_bay.add([
+        TweenMax.to(_bay, 2.0, {rotationZ: 0.2, x: 1, y: 2, delay: 0.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 2.5, {rotationZ: 0.4, x: 0, y: 4, delay: 2.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 1.5, {rotationZ: 0.1, x: -1, y: 2, delay: 4.5, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 1.5, {rotationZ: -0.1, x: 0, y: -1, delay: 6.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 2.5, {rotationZ: -0.4, x: 1, y: -4, delay: 7.5, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 2, {rotationZ: -0.2, x: 0.5, y: -2, delay: 10.0, force3D: true, ease: Linear.easeNone}),
+        TweenMax.to(_bay, 2.0, {rotationZ: 0, x: 0, y: 0, delay: 12.0, force3D: true, ease: Linear.easeNone}),
+        ]);
+
+      </script>
+
+    </div>
+
+</section>
+<section id="land">
+    <div class="land_container">
+
+      <img class="tree" src="img/tree.png">
+      <img class="pingtree" src="img/pingtree.png">
+
+      <div class="grassrow1"></div>
+      <!--div class="layer2"></div-->
+
+      <script>
+      var _tree = $('.tree');
+      var _pingtree = $('.pingtree');
+
+      var tl_tree = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl.duration())}});
+      tl_tree.add([
+        TweenMax.to(_tree, 10, {rotation: -1.5, delay: 0.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_tree, 10, {rotation: 0, delay: 10, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_tree, 10, {rotation: 1.5, delay: 20, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_tree, 10, {rotation: 0, x: 0, y: 0, delay:30, force3D: false, ease: Linear.easeNone}),
+        ]);
+
+      var tl_pingtree = new TimelineMax({repeat: -1, onReverseComplete: function() {this.seek(tl.duration())}});
+      tl_pingtree.add([
+        TweenMax.to(_pingtree, 8, {rotation: 1.5, delay: 0.0, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_pingtree, 8, {rotation: 0, delay: 8, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_pingtree, 8, {rotation: -1.5, delay: 16, force3D: false, ease: Linear.easeNone}),
+        TweenMax.to(_pingtree, 8, {rotation: 0, x: 0, y: 0, delay:24, force3D: false, ease: Linear.easeNone}),
+        ]);
+
+      </script>
+
+    </div>
+
+<!--
+    <div class="trailerVideo_container">
+      <embed class="trailerVideo", height="452" width="720" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="https://share.acg.tv/flash.swf" flashvars="aid=2387534&page=1" pluginspage="https://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></embed>
+    </div>
+-->
+    <div class="trailerVideo_container">
+      <iframe class="trailerVideo", height="540" width="720" src="//player.bilibili.com/player.html?aid=2387534&cid=3735492&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+    </div>
+
+</section>
+
+<!-- #################################################################### -->
+
+</div>
+</body>
+</html>

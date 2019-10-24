@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    <title>光照探针(LightProbe) 与 球谐(Spherical Harmonics) | Breezy Bay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="需求：可以手动自定义，并且随Prefab保存的LightProbe 球谐函数 (Spherical Harmonics) 正经定义：球谐函数是拉普拉斯方程的球坐标系形式解的角度部分 自分白话解释：球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色 Unity中使用的是二阶球谐函数 SphericalHarmonicsL2，保存为9个系数(27个float">
+<meta name="keywords" content="Game Dev,Graphics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="光照探针(LightProbe) 与 球谐(Spherical Harmonics)">
+<meta property="og:url" content="/2019/06/01/20190601-SphericalHarmonics/index.html">
+<meta property="og:site_name" content="Breezy Bay">
+<meta property="og:description" content="需求：可以手动自定义，并且随Prefab保存的LightProbe 球谐函数 (Spherical Harmonics) 正经定义：球谐函数是拉普拉斯方程的球坐标系形式解的角度部分 自分白话解释：球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色 Unity中使用的是二阶球谐函数 SphericalHarmonicsL2，保存为9个系数(27个float">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="/img/graphics/Spherical_Harmonics.jpg">
+<meta property="og:updated_time" content="2019-10-20T09:00:10.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="光照探针(LightProbe) 与 球谐(Spherical Harmonics)">
+<meta name="twitter:description" content="需求：可以手动自定义，并且随Prefab保存的LightProbe 球谐函数 (Spherical Harmonics) 正经定义：球谐函数是拉普拉斯方程的球坐标系形式解的角度部分 自分白话解释：球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色 Unity中使用的是二阶球谐函数 SphericalHarmonicsL2，保存为9个系数(27个float">
+<meta name="twitter:image" content="/img/graphics/Spherical_Harmonics.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/img/logo40.png">
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+</html>
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Breezy Bay</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/games">Games</a>
+                
+                    <a class="main-nav-link" href="/misc">Misc</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/img/Ruby_idle_214.png" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/games">Games</a></td>
+                
+                    <td><a class="main-nav-link" href="/misc">Misc</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/img/Ruby_idle_214.png" />
+            <h2 id="name">甩萝卜兔 (Robotu)</h2>
+            <h3 id="title">Game Developer</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>Hangzhou, China</span>
+            <!-- <a id="follow" target="_blank" href="undefined">关注</a> -->
+        </div>
+<!--         <div class="article-info profile-block">
+            <div class="article-info-block">
+                39
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div> -->
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://www.linkedin.com/in/arnfinch/" target="_blank" title="linkedin" class=tooltip>
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/arnzhan" target="_blank" title="weibo" class=tooltip>
+                            <i class="fab fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20190601-SphericalHarmonics" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            光照探针(LightProbe) 与 球谐(Spherical Harmonics)
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2019/06/01/20190601-SphericalHarmonics/">
+            <time datetime="2019-05-31T16:00:00.000Z" itemprop="datePublished">2019-06-01</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>需求：可以手动自定义，并且随Prefab保存的LightProbe</p>
+<h4 id="球谐函数-Spherical-Harmonics"><a href="#球谐函数-Spherical-Harmonics" class="headerlink" title="球谐函数 (Spherical Harmonics)"></a>球谐函数 (Spherical Harmonics)</h4><p><img src="/img/graphics/Spherical_Harmonics.jpg" alt></p>
+<p>正经定义：<br>球谐函数是拉普拉斯方程的球坐标系形式解的角度部分</p>
+<p>自分白话解释：<br>球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色</p>
+<p>Unity中使用的是二阶球谐函数 <a href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html" target="_blank" rel="noopener">SphericalHarmonicsL2</a>，保存为9个系数(27个float)，使用时转换为7个Vector4提供给Shader(参考buitin shaders中的ShadeSH9)</p>
+<p>Unity的实现参考的是 <a href="http://www.ppsloan.org/publications/StupidSH36.pdf" target="_blank" rel="noopener">Stupid Spherical Harmonics (SH) Tricks</a></p>
+<p>官方文档中关于光照探针的技术信息： <a href="https://docs.unity3d.com/Manual/LightProbes-TechnicalInformation.html" target="_blank" rel="noopener">Light Probes: Technical information</a></p>
+<p>关于SH一篇非常好的文章： <a href="https://patapom.com/blog/SHPortal/" target="_blank" rel="noopener">Benoît Mayaux (Patapom), Spherical Harmonics</a></p>
+<p>还有企鹅学院的两篇：<br>(Unity Shader球谐光照解析)[<a href="https://gameinstitute.qq.com/community/detail/124147]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/124147]</a><br>(球谐光照（spherical harmonic lighting）解析)[<a href="https://gameinstitute.qq.com/community/detail/123183]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/123183]</a></p>
+<h4 id="自动布置LightProbe"><a href="#自动布置LightProbe" class="headerlink" title="自动布置LightProbe"></a>自动布置LightProbe</h4><p>将需要LightProbe的位置赋值给 <a href="https://docs.unity3d.com/ScriptReference/LightProbeGroup-probePositions.html" target="_blank" rel="noopener">LightProbeGroup.probePositions</a></p>
+<p>官方例子：<a href="https://docs.unity3d.com/Manual/LightProbes-Placing-Scripting.html" target="_blank" rel="noopener">Placing probes using scripting</a></p>
+<h4 id="Unity中手动计算SH"><a href="#Unity中手动计算SH" class="headerlink" title="Unity中手动计算SH"></a>Unity中手动计算SH</h4><p><img src="/img/graphics/mlpDemo.jpg" alt></p>
+<p>SphericalHarmonicsL2提供两个方法</p>
+<ul>
+<li>添加环境光(AddAmbientLight)</li>
+<li>添加平行光(AddDirectionalLight)</li>
+</ul>
+<p>Unity官方文档提供了一个例子：[LightProbes.bakedProbes(Unity文档)]<a href="https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html</a></p>
+<a id="more"></a>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ExampleClass</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Color m_Ambient;</span><br><span class="line">    <span class="keyword">public</span> Light[] m_Lights;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// On start add the contribution of the ambient light and all lights</span></span><br><span class="line">    <span class="comment">// assigned to the lights array to all baked probes.</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        SphericalHarmonicsL2[] bakedProbes = LightmapSettings.lightProbes.bakedProbes;</span><br><span class="line">        Vector3[] probePositions = LightmapSettings.lightProbes.positions;</span><br><span class="line">        <span class="keyword">int</span> probeCount = LightmapSettings.lightProbes.count;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Clear all probes</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">            bakedProbes[i].Clear();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add ambient light to all probes</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">            bakedProbes[i].AddAmbientLight(m_Ambient);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add directional and point lights' contribution to all probes</span></span><br><span class="line">        <span class="keyword">foreach</span> (Light l <span class="keyword">in</span> m_Lights)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (l.type == LightType.Directional)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">                    bakedProbes[i].AddDirectionalLight(-l.transform.forward, l.color, l.intensity);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (l.type == LightType.Point)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">                    SHAddPointLight(probePositions[i], l.transform.position, l.range, l.color, l.intensity, <span class="keyword">ref</span> bakedProbes[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        LightmapSettings.lightProbes.bakedProbes = bakedProbes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SHAddPointLight</span>(<span class="params">Vector3 probePosition, Vector3 position, <span class="keyword">float</span> range, Color color, <span class="keyword">float</span> intensity, <span class="keyword">ref</span> SphericalHarmonicsL2 sh</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// From the point of view of an SH probe, point light looks no different than a directional light,</span></span><br><span class="line">        <span class="comment">// just attenuated and coming from the right direction.</span></span><br><span class="line">        Vector3 probeToLight = position - probePosition;</span><br><span class="line">        <span class="keyword">float</span> attenuation = <span class="number">1.0F</span> / (<span class="number">1.0F</span> + <span class="number">25.0F</span> * probeToLight.sqrMagnitude / (range * range));</span><br><span class="line">        sh.AddDirectionalLight(probeToLight.normalized, color, intensity * attenuation);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在已有LightProbe烘焙的环境中的指定位置获取LightProbe"><a href="#在已有LightProbe烘焙的环境中的指定位置获取LightProbe" class="headerlink" title="在已有LightProbe烘焙的环境中的指定位置获取LightProbe"></a>在已有LightProbe烘焙的环境中的指定位置获取LightProbe</h4><p>使用方法<a href="https://docs.unity3d.com/ScriptReference/LightProbes.GetInterpolatedProbe.html" target="_blank" rel="noopener">LightProbes.GetInterpolatedProbe</a></p>
+<h4 id="LightProbe的SH差值"><a href="#LightProbe的SH差值" class="headerlink" title="LightProbe的SH差值"></a>LightProbe的SH差值</h4><p><img src="/img/graphics/Light-Probe-Interpolation-Using-Tetrahedral.png" alt><br>Unity官方在GDC 2012上的说明, <a href="https://www.gdcvault.com/play/1015312/Light-Probe-Interpolation-Using-Tetrahedral" target="_blank" rel="noopener">Light Probe Interpolation Using Tetrahedral Tessellations</a></p>
+<p>Unity中烘焙时计算四面体网络(TetrahedronGrid)并保存，运行时根据对象在某个四面体中的位置，利用这个四面体相关的几个SH插值出一个新的SH</p>
+<p>更多阅读:<br><a href="https://arxiv.org/abs/physics/0206007" target="_blank" rel="noopener">Spherical Harmonics Interpolation, Computation of Laplacians and Gauge Theory</a></p>
+<h4 id="将SH系数注入Renderer"><a href="#将SH系数注入Renderer" class="headerlink" title="将SH系数注入Renderer"></a>将SH系数注入Renderer</h4><p>Unity官方的Keijiro Takahashi 写的 <a href="https://github.com/keijiro/LightProbeUtility" target="_blank" rel="noopener">LightProbeUtility</a></p>
+<p><img src="https://camo.githubusercontent.com/bfda9b5c1438318d429440db42f88464b6214037/68747470733a2f2f34352e6d656469612e74756d626c722e636f6d2f66373934666138383130613932313463326434303065653761346162623132642f74756d626c725f6f34326f7a69614d475a3171696f3436396f315f3430302e676966" alt></p>
+<p>注意系数的组合方式在之后的版本中有变化，正确的组合如下</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Constant + Linear</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    properties.SetVector(_idSHA[i], <span class="keyword">new</span> Vector4(</span><br><span class="line">        sh[i, <span class="number">3</span>], sh[i, <span class="number">1</span>], sh[i, <span class="number">2</span>], sh[i, <span class="number">0</span>] - sh[i, <span class="number">6</span>] </span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Quadratic polynomials</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    properties.SetVector(_idSHB[i], <span class="keyword">new</span> Vector4(</span><br><span class="line">        sh[i, <span class="number">4</span>], sh[i, <span class="number">5</span>], sh[i, <span class="number">6</span>] * <span class="number">3</span>, sh[i, <span class="number">7</span>]</span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Final quadratic polynomial</span></span><br><span class="line">properties.SetVector(_idSHC, <span class="keyword">new</span> Vector4(</span><br><span class="line">    sh[<span class="number">0</span>, <span class="number">8</span>], sh[<span class="number">1</span>, <span class="number">8</span>], sh[<span class="number">2</span>, <span class="number">8</span>], <span class="number">1</span></span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+<p>UnityCG.cginc中相关的代码</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="function">half3 <span class="title">SHEvalLinearL0L1</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    half3 x;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Linear (L1) + constant (L0) polynomial terms</span></span><br><span class="line">    x.r = dot(unity_SHAr,normal);</span><br><span class="line">    x.g = dot(unity_SHAg,normal);</span><br><span class="line">    x.b = dot(unity_SHAb,normal);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="function">half3 <span class="title">SHEvalLinearL2</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    half3 x1, x2;</span><br><span class="line">    <span class="comment">// 4 of the quadratic (L2) polynomials</span></span><br><span class="line">    half4 vB = normal.xyzz * normal.yzzx;</span><br><span class="line">    x1.r = dot(unity_SHBr,vB);</span><br><span class="line">    x1.g = dot(unity_SHBg,vB);</span><br><span class="line">    x1.b = dot(unity_SHBb,vB);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Final (5th) quadratic (L2) polynomial</span></span><br><span class="line">    half vC = normal.x*normal.x - normal.y*normal.y;</span><br><span class="line">    x2 = unity_SHC.rgb * vC;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x1 + x2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="comment">// output in active color space</span></span><br><span class="line"><span class="function">half3 <span class="title">ShadeSH9</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Linear + constant polynomial terms</span></span><br><span class="line">    half3 res = SHEvalLinearL0L1 (normal);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Quadratic polynomials</span></span><br><span class="line">    res += SHEvalLinearL2 (normal);</span><br><span class="line"></span><br><span class="line"><span class="meta">#   ifdef UNITY_COLORSPACE_GAMMA</span></span><br><span class="line">        res = LinearToGammaSpace (res);</span><br><span class="line"><span class="meta">#   <span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2019/06/01/20190601-SphericalHarmonics/" data-id="ck24rrfs0001vlgqj0gtrm49r" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/06/14/20190614-Fresnel/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Fresnel
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2019/01/12/20190112-animalBoxing/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">收拾东西翻出一套搁置脑洞 (Animal Boxing)</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/09/15/20190915-PostprocessMSPaint/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/MSPaint_MSPaint.jpg)" alt="Resize Textures with MSPaint Algorithm via Postprocess" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/09/15/20190915-PostprocessMSPaint/" class="title">Resize Textures with MSPaint Algorithm via Postprocess</a></p>
+                            <p class="item-date"><time datetime="2019-09-14T16:00:00.000Z" itemprop="datePublished">2019-09-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/18/20190818-TexelDensity/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/TexelDensityViewMode1.jpg)" alt="Texel Density View Mode" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/18/20190818-TexelDensity/" class="title">Texel Density View Mode</a></p>
+                            <p class="item-date"><time datetime="2019-08-17T16:00:00.000Z" itemprop="datePublished">2019-08-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/08/17/20190817-PBRTextureGuideline/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f)" alt="PBR 贴图制作准则" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/08/17/20190817-PBRTextureGuideline/" class="title">PBR 贴图制作准则</a></p>
+                            <p class="item-date"><time datetime="2019-08-16T16:00:00.000Z" itemprop="datePublished">2019-08-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/27/20190727-ShadowProxy/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/graphics/ShadowProxyComarison.jpg)" alt="阴影代理 (Shadow Proxy)" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/27/20190727-ShadowProxy/" class="title">阴影代理 (Shadow Proxy)</a></p>
+                            <p class="item-date"><time datetime="2019-07-26T16:00:00.000Z" itemprop="datePublished">2019-07-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="title">植被制作流程 Vegetation and SpeedTree</a></p>
+                            <p class="item-date"><time datetime="2019-07-05T16:00:00.000Z" itemprop="datePublished">2019-07-06</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Game-Dev/">Game Dev</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Graphics/">Graphics</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/">Unity</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/照片/">照片</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/画/">画</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/脑洞/">脑洞</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观后感/">观后感</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Game-Dev/" style="font-size: 18.33px;">Game Dev</a> <a href="/tags/Graphics/" style="font-size: 20px;">Graphics</a> <a href="/tags/Unity/" style="font-size: 13.33px;">Unity</a> <a href="/tags/照片/" style="font-size: 11.67px;">照片</a> <a href="/tags/画/" style="font-size: 16.67px;">画</a> <a href="/tags/脑洞/" style="font-size: 13.33px;">脑洞</a> <a href="/tags/观后感/" style="font-size: 10px;">观后感</a> <a href="/tags/读书笔记/" style="font-size: 15px;">读书笔记</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="/breezybay">Breezy Bay</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://zhanstudio.weebly.com">ZhanStudio (旧博客)</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Breezy Bay<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
