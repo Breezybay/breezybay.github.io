@@ -239,7 +239,7 @@
 
 </div>
 
-    <a data-url="/2019/06/14/20190614-Fresnel/" data-id="ck84jbmft002jicudbpstirc8" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/06/14/20190614-Fresnel/" data-id="ckdcu6h1e001y4kudkli1ol05" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -382,7 +382,7 @@
 
 </div>
 
-    <a data-url="/2019/06/01/20190601-SphericalHarmonics/" data-id="ck84jbmfk0029icud5wy2rqe8" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/06/01/20190601-SphericalHarmonics/" data-id="ckdcu6h1c001v4kud9kq7h62o" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -508,7 +508,7 @@
 
 </div>
 
-    <a data-url="/2019/01/12/20190112-animalBoxing/" data-id="ck84jbmfo002dicudek5pubsf" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/01/12/20190112-animalBoxing/" data-id="ckdcu6h1b001t4kudbyxfsvmb" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -634,7 +634,7 @@
 
 </div>
 
-    <a data-url="/2018/12/14/20181214-Axidaka_Kaya/" data-id="ck84jbmfm002bicudvm1f793p" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/12/14/20181214-Axidaka_Kaya/" data-id="ckdcu6h1a001q4kudhgw6je1i" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -760,7 +760,132 @@
 
 </div>
 
-    <a data-url="/2018/10/26/20181026-Lianxi/" data-id="ck84jbmfh0025icudey1dg9s8" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/10/26/20181026-Lianxi/" data-id="ckdcu6h19001o4kud95a1b7tg" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-20180910-Qinghai" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/09/10/20180910-Qinghai/">青海</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/09/10/20180910-Qinghai/">
+            <time datetime="2018-09-09T16:00:00.000Z" itemprop="datePublished">2018-09-10</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/照片/">照片</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><img src="/img/drawings/mmexport1547465601926.jpg" alt><br><img src="/img/drawings/mmexport1547465611142.jpg" alt></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2018/09/10/20180910-Qinghai/" data-id="ckdcu6h14001g4kud2q8cz86e" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -887,132 +1012,7 @@
 
 </div>
 
-    <a data-url="/2018/09/10/20181023-TheBrain/" data-id="ck84jbmfb001xicudh3ai8yqr" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20180910-Qinghai" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/09/10/20180910-Qinghai/">青海</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/09/10/20180910-Qinghai/">
-            <time datetime="2018-09-09T16:00:00.000Z" itemprop="datePublished">2018-09-10</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/照片/">照片</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p><img src="/img/drawings/mmexport1547465601926.jpg" alt><br><img src="/img/drawings/mmexport1547465611142.jpg" alt></p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2018/09/10/20180910-Qinghai/" data-id="ck84jbmff0023icud04kq9cdz" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/09/10/20181023-TheBrain/" data-id="ckdcu6h17001l4kudf4c512vu" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1138,7 +1138,7 @@
 
 </div>
 
-    <a data-url="/2018/08/08/20180808-TimePower/" data-id="ck84jbmfj0027icudw7y1pjhb" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/08/08/20180808-TimePower/" data-id="ckdcu6h15001j4kudrwxkpv33" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1267,7 +1267,7 @@
 
 </div>
 
-    <a data-url="/2018/06/20/20180620-HunterXHunter/" data-id="ck84jbmf6001sicudaay3h5qq" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/06/20/20180620-HunterXHunter/" data-id="ckdcu6h11001b4kudgplhvb24" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1394,7 +1394,7 @@
 
 </div>
 
-    <a data-url="/2018/06/20/20180620-RealityCapture/" data-id="ck84jbmfc001zicudbh9nxag3" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2018/06/20/20180620-RealityCapture/" data-id="ckdcu6h13001e4kudehz78if6" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
