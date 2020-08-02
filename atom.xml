@@ -6,10 +6,116 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-10-20T09:01:23.205Z</updated>
+  <updated>2020-08-02T08:01:21.937Z</updated>
   <id>/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</title>
+    <link href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/"/>
+    <id>/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/</id>
+    <published>2020-04-30T16:00:00.000Z</published>
+    <updated>2020-08-02T08:01:21.937Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/ta/LayeredTerrain.gif" alt></p><h3 id="定义-What"><a href="#定义-What" class="headerlink" title="定义 (What)"></a>定义 (What)</h3><p>A non-destructive workflow means you can go backwards at any time.<br>一个非破坏性的工作流意味着你可以在任何时候回退。</p><p>A good analogy is layers in photoshop - we write information into these layers instead of the terrain, and then combine those layers of data into one final output.<br>一个很好的类比是Photoshop里的图层 - 我们把信息写入这些图层而不是地形，然后合并这些图层的数据到最终输出。</p><h3 id="原因-Why"><a href="#原因-Why" class="headerlink" title="原因 (Why)"></a>原因 (Why)</h3><p>使用基于图层的工作流提供可以回退，融合，覆盖的操作。增加创作力，提升工作效率。</p><h3 id="方案-How"><a href="#方案-How" class="headerlink" title="方案 (How)"></a>方案 (How)</h3><p>参考Unreal <a href="http://confluence.wd.com/pages/viewpage.action?pageId=23155996" target="_blank" rel="noopener">非破坏性地形图层和样条 Non-Destructive Landscape Layers and Splines</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/img/ta/LayeredTerrain.gif&quot; alt&gt;&lt;/p&gt;
+&lt;h3 id=&quot;定义-What&quot;&gt;&lt;a href=&quot;#定义-What&quot; class=&quot;headerlink&quot; title=&quot;定义 (What)&quot;&gt;&lt;/a&gt;定义 (What)&lt;/h3
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Terrain Tiling</title>
+    <link href="/2020/04/18/20200418-TerrainTiling/"/>
+    <id>/2020/04/18/20200418-TerrainTiling/</id>
+    <published>2020-04-17T16:00:00.000Z</published>
+    <updated>2020-08-02T08:05:27.169Z</updated>
+    
+    <content type="html"><![CDATA[<table><thead><tr><th style="text-align:center">Unity Built-In</th><th style="text-align:center"></th><th style="text-align:center">Micro-Macro Variations with Noise</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/ta/TerrainTiling1.jpg" alt></td><td style="text-align:center">-</td><td style="text-align:center"><img src="/img/ta/TerrainTiling2.jpg" alt></td></tr></tbody></table><p>在野外需要大面积绘制地形的情况下，地形渲染消耗 + 0.1~0.2ms @750Ti</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;Unity Built-In&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;Mic
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Simplygon HLOD for Unity</title>
+    <link href="/2020/03/29/20200329-Simplygon/"/>
+    <id>/2020/03/29/20200329-Simplygon/</id>
+    <published>2020-03-28T16:00:00.000Z</published>
+    <updated>2020-08-02T06:39:02.133Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p><a href="https://simplygon.com/Downloads" target="_blank" rel="noopener">Simplygon SDK</a>，Simplygon SDK 需要 Win10。<br>Unity中导入Simplygon Plugin，需要Unity版本5.5以上，目前Simplygon官方不维护Unity，需要自己处理。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>合并方法可以参考Unity官方的AutoLOD：<a href="https://github.com/Unity-Technologies/AutoLOD/blob/master/Scripts/Editor/MeshSimplifiers/SimplygonMeshSimplifier.cs" target="_blank" rel="noopener">SimplygonMeshSimplifier</a></p><p>使用RemeshingProcessor；<br>在RemeshingSettings中，设置OnScreenSize，HardEdgeAngleInRadians；<br>在MappingImageSettings中，设置TexCoordGeneratorType，UseFullRetexturing，Width，Height；</p><p>执行过程中，Simplygon Plugin在某些情况下会报错（比如模型Material数量少于SubMesh数量），可以定位报错位置并使用<a href="https://github.com/0xd4d/dnSpy" target="_blank" rel="noopener">dnSpy</a>对其进行反编译后修复。</p><p>生成Simplygon资源过程中的性能瓶颈主要在于从Unity上传资源到Simplygon及合并后的资源Download到Unity。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;环境&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://simplygon.com/Downloads&quot; target=&quot;_blank&quot; rel=&quot;noopene
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ComputeShader Noise</title>
+    <link href="/2019/10/06/20191006-TerrainDetailUtil/"/>
+    <id>/2019/10/06/20191006-TerrainDetailUtil/</id>
+    <published>2019-10-05T16:00:00.000Z</published>
+    <updated>2020-08-02T07:52:05.494Z</updated>
+    
+    <content type="html"><![CDATA[<p>可以用 <a href="https://github.com/keijiro" target="_blank" rel="noopener">Keijiro Takahashi</a>的<a href="https://github.com/keijiro/NoiseShader" target="_blank" rel="noopener">Noise Shader Library for Unity</a></p><h4 id="ComputeShader"><a href="#ComputeShader" class="headerlink" title="ComputeShader"></a>ComputeShader</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mask = Perlin( xy / NoiseScale * Resolution )</span><br><span class="line"></span><br><span class="line">Final[id] = min( Final[id] * mask * Offset, Cap);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;可以用 &lt;a href=&quot;https://github.com/keijiro&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Keijiro Takahashi&lt;/a&gt;的&lt;a href=&quot;https://github.com/keijiro/NoiseSh
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
   
   <entry>
     <title>Resize Textures with MSPaint Algorithm via Postprocess</title>
@@ -43,9 +149,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -81,9 +187,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -92,18 +198,16 @@
     <link href="/2019/08/17/20190817-PBRTextureGuideline/"/>
     <id>/2019/08/17/20190817-PBRTextureGuideline/</id>
     <published>2019-08-16T16:00:00.000Z</published>
-    <updated>2019-10-20T09:06:27.884Z</updated>
+    <updated>2020-01-07T08:24:56.076Z</updated>
     
-    <content type="html"><![CDATA[<!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) --><h2 id="Metal-Roughness-Workflow-总结"><a href="#Metal-Roughness-Workflow-总结" class="headerlink" title="Metal / Roughness Workflow 总结"></a>Metal / Roughness Workflow 总结</h2><h4 id="纯金属-Metallic-gt-235"><a href="#纯金属-Metallic-gt-235" class="headerlink" title="纯金属  (Metallic &gt; 235)"></a>纯金属  (Metallic &gt; 235)</h4><ul><li>BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB</li><li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流</li></ul><h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4><ul><li>BaseColor暗部<strong>不应低于30-50 sRGB</strong>, 亮部<strong>不应高于 240 sRGB</strong></li></ul><p>符合PBR规则可以使素材<strong>在任何光照条件下都有合理的表现</strong></p><ul><li>注意,不等于不符合规则的贴图一定看起来不好（在特定光照下有可能看起也合理）</li></ul><p>根据以上原则，制作一个批量排查工具<br><img src="/img/graphics/pbrCheck.jpg" alt></p><a id="more"></a><p>Substance Painter 用PBR检查工具: <a href="https://share.substance3d.com/libraries/824The" target="_blank" rel="noopener">PBR Validate</a><br><img src="https://share.substance3d.com/libraries/824The" alt></p><p>Substance Disigner 可以使用 PBR Metal/Roughness Validate Node<br>位置在Material Filters &gt; PBR Utilities<br><img src="https://cdn.allegorithmic.com/images/academy/bb52362f-6370-4f89-a2f4-633f59868c90" alt></p><p>Source: <a href="https://academy.substance3d.com/courses/the-pbr-guide-part-2" target="_blank" rel="noopener">Practical Guidelines For Creating PBR Textures</a><br>官方中文版：<a href="https://academy.substance3d.com/courses/the-pbr-guide-part2-zh" target="_blank" rel="noopener">创建PBR纹理实用指南</a><br><!--Two most common workflows, which are metal/roughness and specular/glossiness![](https://cdn.allegorithmic.com/images/academy/5fc12cd8-9467-4062-b609-507788d0cbc3)--></p><h2 id="Metal-Roughness-Workflow"><a href="#Metal-Roughness-Workflow" class="headerlink" title="Metal / Roughness Workflow"></a>Metal / Roughness Workflow</h2><h3 id="Dielectric-介电质-绝缘体-F0"><a href="#Dielectric-介电质-绝缘体-F0" class="headerlink" title="Dielectric (介电质/绝缘体) F0"></a>Dielectric (介电质/绝缘体) F0</h3><p>普通绝缘体的 <em>F0</em> 通常设置为 0.04 (linear) 4% 反射。在金属度/粗糙度工作流中，该数值是hardcode在Shader中的。<br>某些金/粗实现中，比如 <em>Substance toolset</em> 和 <em>Unreal Engine 4</em>，提供了Specular控制，使美术可以对绝缘体的 <em>F0</em> 常量进行改变。在Substance中，该输出被标记为 “specularLevel” 并且由一个 texture sampler 提供给shader。如下图，它提供了0.0-0.08的范围。该范围在shader中被映射到0.0～1.0，其中 0.5 对应 4% 反射率。</p><p><img src="https://cdn.allegorithmic.com/images/academy/c16e1e22-42b2-4f5a-af0d-f28b080d325f" alt></p><!--more--><h3 id="基础色-Base-Color-RGB-sRGB"><a href="#基础色-Base-Color-RGB-sRGB" class="headerlink" title="基础色 Base Color (RGB - sRGB)"></a>基础色 Base Color (RGB - sRGB)</h3><p><img src="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f" alt></p><p>Base Color是一张RGB贴图，可以有两种信息：</p><ul><li>绝缘体的漫反射颜色(diffuse reflected color)</li><li>金属反射值</li></ul><p>颜色代表了绝缘体反射的波长，而当一块区域是金属时，金属反射值生效</p><h4 id="制作准则"><a href="#制作准则" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>基础色(Base Color)可以被想成一张在色调上很”平”的图。就是说，它的对比度比传统diffuse贴图要低。在这张图上不建议出现过亮或过暗的地方。物体在色调上会比我们通常印象中的要更明亮。</p><p>就亮度范围来说，我们基本上指绝缘体。在下图中，你可以看到脏迹的数值低于正确亮度范围。对暗部来说，<strong>不应低于30-50 sRGB</strong>。暗部数值宽松的说应该大于30，严格地说大于50。对亮部来说，<strong>不应高于 240 sRGB</strong>。<br><img src="https://cdn.allegorithmic.com/images/academy/86a711f0-2e07-4109-9027-33a21ce3d51a" alt></p><p>我们说过base color包含绝缘体表面反射光的信息，所以它不应包含像AO这样的光照信息。可以有一些例外，比如细微的遮蔽（当shader无法仅仅通过ao来体现这一精度的细节时），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/1e92ba2c-d8b0-476d-ae3c-34c133e16b7d" alt></p><p>金属的反射值应当从现实测量数值中获取。这些数值应当在 <strong>70-100% specular</strong>左右，对应<strong>sRGB范围在 180-255</strong>。</p><p>Sébastien Lagarde的图表是个很好的资源(DONTNOD Physically based rendering chart for Unreal Engine 4](<a href="https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)" target="_blank" rel="noopener">https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)</a>)</p><p><strong>金属的反射值应当从现实测量数值中获取</strong></p><ul><li>颜色代表非金属材质的Albedo，与金属材质的反射值</li><li>基础色(Base color)应该避免包含光照信息，除了微遮蔽(micro-occlusion)</li><li>暗部应该不低于 30 sRGB(宽松下限) 到 50 sRGB(严格下限)</li><li>亮部不应高于240 sRGB</li><li>纯金属的反射很高，在70%-100%，对应 180-255 SRGB</li></ul><p>在接下来的金属段落中你会读到，基础色(base color)包含了金属反射值，如果尘土或锈迹被加在基础色上。会导致该处的金属反射值降低到不可被认定是纯金属的范围。</p><p>金属度贴图(Metallic map)必须考虑尘土和锈迹的情况，这些地方的金属度必须降低以体现这些地方不再被认定为是纯金属。在下图中你可以看到在金属度贴图中锈蚀的地方被当作绝缘体设置成黑色。尘土的地方也设置成了灰色。所以考虑到比如尘土的这种情况，金属度贴图并不总是非黑即白的0/1贴图。<br><img src="https://cdn.allegorithmic.com/images/academy/f155be69-8480-4070-9e05-cb266051d19f" alt></p><p><strong>金属度贴图类似于一张mask，它告诉shader如何处理基础色(base color)中的信息</strong></p><h3 id="金属度-Metallic-Grayscale-Linear"><a href="#金属度-Metallic-Grayscale-Linear" class="headerlink" title="金属度 Metallic (Grayscale - Linear)"></a>金属度 Metallic (Grayscale - Linear)</h3><p>金属贴图用于定义哪些区域是纯金属。作为一张灰度图，它的作用类似于一张mask，告知shader如何处理基础色(base color)中的信息。</p><p><img src="https://cdn.allegorithmic.com/images/academy/08294dc6-f38d-4cd6-af7f-fca8e9c00dda" alt></p><p>金属度贴图中的信息并不直接包含真实世界中的信息。它只是告知shader，基础色的哪些区域应当被作为漫反射颜色(绝缘体)，哪些区域应当被当作金属反射值。在金属度贴图中，0.0 (black – 0 sRGB) 表示非金属，而 1.0 (white – 255 sRGB) 代表纯金属。在实际操作中，当shader发现金属度贴图上的值是白色，它就将Base color贴图上相应的部分当作金属反射值来使用。</p><h4 id="制作准则-1"><a href="#制作准则-1" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>金属表面有两个与贴图相关的方面：</p><ul><li>第一，它们的反射值很高，在 70%-100% 范围；</li><li>第二，有些金属可以生锈。<br>我们讨论制作准则时会分别检视这两个方面。</li></ul><h5 id="纯金属"><a href="#纯金属" class="headerlink" title="纯金属"></a><em>纯金属</em></h5><p>大致上，我们定义金属度贴图上灰度值 <strong>235-255</strong> 的范围为<em>纯金属</em>，在这一区间的金属需要它的Base color有 70-100% 的反射值，或者说 180-255 sRGB。如下图。再次说明，这些数值来源于真实世界的测量数据。<br><img src="https://cdn.allegorithmic.com/images/academy/94624c56-0119-4a99-95c3-45b877aca57d" alt></p><h5 id="锈蚀或绝缘体"><a href="#锈蚀或绝缘体" class="headerlink" title="锈蚀或绝缘体"></a><em>锈蚀或绝缘体</em></h5><p>当你制作一个表面时，需要考虑该金属的氧化情况，或者其它环境因素如尘土及污垢。当一个喷漆的金属某些部分被刮坏或者掉漆了的时候，暴露的金属是纯金属（金属度贴图中为白色），喷漆表面是绝缘层（金属度贴图中为黑色），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/ec724b25-74e5-4c89-bbfb-e5e6edde440a" alt></p><p>金属度贴图可以体现金属及非金属之间的过渡状态（灰度）。如果金属度低于 235 sRGB 的时候你需要降低base color上的反射值。想想一个部分盖住金属的尘土层，如下图。尘土是绝缘体，如果你保留纯白的金属度，shader会将这些尘土在base color上的值用作金属的反射值。尘土的颜色远低于光滑金属所需要的70%-100%范围。通过降低尘土区域的金属度，你才能制作出合适的介于绝缘体和金属反射值之间的过渡。<br><img src="https://cdn.allegorithmic.com/images/academy/ef553e0e-adeb-4f8c-b471-5e778875bc74" alt></p><p>在Substance Designer中可以使用Material Color Blend节点制作尘土效果。</p><h3 id="粗糙度-Roughness-Grayscale-Linear"><a href="#粗糙度-Roughness-Grayscale-Linear" class="headerlink" title="粗糙度 Roughness (Grayscale - Linear)"></a>粗糙度 Roughness (Grayscale - Linear)</h3><p>粗糙度贴图描述物体因为表面不规则导致的光线散射，反射的方向是随机的。这改变了光的方向，但是光的总体强度是保持不变的。粗糙的表面有面积更大、更暗的高光。光滑的表面会使高光反射保持聚集，看起来更亮更强，虽然总体反光量是相同的。<br><img src="https://cdn.allegorithmic.com/images/academy/fbc09194-da18-4478-b119-cd0a84be4930" alt></p><p>粗糙度贴图是最具创作性的贴图，它允许美术在视觉上定义一个表面的特征。使我们可以创造性的讲述这个表面的情况。它的环境是怎样的？它被好好珍藏还是粗暴对待？它曾被暴露在某些情况下吗？一个物体表面的情况可以告诉我们很多关于它所在的环境的故事，并因此与我们想要设计的这个物体，以及想要创造的整体世界相联系起来。</p><h4 id="制作准则-2"><a href="#制作准则-2" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>保持创造性，讲述一个关于该表面的故事。</p>]]></content>
+    <content type="html"><![CDATA[<!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) --><h2 id="Metal-Roughness-Workflow-总结"><a href="#Metal-Roughness-Workflow-总结" class="headerlink" title="Metal / Roughness Workflow 总结"></a>Metal / Roughness Workflow 总结</h2><h4 id="纯金属-Metallic-gt-235"><a href="#纯金属-Metallic-gt-235" class="headerlink" title="纯金属  (Metallic &gt; 235)"></a>纯金属  (Metallic &gt; 235)</h4><ul><li>BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB</li><li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流<br>hexo<h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4></li><li>BaseColor暗部<strong>不应低于30-50 sRGB</strong>, 亮部<strong>不应高于 240 sRGB</strong></li></ul><p>符合PBR规则可以使素材<strong>在任何光照条件下都有合理的表现</strong></p><ul><li>注意,不等于不符合规则的贴图一定看起来不好（在特定光照下有可能看起也合理）</li></ul><p>根据以上原则，制作一个批量排查工具<br><img src="/img/graphics/pbrCheck.jpg" alt></p><a id="more"></a><p>Substance Painter 用PBR检查工具: <a href="https://share.substance3d.com/libraries/824The" target="_blank" rel="noopener">PBR Validate</a><br><img src="https://share.substance3d.com/libraries/824The" alt></p><p>Substance Disigner 可以使用 PBR Metal/Roughness Validate Node<br>位置在Material Filters &gt; PBR Utilities<br><img src="https://cdn.allegorithmic.com/images/academy/bb52362f-6370-4f89-a2f4-633f59868c90" alt></p><p>Source: <a href="https://academy.substance3d.com/courses/the-pbr-guide-part-2" target="_blank" rel="noopener">Practical Guidelines For Creating PBR Textures</a><br>官方中文版：<a href="https://academy.substance3d.com/courses/the-pbr-guide-part2-zh" target="_blank" rel="noopener">创建PBR纹理实用指南</a><br><!--Two most common workflows, which are metal/roughness and specular/glossiness![](https://cdn.allegorithmic.com/images/academy/5fc12cd8-9467-4062-b609-507788d0cbc3)--></p><h2 id="Metal-Roughness-Workflow"><a href="#Metal-Roughness-Workflow" class="headerlink" title="Metal / Roughness Workflow"></a>Metal / Roughness Workflow</h2><h3 id="Dielectric-介电质-绝缘体-F0"><a href="#Dielectric-介电质-绝缘体-F0" class="headerlink" title="Dielectric (介电质/绝缘体) F0"></a>Dielectric (介电质/绝缘体) F0</h3><p>普通绝缘体的 <em>F0</em> 通常设置为 0.04 (linear) 4% 反射。在金属度/粗糙度工作流中，该数值是hardcode在Shader中的。<br>某些金/粗实现中，比如 <em>Substance toolset</em> 和 <em>Unreal Engine 4</em>，提供了Specular控制，使美术可以对绝缘体的 <em>F0</em> 常量进行改变。在Substance中，该输出被标记为 “specularLevel” 并且由一个 texture sampler 提供给shader。如下图，它提供了0.0-0.08的范围。该范围在shader中被映射到0.0～1.0，其中 0.5 对应 4% 反射率。</p><p><img src="https://cdn.allegorithmic.com/images/academy/c16e1e22-42b2-4f5a-af0d-f28b080d325f" alt></p><!--more--><h3 id="基础色-Base-Color-RGB-sRGB"><a href="#基础色-Base-Color-RGB-sRGB" class="headerlink" title="基础色 Base Color (RGB - sRGB)"></a>基础色 Base Color (RGB - sRGB)</h3><p><img src="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f" alt></p><p>Base Color是一张RGB贴图，可以有两种信息：</p><ul><li>绝缘体的漫反射颜色(diffuse reflected color)</li><li>金属反射值</li></ul><p>颜色代表了绝缘体反射的波长，而当一块区域是金属时，金属反射值生效</p><h4 id="制作准则"><a href="#制作准则" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>基础色(Base Color)可以被想成一张在色调上很”平”的图。就是说，它的对比度比传统diffuse贴图要低。在这张图上不建议出现过亮或过暗的地方。物体在色调上会比我们通常印象中的要更明亮。</p><p>就亮度范围来说，我们基本上指绝缘体。在下图中，你可以看到脏迹的数值低于正确亮度范围。对暗部来说，<strong>不应低于30-50 sRGB</strong>。暗部数值宽松的说应该大于30，严格地说大于50。对亮部来说，<strong>不应高于 240 sRGB</strong>。<br><img src="https://cdn.allegorithmic.com/images/academy/86a711f0-2e07-4109-9027-33a21ce3d51a" alt></p><p>我们说过base color包含绝缘体表面反射光的信息，所以它不应包含像AO这样的光照信息。可以有一些例外，比如细微的遮蔽（当shader无法仅仅通过ao来体现这一精度的细节时），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/1e92ba2c-d8b0-476d-ae3c-34c133e16b7d" alt></p><p>金属的反射值应当从现实测量数值中获取。这些数值应当在 <strong>70-100% specular</strong>左右，对应<strong>sRGB范围在 180-255</strong>。</p><p>Sébastien Lagarde的图表是个很好的资源(DONTNOD Physically based rendering chart for Unreal Engine 4](<a href="https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)" target="_blank" rel="noopener">https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)</a>)</p><p><strong>金属的反射值应当从现实测量数值中获取</strong></p><ul><li>颜色代表非金属材质的Albedo，与金属材质的反射值</li><li>基础色(Base color)应该避免包含光照信息，除了微遮蔽(micro-occlusion)</li><li>暗部应该不低于 30 sRGB(宽松下限) 到 50 sRGB(严格下限)</li><li>亮部不应高于240 sRGB</li><li>纯金属的反射很高，在70%-100%，对应 180-255 SRGB</li></ul><p>在接下来的金属段落中你会读到，基础色(base color)包含了金属反射值，如果尘土或锈迹被加在基础色上。会导致该处的金属反射值降低到不可被认定是纯金属的范围。</p><p>金属度贴图(Metallic map)必须考虑尘土和锈迹的情况，这些地方的金属度必须降低以体现这些地方不再被认定为是纯金属。在下图中你可以看到在金属度贴图中锈蚀的地方被当作绝缘体设置成黑色。尘土的地方也设置成了灰色。所以考虑到比如尘土的这种情况，金属度贴图并不总是非黑即白的0/1贴图。<br><img src="https://cdn.allegorithmic.com/images/academy/f155be69-8480-4070-9e05-cb266051d19f" alt></p><p><strong>金属度贴图类似于一张mask，它告诉shader如何处理基础色(base color)中的信息</strong></p><h3 id="金属度-Metallic-Grayscale-Linear"><a href="#金属度-Metallic-Grayscale-Linear" class="headerlink" title="金属度 Metallic (Grayscale - Linear)"></a>金属度 Metallic (Grayscale - Linear)</h3><p>金属贴图用于定义哪些区域是纯金属。作为一张灰度图，它的作用类似于一张mask，告知shader如何处理基础色(base color)中的信息。</p><p><img src="https://cdn.allegorithmic.com/images/academy/08294dc6-f38d-4cd6-af7f-fca8e9c00dda" alt></p><p>金属度贴图中的信息并不直接包含真实世界中的信息。它只是告知shader，基础色的哪些区域应当被作为漫反射颜色(绝缘体)，哪些区域应当被当作金属反射值。在金属度贴图中，0.0 (black – 0 sRGB) 表示非金属，而 1.0 (white – 255 sRGB) 代表纯金属。在实际操作中，当shader发现金属度贴图上的值是白色，它就将Base color贴图上相应的部分当作金属反射值来使用。</p><h4 id="制作准则-1"><a href="#制作准则-1" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>金属表面有两个与贴图相关的方面：</p><ul><li>第一，它们的反射值很高，在 70%-100% 范围；</li><li>第二，有些金属可以生锈。<br>我们讨论制作准则时会分别检视这两个方面。</li></ul><h5 id="纯金属"><a href="#纯金属" class="headerlink" title="纯金属"></a><em>纯金属</em></h5><p>大致上，我们定义金属度贴图上灰度值 <strong>235-255</strong> 的范围为<em>纯金属</em>，在这一区间的金属需要它的Base color有 70-100% 的反射值，或者说 180-255 sRGB。如下图。再次说明，这些数值来源于真实世界的测量数据。<br><img src="https://cdn.allegorithmic.com/images/academy/94624c56-0119-4a99-95c3-45b877aca57d" alt></p><h5 id="锈蚀或绝缘体"><a href="#锈蚀或绝缘体" class="headerlink" title="锈蚀或绝缘体"></a><em>锈蚀或绝缘体</em></h5><p>当你制作一个表面时，需要考虑该金属的氧化情况，或者其它环境因素如尘土及污垢。当一个喷漆的金属某些部分被刮坏或者掉漆了的时候，暴露的金属是纯金属（金属度贴图中为白色），喷漆表面是绝缘层（金属度贴图中为黑色），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/ec724b25-74e5-4c89-bbfb-e5e6edde440a" alt></p><p>金属度贴图可以体现金属及非金属之间的过渡状态（灰度）。如果金属度低于 235 sRGB 的时候你需要降低base color上的反射值。想想一个部分盖住金属的尘土层，如下图。尘土是绝缘体，如果你保留纯白的金属度，shader会将这些尘土在base color上的值用作金属的反射值。尘土的颜色远低于光滑金属所需要的70%-100%范围。通过降低尘土区域的金属度，你才能制作出合适的介于绝缘体和金属反射值之间的过渡。<br><img src="https://cdn.allegorithmic.com/images/academy/ef553e0e-adeb-4f8c-b471-5e778875bc74" alt></p><p>在Substance Designer中可以使用Material Color Blend节点制作尘土效果。</p><h3 id="粗糙度-Roughness-Grayscale-Linear"><a href="#粗糙度-Roughness-Grayscale-Linear" class="headerlink" title="粗糙度 Roughness (Grayscale - Linear)"></a>粗糙度 Roughness (Grayscale - Linear)</h3><p>粗糙度贴图描述物体因为表面不规则导致的光线散射，反射的方向是随机的。这改变了光的方向，但是光的总体强度是保持不变的。粗糙的表面有面积更大、更暗的高光。光滑的表面会使高光反射保持聚集，看起来更亮更强，虽然总体反光量是相同的。<br><img src="https://cdn.allegorithmic.com/images/academy/fbc09194-da18-4478-b119-cd0a84be4930" alt></p><p>粗糙度贴图是最具创作性的贴图，它允许美术在视觉上定义一个表面的特征。使我们可以创造性的讲述这个表面的情况。它的环境是怎样的？它被好好珍藏还是粗暴对待？它曾被暴露在某些情况下吗？一个物体表面的情况可以告诉我们很多关于它所在的环境的故事，并因此与我们想要设计的这个物体，以及想要创造的整体世界相联系起来。</p><h4 id="制作准则-2"><a href="#制作准则-2" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>保持创造性，讲述一个关于该表面的故事。</p>]]></content>
     
     <summary type="html">
     
       &lt;!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) --&gt;
 &lt;h2 id=&quot;Metal-Roughness-Workflow-总结&quot;&gt;&lt;a href=&quot;#Metal-Roughness-Workflow-总结&quot; class=&quot;headerlink&quot; title=&quot;Metal / Roughness Workflow 总结&quot;&gt;&lt;/a&gt;Metal / Roughness Workflow 总结&lt;/h2&gt;&lt;h4 id=&quot;纯金属-Metallic-gt-235&quot;&gt;&lt;a href=&quot;#纯金属-Metallic-gt-235&quot; class=&quot;headerlink&quot; title=&quot;纯金属  (Metallic &amp;gt; 235)&quot;&gt;&lt;/a&gt;纯金属  (Metallic &amp;gt; 235)&lt;/h4&gt;&lt;ul&gt;
 &lt;li&gt;BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB&lt;/li&gt;
-&lt;li&gt;如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&quot;介电质-绝缘体：&quot;&gt;&lt;a href=&quot;#介电质-绝缘体：&quot; class=&quot;headerlink&quot; title=&quot;介电质/绝缘体：&quot;&gt;&lt;/a&gt;介电质/绝缘体：&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流&lt;br&gt;hexo&lt;h4 id=&quot;介电质-绝缘体：&quot;&gt;&lt;a href=&quot;#介电质-绝缘体：&quot; class=&quot;headerlink&quot; title=&quot;介电质/绝缘体：&quot;&gt;&lt;/a&gt;介电质/绝缘体：&lt;/h4&gt;&lt;/li&gt;
 &lt;li&gt;BaseColor暗部&lt;strong&gt;不应低于30-50 sRGB&lt;/strong&gt;, 亮部&lt;strong&gt;不应高于 240 sRGB&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;符合PBR规则可以使素材&lt;strong&gt;在任何光照条件下都有合理的表现&lt;/strong&gt;&lt;/p&gt;
@@ -115,9 +219,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -141,9 +245,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -166,9 +270,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -189,9 +293,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -213,9 +317,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -252,9 +356,9 @@
     </summary>
     
     
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
       <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
   </entry>
   
@@ -388,31 +492,6 @@
   </entry>
   
   <entry>
-    <title>三维重建与游戏制作 Reality Capture</title>
-    <link href="/2018/06/20/20180620-RealityCapture/"/>
-    <id>/2018/06/20/20180620-RealityCapture/</id>
-    <published>2018-06-19T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.391Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p><p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p><a id="more"></a><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image17.gif" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif&quot; alt&gt;&lt;/p&gt;
-&lt;p&gt;今天看到Unity的一篇博客文章 &lt;a href=&quot;https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Book of the Dead: Photogrammetry Assets, Trees, VFX&lt;/a&gt;&lt;br&gt;三维重建渐渐的实用化了。&lt;br&gt;想起大学在虚国重的日子，竟然已经十年了……&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
-    
-      <category term="Unity" scheme="/tags/Unity/"/>
-    
-      <category term="Graphics" scheme="/tags/Graphics/"/>
-    
-  </entry>
-  
-  <entry>
     <title>HUNTERxHUNTER(猎人) 观后感</title>
     <link href="/2018/06/20/20180620-HunterXHunter/"/>
     <id>/2018/06/20/20180620-HunterXHunter/</id>
@@ -439,86 +518,27 @@
   </entry>
   
   <entry>
-    <title>翻本子发现2017年1月的脑洞</title>
-    <link href="/2018/06/05/20180605-Naodong/"/>
-    <id>/2018/06/05/20180605-Naodong/</id>
-    <published>2018-06-04T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.390Z</updated>
+    <title>三维重建与游戏制作 Reality Capture</title>
+    <link href="/2018/06/20/20180620-RealityCapture/"/>
+    <id>/2018/06/20/20180620-RealityCapture/</id>
+    <published>2018-06-19T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
     
-    <content type="html"><![CDATA[<p><img src="/img/drawings/mmexport1547456360676.jpg" alt></p><a id="more"></a><p><img src="/img/drawings/mmexport1547456354498.jpg" alt><br><img src="/img/drawings/mmexport1547456357703.jpg" alt><br><img src="/img/drawings/mmexport1547456348175.jpg" alt><br><img src="/img/drawings/mmexport1547456351541.jpg" alt><br><img src="/img/drawings/mmexport1547456363613.jpg" alt><br><img src="/img/drawings/mmexport1547456366892.jpg" alt><br><img src="/img/drawings/mmexport1547456370330.jpg" alt><br><img src="/img/drawings/mmexport1547456373428.jpg" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;/img/drawings/mmexport1547456360676.jpg&quot; alt&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="画" scheme="/tags/%E7%94%BB/"/>
-    
-      <category term="脑洞" scheme="/tags/%E8%84%91%E6%B4%9E/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>半透效果皮肤 (Aproximate Subserface-Scattering)</title>
-    <link href="/2018/05/26/20180526-ApproximateSSS/"/>
-    <id>/2018/05/26/20180526-ApproximateSSS/</id>
-    <published>2018-05-25T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.389Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/img/sssChunli.png" alt><br>开发测试环境：Unity, Android (小米Max2)</p><p>主要看<a href="https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/" target="_blank" rel="noopener">GDC2011这篇演讲</a><br>原理很简单，用光源反方向点乘视线方向，配合厚度图模拟半透效果</p><a id="more"></a><p>下面vLT的这个 0.2* normal 作者称之为 Subsurface Distortion<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">half3 vLT = normalize (lightDir + 0.2* normal);</span><br></pre></td></tr></table></figure></p><p>其实没什么用不如去掉，实际使用时只用了-L·V<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">half fLTDot = pow(saturate(dot(viewDir, -lightDir)), _SSSPower) * _SSSScale;</span><br></pre></td></tr></table></figure></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">half3 sss = thickness * (((_LightColor0.xyz * (fLTDot) + _SSSAmbient));</span><br></pre></td></tr></table></figure><h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/" target="_blank" rel="noopener">GDC 2011 – Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look</a><br><a href="https://www.alanzucconi.com/2017/08/30/fast-subsurface-scattering-1/" target="_blank" rel="noopener">Fast Subsurface Scattering in Unity</a></p>]]></content>
+    <content type="html"><![CDATA[<p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p><p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p><a id="more"></a><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image17.gif" alt></p>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;&lt;img src=&quot;/img/sssChunli.png&quot; alt&gt;&lt;br&gt;开发测试环境：Unity, Android (小米Max2)&lt;/p&gt;
-&lt;p&gt;主要看&lt;a href=&quot;https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;GDC2011这篇演讲&lt;/a&gt;&lt;br&gt;原理很简单，用光源反方向点乘视线方向，配合厚度图模拟半透效果&lt;/p&gt;
+      &lt;p&gt;&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;今天看到Unity的一篇博客文章 &lt;a href=&quot;https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Book of the Dead: Photogrammetry Assets, Trees, VFX&lt;/a&gt;&lt;br&gt;三维重建渐渐的实用化了。&lt;br&gt;想起大学在虚国重的日子，竟然已经十年了……&lt;/p&gt;
     
     </summary>
     
     
       <category term="Graphics" scheme="/tags/Graphics/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Shader - PBR BRDF</title>
-    <link href="/2018/05/25/20180525-BRDF/"/>
-    <id>/2018/05/25/20180525-BRDF/</id>
-    <published>2018-05-24T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.389Z</updated>
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
-    <content type="html"><![CDATA[<p>参考Unity的Standard Shader直接写个BRDF PBS的fragment shader，作为基础方便以后修改。</p><h3 id="v2f结构"><a href="#v2f结构" class="headerlink" title="v2f结构"></a>v2f结构</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">v2f</span> &#123;</span></span><br><span class="line">float4 pos : SV_POSITION;</span><br><span class="line">half4 pack0 : TEXCOORD0; <span class="comment">// _MainTex _BumpMap</span></span><br><span class="line">half3 viewDir : TEXCOORD01;</span><br><span class="line">half3 worldPos : TEXCOORD2;</span><br><span class="line">half3x3 tangentToWorld : TEXCOORD3;    <span class="comment">// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]</span></span><br><span class="line">SHADOW_COORDS(<span class="number">6</span>)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><a id="more"></a><h3 id="顶点"><a href="#顶点" class="headerlink" title="顶点"></a>顶点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/// Vertex</span><br><span class="line">v2f vert (appdata_full v)</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">o.pos = UnityObjectToClipPos(v.vertex);</span><br><span class="line">o.pack0.xy = TRANSFORM_TEX(v.texcoord, _MainTex);</span><br><span class="line">o.pack0.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// half3x3(tangent, binormal, normal)</span><br><span class="line">o.tangentToWorld = CreateTangentToWorldPerVertex(worldNormal, worldTangent.xyz, worldTangent.w);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>把uv都pack到TEXCOORD0</li><li>在顶点处建立tangentToWorld矩阵</li></ul><h3 id="BRDF"><a href="#BRDF" class="headerlink" title="BRDF"></a>BRDF</h3><p>UnityStandardBRDF.cginc 的 BRDF1_Unity_PBS</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_HANDLE_CORRECTLY_NEGATIVE_NDOTV</span></span><br><span class="line"><span class="comment">// The amount we shift the normal toward the view vector is defined by the dot product.</span></span><br><span class="line">half shiftAmount = dot(normal, viewDir);</span><br><span class="line">normal = shiftAmount &lt; <span class="number">0.0f</span> ? normal + viewDir * (-shiftAmount + <span class="number">1e-5</span>f) : normal;</span><br><span class="line"><span class="comment">// A re-normalization should be applied here but as the shift is small we don't do it to save ALU.</span></span><br><span class="line"><span class="comment">//normal = normalize(normal);</span></span><br><span class="line"></span><br><span class="line">half nv = saturate(dot(normal, viewDir)); <span class="comment">// <span class="doctag">TODO:</span> this saturate should no be necessary here</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">half nv = <span class="built_in">abs</span>(dot(normal, viewDir));    <span class="comment">// This abs allow to limit artifact</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">half nl = saturate(dot(normal, lightDir));</span><br><span class="line">half nh = saturate(dot(normal, halfDir));</span><br><span class="line"></span><br><span class="line">half lv = saturate(dot(lightDir, viewDir));</span><br><span class="line">half lh = saturate(dot(lightDir, halfDir));</span><br><span class="line"></span><br><span class="line">half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;</span><br><span class="line"></span><br><span class="line">half roughness = PerceptualRoughnessToRoughness(perceptualRoughness);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_BRDF_GGX</span></span><br><span class="line">half V = SmithJointGGXVisibilityTerm (nl, nv, roughness);</span><br><span class="line">half D = GGXTerm (nh, roughness);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="comment">// Legacy</span></span><br><span class="line">half V = SmithBeckmannVisibilityTerm (nl, nv, roughness);</span><br><span class="line">half D = NDFBlinnPhongNormalizedTerm (nh, PerceptualRoughnessToSpecPower(perceptualRoughness));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">half specularTerm = V * D * UNITY_PI; <span class="comment">// Torrance-Sparrow model, Fresnel is applied later</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> UNITY_COLORSPACE_GAMMA</span></span><br><span class="line">specularTerm = <span class="built_in">sqrt</span>(max(<span class="number">1e-4</span>h, specularTerm));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// specularTerm * nl can be NaN on Metal in some cases, use max() to make sure it's a sane value</span></span><br><span class="line">specularTerm = max(<span class="number">0</span>, specularTerm * nl);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(_SPECULARHIGHLIGHTS_OFF)</span></span><br><span class="line">specularTerm = <span class="number">0.0</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure><h3 id="Metallic-amp-Specular"><a href="#Metallic-amp-Specular" class="headerlink" title="Metallic &amp; Specular"></a>Metallic &amp; Specular</h3><p>Metallic<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fixed4 metallicGlossTex = tex2D(_MetallicGlossMap, uv);</span><br><span class="line">half metallic = _Metallic * metallicGlossTex.r;</span><br><span class="line">half smoothness = _Glossiness * metallicGlossTex.a;</span><br><span class="line"></span><br><span class="line">half oneMinusDielectricSpec = unity_ColorSpaceDielectricSpec.a;</span><br><span class="line">half oneMinusReflectivity = oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;</span><br><span class="line">fixed3 specColor = lerp (unity_ColorSpaceDielectricSpec.rgb, tex.rgb, metallic);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">half3 diffColor = tex * oneMinusReflectivity * occ;</span><br></pre></td></tr></table></figure></p><p>Specular<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fixed4 specTex = tex2D(_SpecGlossMap, uv);</span><br><span class="line">fixed3 specColor = specTex.rgb;</span><br><span class="line">half smoothness = _Glossiness * specTex.a;</span><br><span class="line"></span><br><span class="line">half oneMinusReflectivity = <span class="number">1</span> - SpecularStrength(specColor);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// EnergyConservationBetweenDiffuseAndSpecular</span></span><br><span class="line">half3 diffColor = tex * (half3(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>) - specColor) * occ;</span><br></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;参考Unity的Standard Shader直接写个BRDF PBS的fragment shader，作为基础方便以后修改。&lt;/p&gt;
-&lt;h3 id=&quot;v2f结构&quot;&gt;&lt;a href=&quot;#v2f结构&quot; class=&quot;headerlink&quot; title=&quot;v2f结构&quot;&gt;&lt;/a&gt;v2f结构&lt;/h3&gt;&lt;figure class=&quot;highlight c&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;v2f&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	float4 pos : SV_POSITION;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	half4 pack0 : TEXCOORD0; &lt;span class=&quot;comment&quot;&gt;// _MainTex _BumpMap&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	half3 viewDir : TEXCOORD01;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	half3 worldPos : TEXCOORD2;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	half3x3 tangentToWorld : TEXCOORD3;    &lt;span class=&quot;comment&quot;&gt;// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	SHADOW_COORDS(&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-    
-    </summary>
-    
-    
-      <category term="Graphics" scheme="/tags/Graphics/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>怎样画煎蛋</title>
-    <link href="/2018/05/04/20180504-Jiandan/"/>
-    <id>/2018/05/04/20180504-Jiandan/</id>
-    <published>2018-05-03T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.389Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/img/煎蛋的画法/dan00.jpg" alt></p><a id="more"></a><p><img src="/img/煎蛋的画法/dan01.jpg" alt><br><img src="/img/煎蛋的画法/dan02.jpg" alt><br><img src="/img/煎蛋的画法/dan03.jpg" alt><br><img src="/img/煎蛋的画法/dan04.jpg" alt><br><img src="/img/煎蛋的画法/dan05.jpg" alt><br><img src="/img/煎蛋的画法/dan06.jpg" alt><br><img src="/img/煎蛋的画法/dan07.jpg" alt><br><img src="/img/煎蛋的画法/dan08.jpg" alt><br><img src="/img/煎蛋的画法/dan09.jpg" alt></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;/img/煎蛋的画法/dan00.jpg&quot; alt&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="画" scheme="/tags/%E7%94%BB/"/>
+      <category term="Unity" scheme="/tags/Unity/"/>
     
   </entry>
   

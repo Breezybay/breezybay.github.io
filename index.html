@@ -152,7 +152,7 @@
         </div>
 <!--         <div class="article-info profile-block">
             <div class="article-info-block">
-                39
+                43
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -187,6 +187,530 @@
 
             
             <section id="main">
+    <article id="post-20200501-NonDestructive_LayerBased_Terrain" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/">Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/">
+            <time datetime="2020-04-30T16:00:00.000Z" itemprop="datePublished">2020-05-01</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><img src="/img/ta/LayeredTerrain.gif" alt></p>
+<h3 id="定义-What"><a href="#定义-What" class="headerlink" title="定义 (What)"></a>定义 (What)</h3><p>A non-destructive workflow means you can go backwards at any time.<br>一个非破坏性的工作流意味着你可以在任何时候回退。</p>
+<p>A good analogy is layers in photoshop - we write information into these layers instead of the terrain, and then combine those layers of data into one final output.<br>一个很好的类比是Photoshop里的图层 - 我们把信息写入这些图层而不是地形，然后合并这些图层的数据到最终输出。</p>
+<h3 id="原因-Why"><a href="#原因-Why" class="headerlink" title="原因 (Why)"></a>原因 (Why)</h3><p>使用基于图层的工作流提供可以回退，融合，覆盖的操作。增加创作力，提升工作效率。</p>
+<h3 id="方案-How"><a href="#方案-How" class="headerlink" title="方案 (How)"></a>方案 (How)</h3><p>参考Unreal <a href="http://confluence.wd.com/pages/viewpage.action?pageId=23155996" target="_blank" rel="noopener">非破坏性地形图层和样条 Non-Destructive Landscape Layers and Splines</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/" data-id="ckdct0k0v0006q8udtaeeymk9" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-20200418-TerrainTiling" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2020/04/18/20200418-TerrainTiling/">Terrain Tiling</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2020/04/18/20200418-TerrainTiling/">
+            <time datetime="2020-04-17T16:00:00.000Z" itemprop="datePublished">2020-04-18</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <table>
+<thead>
+<tr>
+<th style="text-align:center">Unity Built-In</th>
+<th style="text-align:center"></th>
+<th style="text-align:center">Micro-Macro Variations with Noise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="/img/ta/TerrainTiling1.jpg" alt></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><img src="/img/ta/TerrainTiling2.jpg" alt></td>
+</tr>
+</tbody>
+</table>
+<p>在野外需要大面积绘制地形的情况下，地形渲染消耗 + 0.1~0.2ms @750Ti</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2020/04/18/20200418-TerrainTiling/" data-id="ckdct0k0d0001q8udtae2rhle" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-20200329-Simplygon" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2020/03/29/20200329-Simplygon/">Simplygon HLOD for Unity</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2020/03/29/20200329-Simplygon/">
+            <time datetime="2020-03-28T16:00:00.000Z" itemprop="datePublished">2020-03-29</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p><a href="https://simplygon.com/Downloads" target="_blank" rel="noopener">Simplygon SDK</a>，Simplygon SDK 需要 Win10。<br>Unity中导入Simplygon Plugin，需要Unity版本5.5以上，目前Simplygon官方不维护Unity，需要自己处理。</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>合并方法可以参考Unity官方的AutoLOD：<a href="https://github.com/Unity-Technologies/AutoLOD/blob/master/Scripts/Editor/MeshSimplifiers/SimplygonMeshSimplifier.cs" target="_blank" rel="noopener">SimplygonMeshSimplifier</a></p>
+<p>使用RemeshingProcessor；<br>在RemeshingSettings中，设置OnScreenSize，HardEdgeAngleInRadians；<br>在MappingImageSettings中，设置TexCoordGeneratorType，UseFullRetexturing，Width，Height；</p>
+<p>执行过程中，Simplygon Plugin在某些情况下会报错（比如模型Material数量少于SubMesh数量），可以定位报错位置并使用<a href="https://github.com/0xd4d/dnSpy" target="_blank" rel="noopener">dnSpy</a>对其进行反编译后修复。</p>
+<p>生成Simplygon资源过程中的性能瓶颈主要在于从Unity上传资源到Simplygon及合并后的资源Download到Unity。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2020/03/29/20200329-Simplygon/" data-id="ckdbm2qvy0000jsud6u18mxfl" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-20191006-TerrainDetailUtil" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2019/10/06/20191006-TerrainDetailUtil/">ComputeShader Noise</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2019/10/06/20191006-TerrainDetailUtil/">
+            <time datetime="2019-10-05T16:00:00.000Z" itemprop="datePublished">2019-10-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Unity/">Unity</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>可以用 <a href="https://github.com/keijiro" target="_blank" rel="noopener">Keijiro Takahashi</a>的<a href="https://github.com/keijiro/NoiseShader" target="_blank" rel="noopener">Noise Shader Library for Unity</a></p>
+<h4 id="ComputeShader"><a href="#ComputeShader" class="headerlink" title="ComputeShader"></a>ComputeShader</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mask = Perlin( xy / NoiseScale * Resolution )</span><br><span class="line"></span><br><span class="line">Final[id] = min( Final[id] * mask * Offset, Cap);</span><br></pre></td></tr></table></figure>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="/2019/10/06/20191006-TerrainDetailUtil/" data-id="ckdct0k020000q8ud1m0rsot1" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-20190915-PostprocessMSPaint" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -253,7 +777,7 @@
 
 </div>
 
-    <a data-url="/2019/09/15/20190915-PostprocessMSPaint/" data-id="ck24slckg0032hkqj344mw3fr" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/09/15/20190915-PostprocessMSPaint/" data-id="ck84jbmfy002picudqvdcl4sy" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -395,7 +919,7 @@
 
 </div>
 
-    <a data-url="/2019/08/18/20190818-TexelDensity/" data-id="ck24slcjo001vhkqjkortri7b" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/08/18/20190818-TexelDensity/" data-id="ck84jbmg0002ricudrzd6epqu" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -511,9 +1035,7 @@
             <p><!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) -->
 <h2 id="Metal-Roughness-Workflow-总结"><a href="#Metal-Roughness-Workflow-总结" class="headerlink" title="Metal / Roughness Workflow 总结"></a>Metal / Roughness Workflow 总结</h2><h4 id="纯金属-Metallic-gt-235"><a href="#纯金属-Metallic-gt-235" class="headerlink" title="纯金属  (Metallic &gt; 235)"></a>纯金属  (Metallic &gt; 235)</h4><ul>
 <li>BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB</li>
-<li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流</li>
-</ul>
-<h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4><ul>
+<li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流<br>hexo<h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4></li>
 <li>BaseColor暗部<strong>不应低于30-50 sRGB</strong>, 亮部<strong>不应高于 240 sRGB</strong></li>
 </ul>
 <p>符合PBR规则可以使素材<strong>在任何光照条件下都有合理的表现</strong></p>
@@ -533,7 +1055,7 @@
 
 </div>
 
-    <a data-url="/2019/08/17/20190817-PBRTextureGuideline/" data-id="ck24slckk003ahkqj2pzzzw8z" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/08/17/20190817-PBRTextureGuideline/" data-id="ck84jbmfv002licudj6z22f3d" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -659,7 +1181,7 @@
 
 </div>
 
-    <a data-url="/2019/07/27/20190727-ShadowProxy/" data-id="ck24slcjn001thkqjx4p1uhsf" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/07/27/20190727-ShadowProxy/" data-id="ck84jbmfr002hicudxejj7eyk" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -794,7 +1316,7 @@
 
 </div>
 
-    <a data-url="/2019/07/06/20190706-Vegetation_SpeedTree/" data-id="ck24slcjl001qhkqjipwvnrix" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/07/06/20190706-Vegetation_SpeedTree/" data-id="ck84jbmfx002nicudn0f4em4k" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -921,530 +1443,7 @@
 
 </div>
 
-    <a data-url="/2019/06/15/20190615-GlowOutline/" data-id="ck24slcjk001ohkqj6ci0lkrz" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20190614-Fresnel" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2019/06/14/20190614-Fresnel/">Fresnel</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2019/06/14/20190614-Fresnel/">
-            <time datetime="2019-06-13T16:00:00.000Z" itemprop="datePublished">2019-06-14</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h3 id="Fresnel"><a href="#Fresnel" class="headerlink" title="Fresnel"></a>Fresnel</h3><p><img src="/img/graphics/EveryThingHasFresnel.jpg" alt></p>
-<h2 id="Example-Water-Fresnel"><a href="#Example-Water-Fresnel" class="headerlink" title="Example Water Fresnel"></a>Example Water Fresnel</h2><p><img src="/img/graphics/waterFresnel.png" alt></p>
-<p><img src="/img/graphics/fresnelOnly.jpg" alt></p></p>
-            <p class="article-more-link">
-                <a href="/2019/06/14/20190614-Fresnel/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2019/06/14/20190614-Fresnel/" data-id="ck24slcjj001mhkqjsbc0m3p5" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20190601-SphericalHarmonics" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2019/06/01/20190601-SphericalHarmonics/">光照探针(LightProbe) 与 球谐(Spherical Harmonics)</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2019/06/01/20190601-SphericalHarmonics/">
-            <time datetime="2019-05-31T16:00:00.000Z" itemprop="datePublished">2019-06-01</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/Graphics/">Graphics</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>需求：可以手动自定义，并且随Prefab保存的LightProbe</p>
-<h4 id="球谐函数-Spherical-Harmonics"><a href="#球谐函数-Spherical-Harmonics" class="headerlink" title="球谐函数 (Spherical Harmonics)"></a>球谐函数 (Spherical Harmonics)</h4><p><img src="/img/graphics/Spherical_Harmonics.jpg" alt></p>
-<p>正经定义：<br>球谐函数是拉普拉斯方程的球坐标系形式解的角度部分</p>
-<p>自分白话解释：<br>球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色</p>
-<p>Unity中使用的是二阶球谐函数 <a href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html" target="_blank" rel="noopener">SphericalHarmonicsL2</a>，保存为9个系数(27个float)，使用时转换为7个Vector4提供给Shader(参考buitin shaders中的ShadeSH9)</p>
-<p>Unity的实现参考的是 <a href="http://www.ppsloan.org/publications/StupidSH36.pdf" target="_blank" rel="noopener">Stupid Spherical Harmonics (SH) Tricks</a></p>
-<p>官方文档中关于光照探针的技术信息： <a href="https://docs.unity3d.com/Manual/LightProbes-TechnicalInformation.html" target="_blank" rel="noopener">Light Probes: Technical information</a></p>
-<p>关于SH一篇非常好的文章： <a href="https://patapom.com/blog/SHPortal/" target="_blank" rel="noopener">Benoît Mayaux (Patapom), Spherical Harmonics</a></p>
-<p>还有企鹅学院的两篇：<br>(Unity Shader球谐光照解析)[<a href="https://gameinstitute.qq.com/community/detail/124147]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/124147]</a><br>(球谐光照（spherical harmonic lighting）解析)[<a href="https://gameinstitute.qq.com/community/detail/123183]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/123183]</a></p>
-<h4 id="自动布置LightProbe"><a href="#自动布置LightProbe" class="headerlink" title="自动布置LightProbe"></a>自动布置LightProbe</h4><p>将需要LightProbe的位置赋值给 <a href="https://docs.unity3d.com/ScriptReference/LightProbeGroup-probePositions.html" target="_blank" rel="noopener">LightProbeGroup.probePositions</a></p>
-<p>官方例子：<a href="https://docs.unity3d.com/Manual/LightProbes-Placing-Scripting.html" target="_blank" rel="noopener">Placing probes using scripting</a></p>
-<h4 id="Unity中手动计算SH"><a href="#Unity中手动计算SH" class="headerlink" title="Unity中手动计算SH"></a>Unity中手动计算SH</h4><p><img src="/img/graphics/mlpDemo.jpg" alt></p>
-<p>SphericalHarmonicsL2提供两个方法</p>
-<ul>
-<li>添加环境光(AddAmbientLight)</li>
-<li>添加平行光(AddDirectionalLight)</li>
-</ul>
-<p>Unity官方文档提供了一个例子：[LightProbes.bakedProbes(Unity文档)]<a href="https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html</a></p></p>
-            <p class="article-more-link">
-                <a href="/2019/06/01/20190601-SphericalHarmonics/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2019/06/01/20190601-SphericalHarmonics/" data-id="ck24slcji001jhkqjwx6jnqm4" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20190112-animalBoxing" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2019/01/12/20190112-animalBoxing/">收拾东西翻出一套搁置脑洞 (Animal Boxing)</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2019/01/12/20190112-animalBoxing/">
-            <time datetime="2019-01-11T16:00:00.000Z" itemprop="datePublished">2019-01-12</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/Game-Dev/">Game Dev</a>, <a class="tag-link" href="/tags/画/">画</a>, <a class="tag-link" href="/tags/脑洞/">脑洞</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p><img src="/img/animalboxing/mmexport1547290455260.png" alt></p></p>
-            <p class="article-more-link">
-                <a href="/2019/01/12/20190112-animalBoxing/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2019/01/12/20190112-animalBoxing/" data-id="ck24slcjh001hhkqj5nctu8ll" class="article-share-link"><i class="fas fa-share"></i>分享</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-20181214-Axidaka_Kaya" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/12/14/20181214-Axidaka_Kaya/">阿西达卡与卡雅</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/12/14/20181214-Axidaka_Kaya/">
-            <time datetime="2018-12-13T16:00:00.000Z" itemprop="datePublished">2018-12-14</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/画/">画</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p><img src="/img/drawings/mmexport1547466623253.jpg" alt></p></p>
-            <p class="article-more-link">
-                <a href="/2018/12/14/20181214-Axidaka_Kaya/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="/2018/12/14/20181214-Axidaka_Kaya/" data-id="ck24slcjf001ehkqjf69eykwf" class="article-share-link"><i class="fas fa-share"></i>分享</a>
+    <a data-url="/2019/06/15/20190615-GlowOutline/" data-id="ck84jbmfp002ficudc3wwshhy" class="article-share-link"><i class="fas fa-share"></i>分享</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1521,7 +1520,7 @@
 
 
     <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
 </section>
             
@@ -1533,6 +1532,82 @@
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/ta/LayeredTerrain.gif)" alt="Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/" class="title">Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</a></p>
+                            <p class="item-date"><time datetime="2020-04-30T16:00:00.000Z" itemprop="datePublished">2020-05-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/04/18/20200418-TerrainTiling/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/ta/TerrainTiling2.jpg)" alt="Terrain Tiling" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2020/04/18/20200418-TerrainTiling/" class="title">Terrain Tiling</a></p>
+                            <p class="item-date"><time datetime="2020-04-17T16:00:00.000Z" itemprop="datePublished">2020-04-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/03/29/20200329-Simplygon/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/img/SimplygonHLODExample.jpg)" alt="Simplygon HLOD for Unity" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2020/03/29/20200329-Simplygon/" class="title">Simplygon HLOD for Unity</a></p>
+                            <p class="item-date"><time datetime="2020-03-28T16:00:00.000Z" itemprop="datePublished">2020-03-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/10/06/20191006-TerrainDetailUtil/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/10/06/20191006-TerrainDetailUtil/" class="title">ComputeShader Noise</a></p>
+                            <p class="item-date"><time datetime="2019-10-05T16:00:00.000Z" itemprop="datePublished">2019-10-06</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1553,82 +1628,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/08/18/20190818-TexelDensity/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/img/graphics/TexelDensityViewMode1.jpg)" alt="Texel Density View Mode" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/08/18/20190818-TexelDensity/" class="title">Texel Density View Mode</a></p>
-                            <p class="item-date"><time datetime="2019-08-17T16:00:00.000Z" itemprop="datePublished">2019-08-18</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/08/17/20190817-PBRTextureGuideline/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f)" alt="PBR 贴图制作准则" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/08/17/20190817-PBRTextureGuideline/" class="title">PBR 贴图制作准则</a></p>
-                            <p class="item-date"><time datetime="2019-08-16T16:00:00.000Z" itemprop="datePublished">2019-08-17</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/07/27/20190727-ShadowProxy/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/img/graphics/ShadowProxyComarison.jpg)" alt="阴影代理 (Shadow Proxy)" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/07/27/20190727-ShadowProxy/" class="title">阴影代理 (Shadow Proxy)</a></p>
-                            <p class="item-date"><time datetime="2019-07-26T16:00:00.000Z" itemprop="datePublished">2019-07-27</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/07/06/20190706-Vegetation_SpeedTree/" class="title">植被制作流程 Vegetation and SpeedTree</a></p>
-                            <p class="item-date"><time datetime="2019-07-05T16:00:00.000Z" itemprop="datePublished">2019-07-06</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1640,7 +1639,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">July 2013</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1649,7 +1648,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Game-Dev/">Game Dev</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Graphics/">Graphics</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/">Unity</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/照片/">照片</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/画/">画</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/脑洞/">脑洞</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观后感/">观后感</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">6</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Game-Dev/">Game Dev</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Graphics/">Graphics</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity/">Unity</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/照片/">照片</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/画/">画</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/脑洞/">脑洞</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观后感/">观后感</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -1658,7 +1657,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Game-Dev/" style="font-size: 18.33px;">Game Dev</a> <a href="/tags/Graphics/" style="font-size: 20px;">Graphics</a> <a href="/tags/Unity/" style="font-size: 13.33px;">Unity</a> <a href="/tags/照片/" style="font-size: 11.67px;">照片</a> <a href="/tags/画/" style="font-size: 16.67px;">画</a> <a href="/tags/脑洞/" style="font-size: 13.33px;">脑洞</a> <a href="/tags/观后感/" style="font-size: 10px;">观后感</a> <a href="/tags/读书笔记/" style="font-size: 15px;">读书笔记</a>
+            <a href="/tags/Game-Dev/" style="font-size: 20px;">Game Dev</a> <a href="/tags/Graphics/" style="font-size: 18.57px;">Graphics</a> <a href="/tags/Unity/" style="font-size: 17.14px;">Unity</a> <a href="/tags/照片/" style="font-size: 11.43px;">照片</a> <a href="/tags/画/" style="font-size: 15.71px;">画</a> <a href="/tags/脑洞/" style="font-size: 12.86px;">脑洞</a> <a href="/tags/观后感/" style="font-size: 10px;">观后感</a> <a href="/tags/读书笔记/" style="font-size: 14.29px;">读书笔记</a>
         </div>
     </div>
 
@@ -1691,7 +1690,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2019 Breezy Bay<br>
+            &copy; 2020 Breezy Bay<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>
