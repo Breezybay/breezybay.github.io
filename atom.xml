@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Breezy Bay</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="/"/>
+  <updated>2021-07-21T13:01:22.370Z</updated>
+  <id>/</id>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Substance Painter - Unity 效果还原的一种方法</title>
+    <link href="/2021/05/01/20210501-SubstancePainter_Unity/"/>
+    <id>/2021/05/01/20210501-SubstancePainter_Unity/</id>
+    <published>2021-04-30T16:00:00.000Z</published>
+    <updated>2021-07-21T13:01:22.370Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/ta/meetmat2-title.jpg" alt></p><p>美术经常有这样的困扰，“为什么我在SP里的效果是这样的，进了Unity就变成那样了？”</p><p>对于美术生产来说，不能所见即所得，进引擎的最终效果靠猜，是非常不利于美术创作的。</p><p>另一方面，没有这样的一个与引擎内效果统一的生产环境，也不利于外包的工作。</p><p>所以引擎与生产环境效果的统一，是打通PBR Pipeline的重要一环，对工业化水平的提升是非常有意义的。</p><p>目前网上找到的分享中，大都有这样的困扰，就是由于Unity和SP两边光照环境的区别，很难做到非常一致的效果。</p><p>这里给大家分享一个Unity效果还原到SP的方法，通过将Unity的光照与Shader还原到SP中，基本可以做到两边的效果比较相似。</p><a id="more"></a><h3 id="光照环境"><a href="#光照环境" class="headerlink" title="光照环境"></a>光照环境</h3><p>在SP的Shader中直接写入直接光照来统一两边表现可以比较简单的实现，这里按下不表，主要讲一下怎么把Unity的环境高光挪到SP里。</p><p>SP中是通过对环境进行重要性采样来计算IBL的，而Unity中是根据粗糙度来采样Cubemap，但是这个Cubemap是Unity提前Bake好的。</p><p><img src="/img/ta/sp-baked.jpg" alt><br>Studio 03 的mipmap，在Unity（上）与SP（下）中的对比</p><p>挖了下Unity源码，没有看到具体是怎么Bake的，所以使用了非常暴力的做法，直接把Unity烘焙好的环境球提供给SP，Shader直接采样这个Unity的Cubemap，不再采样SP自己的环境。通过这样的方式，来统一两边的环境光照。</p><h3 id="Shader"><a href="#Shader" class="headerlink" title="Shader"></a>Shader</h3><p>Substance的API文档和自带的几个Shader都是很好的参考对象。</p><p>Shader相对比较直接，把Unity的算法搬过来就好，基本在以下几个地方：</p><p>Internal-DeferredReflections<br>UnityPBSLighting<br>UnityGlobalIllumination<br>UnityStandardBRDF<br>UnityImageBasedLighting</p><p>可以先把half3这些define了，把常用函数也复制过来，抄起来方便很多，这点可以参考nagnae的这篇blog文章。另外这篇文章的最后也准备了懒人包。</p><p>因为是先写了原生Unity 5.6的效果再在那个的基础上还原自己项目的Shader，这里稍微分享下原生Unity SP Shader的片段。</p><p>间接高光部分。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">half3 IndirectSpecular(LocalVectors vectors, half roughness, half occlusion)</span><br><span class="line">&#123;</span><br><span class="line">    roughness = roughness*(1.7 - 0.7*roughness);</span><br><span class="line"></span><br><span class="line">    half mip = perceptualRoughnessToMipmapLevel(roughness);</span><br><span class="line">    half3 reflUVW = reflect(-vectors.eye, vectors.normal);</span><br><span class="line">    </span><br><span class="line">    half3 env0 = envSampleLODCustom(reflUVW, mip).rgb;</span><br><span class="line"></span><br><span class="line">    return env0 * occlusion;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="/img/ta/meetmat2-comparison.jpg" alt><br>写Shader的过程中可以通过对比一些中间结果确定自己没跑偏，上图显示的是mip</p><p>BRDF（连人家的注释都一起抄过来），这里只有高光。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">half3 UNITY_BRDF_PBS(LocalVectors vectors, UnityStandardData data, float oneMinusReflectivity)</span><br><span class="line">&#123;</span><br><span class="line">  half perceptualRoughness = SmoothnessToPerceptualRoughness (data.smoothness);</span><br><span class="line">  half roughness = PerceptualRoughnessToRoughness(perceptualRoughness);</span><br><span class="line"></span><br><span class="line">  vec3 Ln = half3(0, 1, 0);</span><br><span class="line">  vec3 Hn = normalize(Ln + vectors.eye);</span><br><span class="line"></span><br><span class="line">  float nv = saturate(dot(data.normalWorld, vectors.eye));</span><br><span class="line">  float nl = saturate(dot(vectors.normal, Ln));</span><br><span class="line">  float nh = saturate(dot(vectors.normal, Hn));</span><br><span class="line"></span><br><span class="line">  float lv = saturate(dot(Ln, vectors.eye));</span><br><span class="line">  float lh = saturate(dot(Ln, Hn));</span><br><span class="line"></span><br><span class="line">  float vh = saturate(dot(vectors.eye, Hn));</span><br><span class="line"></span><br><span class="line">  half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;</span><br><span class="line"></span><br><span class="line">  half V = SmithJointGGXVisibilityTerm (nl, nv, roughness);</span><br><span class="line">  half D = GGXTerm (nh, roughness);</span><br><span class="line"></span><br><span class="line">  half specularTerm = V * D * 3.14159265359; // Torrance-Sparrow model, Fresnel is applied later</span><br><span class="line">  // specularTerm * nl can be NaN on Metal in some cases, use max() to make sure it&apos;s a sane value</span><br><span class="line">  specularTerm = max(0, specularTerm * nl);</span><br><span class="line"></span><br><span class="line">  // To provide true Lambert lighting, we need to be able to kill specular completely.</span><br><span class="line">  specularTerm *= any(data.specularColor) ? 1.0 : 0.0;</span><br><span class="line"></span><br><span class="line">  // surfaceReduction = Int D(NdotH) * NdotH * Id(NdotL&gt;0) dH = 1/(roughness^2+1)</span><br><span class="line">  float surfaceReduction = 1.0 / (roughness*roughness + 1.0);</span><br><span class="line"></span><br><span class="line">  half grazingTerm = saturate(data.smoothness + (1 - oneMinusReflectivity));</span><br><span class="line"></span><br><span class="line">  return surfaceReduction * IndirectSpecular(vectors, perceptualRoughness, data.occlusion) * FresnelLerp(data.specularColor, vec3(grazingTerm), nv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>放一个原生Unity配Substance Painter的效果。<br><img src="/img/ta/meetmat2-title-ori.jpg" alt></p><h3 id="写在最后的一些实用小东西"><a href="#写在最后的一些实用小东西" class="headerlink" title="写在最后的一些实用小东西"></a>写在最后的一些实用小东西</h3><h5 id="在SP里刷新Shader"><a href="#在SP里刷新Shader" class="headerlink" title="在SP里刷新Shader"></a>在SP里刷新Shader</h5><p>SP的Custom Shader是不会实时更新效果的，如何在SP里刷新修改后的Shader呢？</p><p>首先在某个位置创建自己的glsl Shader；</p><p>然后将Shader文件拖进SP，在导入设置里选择project项；</p><p><img src="/img/ta/Import Shader to project.jpg" alt></p><p>修改了Shader文件，想要在SP中看到效果的时候，右键Shader选择Reload；</p><p>这个小技巧是参考了<a href="https://qiita.com/harayoki/items/0d9ac27435246cbd0fbd" target="_blank" rel="noopener">harayoki的分享</a>。</p><h5 id="Unity环境球转到Substance的一些细节"><a href="#Unity环境球转到Substance的一些细节" class="headerlink" title="Unity环境球转到Substance的一些细节"></a>Unity环境球转到Substance的一些细节</h5><p>SP不认Cubemap，所以需要做一个转换。</p><p>这个Staff推荐的HDRShop我只试了v1，不太好用。推荐使用ImageViewer这个工具，很方便。</p><h3 id="懒人包"><a href="#懒人包" class="headerlink" title="懒人包"></a>懒人包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">half Pow5 (half x)</span><br><span class="line">&#123;</span><br><span class="line">    return x*x * x*x * x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half SpecularStrength(half3 specular)</span><br><span class="line">&#123;</span><br><span class="line">    return max (max (specular.r, specular.g), specular.b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half perceptualRoughnessToMipmapLevel(half perceptualRoughness)</span><br><span class="line">&#123;</span><br><span class="line">    return perceptualRoughness * MIP_STEP;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness)</span><br><span class="line">&#123;</span><br><span class="line">    half fd90 = 0.5 + 2 * LdotH * LdotH * perceptualRoughness;</span><br><span class="line">    // Two schlick fresnel term</span><br><span class="line">    half lightScatter   = (1 + (fd90 - 1) * Pow5(1 - NdotL));</span><br><span class="line">    half viewScatter    = (1 + (fd90 - 1) * Pow5(1 - NdotV));</span><br><span class="line"></span><br><span class="line">    return lightScatter * viewScatter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half SmithJointGGXVisibilityTerm (half NdotL, half NdotV, half roughness)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    half a = roughness;</span><br><span class="line">    half lambdaV = NdotL * (NdotV * (1 - a) + a);</span><br><span class="line">    half lambdaL = NdotV * (NdotL * (1 - a) + a);</span><br><span class="line"></span><br><span class="line">    return 0.5f / (lambdaV + lambdaL + 1e-5f);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half GGXTerm (half NdotH, half roughness)</span><br><span class="line">&#123;</span><br><span class="line">    half a2 = roughness * roughness;</span><br><span class="line">    half d = (NdotH * a2 - NdotH) * NdotH + 1.0f; // 2 mad</span><br><span class="line">    return 0.31830988618 * a2 / (d * d + 1e-7f); // This function is not intended to be running on Mobile,</span><br><span class="line">                                            // therefore epsilon is smaller than what can be represented by half</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half3 FresnelLerp(half3 F0, half3 F90, half cosA)</span><br><span class="line">&#123;</span><br><span class="line">  half t = Pow5(1 - cosA);   // ala Schlick interpoliation</span><br><span class="line">  return lerp(F0, F90, t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half3 DiffuseFromMetallic (half3 albedo, half metallic)</span><br><span class="line">&#123;</span><br><span class="line">    float oneMinusReflectivity = OneMinusReflectivityFromMetallic(metallic);</span><br><span class="line">    return albedo * oneMinusReflectivity;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">half3 SpecularFromMetallic (half3 albedo, half metallic)</span><br><span class="line">&#123;</span><br><span class="line">    return lerp (unity_ColorSpaceDielectricSpec.rgb, albedo, metallic);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li>Substance Docs，Shader API，2021</li><li>Razor Yang，简单聊聊CODM的图形，2021</li><li>harayoki,【SubstancePainter】編集中のシェーダーをすぐさまリロードする, 2019</li><li>nagnae，Substance Painter’s shader for Unity，2018</li><li>月光下的旅行，Substance Painter Shader与UE4移动端渲染效果同步2020</li><li>IanBanks, arma 3 substance shader, 2018</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/ta/meetmat2-title.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;美术经常有这样的困扰，“为什么我在SP里的效果是这样的，进了Unity就变成那样了？”&lt;/p&gt;
+&lt;p&gt;对于美术生产来说，不能所见即所得，进引擎的最终效果靠猜，是非常不利于美术创作的。&lt;/p&gt;
+&lt;p&gt;另一方面，没有这样的一个与引擎内效果统一的生产环境，也不利于外包的工作。&lt;/p&gt;
+&lt;p&gt;所以引擎与生产环境效果的统一，是打通PBR Pipeline的重要一环，对工业化水平的提升是非常有意义的。&lt;/p&gt;
+&lt;p&gt;目前网上找到的分享中，大都有这样的困扰，就是由于Unity和SP两边光照环境的区别，很难做到非常一致的效果。&lt;/p&gt;
+&lt;p&gt;这里给大家分享一个Unity效果还原到SP的方法，通过将Unity的光照与Shader还原到SP中，基本可以做到两边的效果比较相似。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</title>
+    <link href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/"/>
+    <id>/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/</id>
+    <published>2020-04-30T16:00:00.000Z</published>
+    <updated>2020-08-02T08:43:00.744Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/ta/LayeredTerrain.gif" alt></p><a id="more"></a><h3 id="定义-What"><a href="#定义-What" class="headerlink" title="定义 (What)"></a>定义 (What)</h3><p>A non-destructive workflow means you can go backwards at any time.<br>一个非破坏性的工作流意味着你可以在任何时候回退。</p><p>A good analogy is layers in photoshop - we write information into these layers instead of the terrain, and then combine those layers of data into one final output.<br>一个很好的类比是Photoshop里的图层 - 我们把信息写入这些图层而不是地形，然后合并这些图层的数据到最终输出。</p><h3 id="原因-Why"><a href="#原因-Why" class="headerlink" title="原因 (Why)"></a>原因 (Why)</h3><p>使用基于图层的工作流提供可以回退，融合，覆盖的操作。增加创作力，提升工作效率。</p><h3 id="方案-How"><a href="#方案-How" class="headerlink" title="方案 (How)"></a>方案 (How)</h3><p>参考Unreal <a href="http://confluence.wd.com/pages/viewpage.action?pageId=23155996" target="_blank" rel="noopener">非破坏性地形图层和样条 Non-Destructive Landscape Layers and Splines</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/ta/LayeredTerrain.gif&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Terrain Tiling</title>
+    <link href="/2020/04/18/20200418-TerrainTiling/"/>
+    <id>/2020/04/18/20200418-TerrainTiling/</id>
+    <published>2020-04-17T16:00:00.000Z</published>
+    <updated>2020-08-02T08:05:27.169Z</updated>
+    
+    <content type="html"><![CDATA[<table><thead><tr><th style="text-align:center">Unity Built-In</th><th style="text-align:center"></th><th style="text-align:center">Micro-Macro Variations with Noise</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/ta/TerrainTiling1.jpg" alt></td><td style="text-align:center">-</td><td style="text-align:center"><img src="/img/ta/TerrainTiling2.jpg" alt></td></tr></tbody></table><p>在野外需要大面积绘制地形的情况下，地形渲染消耗 + 0.1~0.2ms @750Ti</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;Unity Built-In&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;Mic
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Simplygon HLOD for Unity</title>
+    <link href="/2020/03/29/20200329-Simplygon/"/>
+    <id>/2020/03/29/20200329-Simplygon/</id>
+    <published>2020-03-28T16:00:00.000Z</published>
+    <updated>2020-08-02T06:39:02.133Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p><a href="https://simplygon.com/Downloads" target="_blank" rel="noopener">Simplygon SDK</a>，Simplygon SDK 需要 Win10。<br>Unity中导入Simplygon Plugin，需要Unity版本5.5以上，目前Simplygon官方不维护Unity，需要自己处理。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>合并方法可以参考Unity官方的AutoLOD：<a href="https://github.com/Unity-Technologies/AutoLOD/blob/master/Scripts/Editor/MeshSimplifiers/SimplygonMeshSimplifier.cs" target="_blank" rel="noopener">SimplygonMeshSimplifier</a></p><p>使用RemeshingProcessor；<br>在RemeshingSettings中，设置OnScreenSize，HardEdgeAngleInRadians；<br>在MappingImageSettings中，设置TexCoordGeneratorType，UseFullRetexturing，Width，Height；</p><p>执行过程中，Simplygon Plugin在某些情况下会报错（比如模型Material数量少于SubMesh数量），可以定位报错位置并使用<a href="https://github.com/0xd4d/dnSpy" target="_blank" rel="noopener">dnSpy</a>对其进行反编译后修复。</p><p>生成Simplygon资源过程中的性能瓶颈主要在于从Unity上传资源到Simplygon及合并后的资源Download到Unity。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;环境&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://simplygon.com/Downloads&quot; target=&quot;_blank&quot; rel=&quot;noopene
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ComputeShader Noise</title>
+    <link href="/2019/10/06/20191006-TerrainDetailUtil/"/>
+    <id>/2019/10/06/20191006-TerrainDetailUtil/</id>
+    <published>2019-10-05T16:00:00.000Z</published>
+    <updated>2020-08-02T07:52:05.494Z</updated>
+    
+    <content type="html"><![CDATA[<p>可以用 <a href="https://github.com/keijiro" target="_blank" rel="noopener">Keijiro Takahashi</a>的<a href="https://github.com/keijiro/NoiseShader" target="_blank" rel="noopener">Noise Shader Library for Unity</a></p><h4 id="ComputeShader"><a href="#ComputeShader" class="headerlink" title="ComputeShader"></a>ComputeShader</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mask = Perlin( xy / NoiseScale * Resolution )</span><br><span class="line"></span><br><span class="line">Final[id] = min( Final[id] * mask * Offset, Cap);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;可以用 &lt;a href=&quot;https://github.com/keijiro&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Keijiro Takahashi&lt;/a&gt;的&lt;a href=&quot;https://github.com/keijiro/NoiseSh
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Resize Textures with MSPaint Algorithm via Postprocess</title>
+    <link href="/2019/09/15/20190915-PostprocessMSPaint/"/>
+    <id>/2019/09/15/20190915-PostprocessMSPaint/</id>
+    <published>2019-09-14T16:00:00.000Z</published>
+    <updated>2019-10-20T09:01:23.205Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Example-2048-gt-1024"><a href="#Example-2048-gt-1024" class="headerlink" title="Example (2048 -&gt; 1024)"></a>Example (2048 -&gt; 1024)</h3><table><thead><tr><th style="text-align:center">Unity Built-In (Unity自带)</th><th style="text-align:center"></th><th style="text-align:center">MSPaint Kernel（后处理加入画图锐化）</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/graphics/MSPaint_UnityBuiltIn.jpg" alt></td><td style="text-align:center">-</td><td style="text-align:center"><img src="/img/graphics/MSPaint_MSPaint.jpg" alt></td></tr></tbody></table><p>MSPaint provides better resize results as stated in <a href="https://computergraphics.stackexchange.com/questions/2246/which-interpolation-algorithm-does-ms-paint-on-windows-7-use-for-image-rescaling" target="_blank" rel="noopener">Which interpolation algorithm does MS Paint on Windows 7 use for image rescaling?</a></p><a id="more"></a><p>Source: <a href="https://stackoverflow.com/a/48855445" target="_blank" rel="noopener">skenera’s answer</a></p><p>MSPaint uses bilinear interpolation then sharpens the image with a convolution kernel:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0.0, -0.125, 0.0</span><br><span class="line"></span><br><span class="line">-0.125, 1.5, -0.125</span><br><span class="line"></span><br><span class="line">0.0, -0.125, 0.0</span><br></pre></td></tr></table></figure></p><p>For our current project we need to batch resize using this algorithm.</p><h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><p><a href="https://docs.unity3d.com/ScriptReference/AssetPostprocessor.OnPostprocessTexture.html" target="_blank" rel="noopener">AssetPostprocessor.OnPostprocessTexture(Texture2D)</a></p><p>The actual kernel used:</p><p>new float[3]{ 0.0f, -0.25f, 0.0f },<br>new float[3]{ -0.25f, 2f, -0.25f },<br>new float[3]{ 0.0f, -0.25f, 0.0f }</p><h3 id="ImageMagick"><a href="#ImageMagick" class="headerlink" title="ImageMagick"></a>ImageMagick</h3><p>An alternative approach would be compressing source texture files with ImageMagick.<br>However it is only useful in some cases and is not recommended, compare to postprocess approach.</p><p>ImageMagick Command:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">magick image.png -scale 512 -morphology Convolve &quot;3x3: 0.0, -0.125, 0.0 -0.125, 1.5, -0.125 0.0, -0.125, 0.0&quot; image_resized.png</span><br></pre></td></tr></table></figure></p><p>Download <a href="https://imagemagick.org/index.php" target="_blank" rel="noopener">ImageMagick</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Example-2048-gt-1024&quot;&gt;&lt;a href=&quot;#Example-2048-gt-1024&quot; class=&quot;headerlink&quot; title=&quot;Example (2048 -&amp;gt; 1024)&quot;&gt;&lt;/a&gt;Example (2048 -&amp;gt; 1024)&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;Unity Built-In (Unity自带)&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;MSPaint Kernel（后处理加入画图锐化）&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/graphics/MSPaint_UnityBuiltIn.jpg&quot; alt&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/graphics/MSPaint_MSPaint.jpg&quot; alt&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;MSPaint provides better resize results as stated in &lt;a href=&quot;https://computergraphics.stackexchange.com/questions/2246/which-interpolation-algorithm-does-ms-paint-on-windows-7-use-for-image-rescaling&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Which interpolation algorithm does MS Paint on Windows 7 use for image rescaling?&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Texel Density View Mode</title>
+    <link href="/2019/08/18/20190818-TexelDensity/"/>
+    <id>/2019/08/18/20190818-TexelDensity/</id>
+    <published>2019-08-17T16:00:00.000Z</published>
+    <updated>2021-09-01T01:52:51.343Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://80.lv/articles/textel-density-tutorial/" target="_blank" rel="noopener">Figuring out Textel Density - 80 Level</a></p><h2 id="Texel-Density-View-Mode"><a href="#Texel-Density-View-Mode" class="headerlink" title="Texel Density View Mode"></a>Texel Density View Mode</h2><!--| | | ||:------------:|:------------:|:------------:|| ![](/img/graphics/TexelDensityViewMode1.jpg) | - |  ![](/img/graphics/TexelDensityViewMode2.jpg) |--><p><img src="/img/graphics/TexelDensityViewMode1.jpg" alt></p><a id="more"></a><h2 id="关于TD"><a href="#关于TD" class="headerlink" title="关于TD"></a>关于TD</h2><h3 id="Texel-Density-Mesh（UV）上每单位的像素数"><a href="#Texel-Density-Mesh（UV）上每单位的像素数" class="headerlink" title="Texel Density: Mesh（UV）上每单位的像素数"></a>Texel Density: Mesh（UV）上每单位的像素数</h3><p>翻译：</p><ul><li>Texel密度（Autodesk, MODO）</li><li>纹理密度</li><li>像素密度（Valve XSI）</li><li>贴图密度（Unreal UDK）</li><li>纹素密度（《游戏引擎架构》中英词汇索引表）</li></ul><p>简称<strong>TD</strong></p><p>Pixel：屏幕上的最小单位<br>Texel：贴图上的最小单位<br>一个Pixel上有多个texel（缩小）<br>一个texel覆盖多个Pixel（放大）</p><p>正确的密度: 同类素材有一致的TD</p><h3 id="最优做法"><a href="#最优做法" class="headerlink" title="最优做法"></a>最优做法</h3><p>确定游戏类型/环境（第一人称视角，第三人称视角，侧视相机视角等）</p><p>素材分类：可以出现在玩家面前的，背景素材，远景</p><p>通过一些测试确定各个分类的最佳TD</p><p>确定在模型UV上执行这些TD的方式</p><p>确保各个分类内的TD始终保持一致</p><h3 id="如何确定游戏的TD"><a href="#如何确定游戏的TD" class="headerlink" title="如何确定游戏的TD"></a>如何确定游戏的TD</h3><p>有两个主要因素决定贴图大小：</p><ul><li>物体在屏幕上的大小</li><li>内存/显存预算</li></ul><p>理想状态下我们希望Texel和屏幕Pixel尽量一致，<br>但现实中我们只能尽力做到接近。</p><h5 id="第一人称视角-1024-px-m"><a href="#第一人称视角-1024-px-m" class="headerlink" title="第一人称视角 (1024 px/m)"></a>第一人称视角 (1024 px/m)</h5><p>通常TD较高，武器、手有更高TD</p><h5 id="第三人称视角-512-px-m"><a href="#第三人称视角-512-px-m" class="headerlink" title="第三人称视角 (512 px/m)"></a>第三人称视角 (512 px/m)</h5><p>通常不会很接近环境物体，而距离角色较近，所以环境一般为512px每米，而角色略高</p><h5 id="战略视角-128-256-px-m"><a href="#战略视角-128-256-px-m" class="headerlink" title="战略视角 (128-256 px/m)"></a>战略视角 (128-256 px/m)</h5><p>战略视角：总是距离较远，所以不需要高密度</p><h5 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h5><ul><li>TP角色和FP武器离相机较近，TD可以比环境高</li><li>通常角色的脸有相对高的TD，因为玩家爱看脸</li><li>不容易接近的地方可以有较低TD（天空盒，背景，车底部……）</li></ul><h3 id="素材分类"><a href="#素材分类" class="headerlink" title="素材分类"></a>素材分类</h3><p>例如，环境可以分为三类：</p><ul><li>近景/可玩区</li><li>中景/远处物体</li><li>背景物体</li></ul><h3 id="制作"><a href="#制作" class="headerlink" title="制作"></a>制作</h3><p>Maya，Max等都有相应的成熟工具</p><h2 id="Geometry-Shader"><a href="#Geometry-Shader" class="headerlink" title="Geometry Shader"></a>Geometry Shader</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">geom</span><span class="params">(triangle v2g input[<span class="number">3</span>], inout TriangleStream&lt;g2f&gt; triStream)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">... </span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算三角面在世界空间面积</span></span><br><span class="line"><span class="keyword">float</span> wArea = <span class="built_in">abs</span>(length(cross(abw, acw)));</span><br><span class="line"></span><br><span class="line">... </span><br><span class="line"></span><br><span class="line"><span class="comment">// 像素数</span></span><br><span class="line"><span class="keyword">float</span> texArea = _MainTex_TexelSize.z * _MainTex_TexelSize.w;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UV面积</span></span><br><span class="line"><span class="keyword">float</span> uvArea = <span class="built_in">abs</span>(length(cross(ab, ac)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 三角形UV上的像素数</span></span><br><span class="line"><span class="keyword">float</span> uvPixels = texArea * uvArea;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 得到TD</span></span><br><span class="line"><span class="keyword">float</span> td = <span class="built_in">sqrt</span>(uvPixels / wArea);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 进行着色</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://80.lv/articles/textel-density-tutorial/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Figuring out Textel Density - 80 Level&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Texel-Density-View-Mode&quot;&gt;&lt;a href=&quot;#Texel-Density-View-Mode&quot; class=&quot;headerlink&quot; title=&quot;Texel Density View Mode&quot;&gt;&lt;/a&gt;Texel Density View Mode&lt;/h2&gt;&lt;!--
+| | | |
+|:------------:|:------------:|:------------:|
+| ![](/img/graphics/TexelDensityViewMode1.jpg) | - |  ![](/img/graphics/TexelDensityViewMode2.jpg) |
+--&gt;
+&lt;p&gt;&lt;img src=&quot;/img/graphics/TexelDensityViewMode1.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PBR 贴图制作准则</title>
+    <link href="/2019/08/17/20190817-PBRTextureGuideline/"/>
+    <id>/2019/08/17/20190817-PBRTextureGuideline/</id>
+    <published>2019-08-16T16:00:00.000Z</published>
+    <updated>2020-01-07T08:24:56.076Z</updated>
+    
+    <content type="html"><![CDATA[<!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) --><h2 id="Metal-Roughness-Workflow-总结"><a href="#Metal-Roughness-Workflow-总结" class="headerlink" title="Metal / Roughness Workflow 总结"></a>Metal / Roughness Workflow 总结</h2><h4 id="纯金属-Metallic-gt-235"><a href="#纯金属-Metallic-gt-235" class="headerlink" title="纯金属  (Metallic &gt; 235)"></a>纯金属  (Metallic &gt; 235)</h4><ul><li>BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB</li><li>如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流<br>hexo<h4 id="介电质-绝缘体："><a href="#介电质-绝缘体：" class="headerlink" title="介电质/绝缘体："></a>介电质/绝缘体：</h4></li><li>BaseColor暗部<strong>不应低于30-50 sRGB</strong>, 亮部<strong>不应高于 240 sRGB</strong></li></ul><p>符合PBR规则可以使素材<strong>在任何光照条件下都有合理的表现</strong></p><ul><li>注意,不等于不符合规则的贴图一定看起来不好（在特定光照下有可能看起也合理）</li></ul><p>根据以上原则，制作一个批量排查工具<br><img src="/img/graphics/pbrCheck.jpg" alt></p><a id="more"></a><p>Substance Painter 用PBR检查工具: <a href="https://share.substance3d.com/libraries/824The" target="_blank" rel="noopener">PBR Validate</a><br><img src="https://share.substance3d.com/libraries/824The" alt></p><p>Substance Disigner 可以使用 PBR Metal/Roughness Validate Node<br>位置在Material Filters &gt; PBR Utilities<br><img src="https://cdn.allegorithmic.com/images/academy/bb52362f-6370-4f89-a2f4-633f59868c90" alt></p><p>Source: <a href="https://academy.substance3d.com/courses/the-pbr-guide-part-2" target="_blank" rel="noopener">Practical Guidelines For Creating PBR Textures</a><br>官方中文版：<a href="https://academy.substance3d.com/courses/the-pbr-guide-part2-zh" target="_blank" rel="noopener">创建PBR纹理实用指南</a><br><!--Two most common workflows, which are metal/roughness and specular/glossiness![](https://cdn.allegorithmic.com/images/academy/5fc12cd8-9467-4062-b609-507788d0cbc3)--></p><h2 id="Metal-Roughness-Workflow"><a href="#Metal-Roughness-Workflow" class="headerlink" title="Metal / Roughness Workflow"></a>Metal / Roughness Workflow</h2><h3 id="Dielectric-介电质-绝缘体-F0"><a href="#Dielectric-介电质-绝缘体-F0" class="headerlink" title="Dielectric (介电质/绝缘体) F0"></a>Dielectric (介电质/绝缘体) F0</h3><p>普通绝缘体的 <em>F0</em> 通常设置为 0.04 (linear) 4% 反射。在金属度/粗糙度工作流中，该数值是hardcode在Shader中的。<br>某些金/粗实现中，比如 <em>Substance toolset</em> 和 <em>Unreal Engine 4</em>，提供了Specular控制，使美术可以对绝缘体的 <em>F0</em> 常量进行改变。在Substance中，该输出被标记为 “specularLevel” 并且由一个 texture sampler 提供给shader。如下图，它提供了0.0-0.08的范围。该范围在shader中被映射到0.0～1.0，其中 0.5 对应 4% 反射率。</p><p><img src="https://cdn.allegorithmic.com/images/academy/c16e1e22-42b2-4f5a-af0d-f28b080d325f" alt></p><!--more--><h3 id="基础色-Base-Color-RGB-sRGB"><a href="#基础色-Base-Color-RGB-sRGB" class="headerlink" title="基础色 Base Color (RGB - sRGB)"></a>基础色 Base Color (RGB - sRGB)</h3><p><img src="https://cdn.allegorithmic.com/images/academy/21d2a547-9f5b-4ab2-96b3-deedfd67815f" alt></p><p>Base Color是一张RGB贴图，可以有两种信息：</p><ul><li>绝缘体的漫反射颜色(diffuse reflected color)</li><li>金属反射值</li></ul><p>颜色代表了绝缘体反射的波长，而当一块区域是金属时，金属反射值生效</p><h4 id="制作准则"><a href="#制作准则" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>基础色(Base Color)可以被想成一张在色调上很”平”的图。就是说，它的对比度比传统diffuse贴图要低。在这张图上不建议出现过亮或过暗的地方。物体在色调上会比我们通常印象中的要更明亮。</p><p>就亮度范围来说，我们基本上指绝缘体。在下图中，你可以看到脏迹的数值低于正确亮度范围。对暗部来说，<strong>不应低于30-50 sRGB</strong>。暗部数值宽松的说应该大于30，严格地说大于50。对亮部来说，<strong>不应高于 240 sRGB</strong>。<br><img src="https://cdn.allegorithmic.com/images/academy/86a711f0-2e07-4109-9027-33a21ce3d51a" alt></p><p>我们说过base color包含绝缘体表面反射光的信息，所以它不应包含像AO这样的光照信息。可以有一些例外，比如细微的遮蔽（当shader无法仅仅通过ao来体现这一精度的细节时），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/1e92ba2c-d8b0-476d-ae3c-34c133e16b7d" alt></p><p>金属的反射值应当从现实测量数值中获取。这些数值应当在 <strong>70-100% specular</strong>左右，对应<strong>sRGB范围在 180-255</strong>。</p><p>Sébastien Lagarde的图表是个很好的资源(DONTNOD Physically based rendering chart for Unreal Engine 4](<a href="https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)" target="_blank" rel="noopener">https://seblagarde.wordpress.com/2014/04/14/dontnod-physically-based-rendering-chart-for-unreal-engine-4/)</a>)</p><p><strong>金属的反射值应当从现实测量数值中获取</strong></p><ul><li>颜色代表非金属材质的Albedo，与金属材质的反射值</li><li>基础色(Base color)应该避免包含光照信息，除了微遮蔽(micro-occlusion)</li><li>暗部应该不低于 30 sRGB(宽松下限) 到 50 sRGB(严格下限)</li><li>亮部不应高于240 sRGB</li><li>纯金属的反射很高，在70%-100%，对应 180-255 SRGB</li></ul><p>在接下来的金属段落中你会读到，基础色(base color)包含了金属反射值，如果尘土或锈迹被加在基础色上。会导致该处的金属反射值降低到不可被认定是纯金属的范围。</p><p>金属度贴图(Metallic map)必须考虑尘土和锈迹的情况，这些地方的金属度必须降低以体现这些地方不再被认定为是纯金属。在下图中你可以看到在金属度贴图中锈蚀的地方被当作绝缘体设置成黑色。尘土的地方也设置成了灰色。所以考虑到比如尘土的这种情况，金属度贴图并不总是非黑即白的0/1贴图。<br><img src="https://cdn.allegorithmic.com/images/academy/f155be69-8480-4070-9e05-cb266051d19f" alt></p><p><strong>金属度贴图类似于一张mask，它告诉shader如何处理基础色(base color)中的信息</strong></p><h3 id="金属度-Metallic-Grayscale-Linear"><a href="#金属度-Metallic-Grayscale-Linear" class="headerlink" title="金属度 Metallic (Grayscale - Linear)"></a>金属度 Metallic (Grayscale - Linear)</h3><p>金属贴图用于定义哪些区域是纯金属。作为一张灰度图，它的作用类似于一张mask，告知shader如何处理基础色(base color)中的信息。</p><p><img src="https://cdn.allegorithmic.com/images/academy/08294dc6-f38d-4cd6-af7f-fca8e9c00dda" alt></p><p>金属度贴图中的信息并不直接包含真实世界中的信息。它只是告知shader，基础色的哪些区域应当被作为漫反射颜色(绝缘体)，哪些区域应当被当作金属反射值。在金属度贴图中，0.0 (black – 0 sRGB) 表示非金属，而 1.0 (white – 255 sRGB) 代表纯金属。在实际操作中，当shader发现金属度贴图上的值是白色，它就将Base color贴图上相应的部分当作金属反射值来使用。</p><h4 id="制作准则-1"><a href="#制作准则-1" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>金属表面有两个与贴图相关的方面：</p><ul><li>第一，它们的反射值很高，在 70%-100% 范围；</li><li>第二，有些金属可以生锈。<br>我们讨论制作准则时会分别检视这两个方面。</li></ul><h5 id="纯金属"><a href="#纯金属" class="headerlink" title="纯金属"></a><em>纯金属</em></h5><p>大致上，我们定义金属度贴图上灰度值 <strong>235-255</strong> 的范围为<em>纯金属</em>，在这一区间的金属需要它的Base color有 70-100% 的反射值，或者说 180-255 sRGB。如下图。再次说明，这些数值来源于真实世界的测量数据。<br><img src="https://cdn.allegorithmic.com/images/academy/94624c56-0119-4a99-95c3-45b877aca57d" alt></p><h5 id="锈蚀或绝缘体"><a href="#锈蚀或绝缘体" class="headerlink" title="锈蚀或绝缘体"></a><em>锈蚀或绝缘体</em></h5><p>当你制作一个表面时，需要考虑该金属的氧化情况，或者其它环境因素如尘土及污垢。当一个喷漆的金属某些部分被刮坏或者掉漆了的时候，暴露的金属是纯金属（金属度贴图中为白色），喷漆表面是绝缘层（金属度贴图中为黑色），如下图。<br><img src="https://cdn.allegorithmic.com/images/academy/ec724b25-74e5-4c89-bbfb-e5e6edde440a" alt></p><p>金属度贴图可以体现金属及非金属之间的过渡状态（灰度）。如果金属度低于 235 sRGB 的时候你需要降低base color上的反射值。想想一个部分盖住金属的尘土层，如下图。尘土是绝缘体，如果你保留纯白的金属度，shader会将这些尘土在base color上的值用作金属的反射值。尘土的颜色远低于光滑金属所需要的70%-100%范围。通过降低尘土区域的金属度，你才能制作出合适的介于绝缘体和金属反射值之间的过渡。<br><img src="https://cdn.allegorithmic.com/images/academy/ef553e0e-adeb-4f8c-b471-5e778875bc74" alt></p><p>在Substance Designer中可以使用Material Color Blend节点制作尘土效果。</p><h3 id="粗糙度-Roughness-Grayscale-Linear"><a href="#粗糙度-Roughness-Grayscale-Linear" class="headerlink" title="粗糙度 Roughness (Grayscale - Linear)"></a>粗糙度 Roughness (Grayscale - Linear)</h3><p>粗糙度贴图描述物体因为表面不规则导致的光线散射，反射的方向是随机的。这改变了光的方向，但是光的总体强度是保持不变的。粗糙的表面有面积更大、更暗的高光。光滑的表面会使高光反射保持聚集，看起来更亮更强，虽然总体反光量是相同的。<br><img src="https://cdn.allegorithmic.com/images/academy/fbc09194-da18-4478-b119-cd0a84be4930" alt></p><p>粗糙度贴图是最具创作性的贴图，它允许美术在视觉上定义一个表面的特征。使我们可以创造性的讲述这个表面的情况。它的环境是怎样的？它被好好珍藏还是粗暴对待？它曾被暴露在某些情况下吗？一个物体表面的情况可以告诉我们很多关于它所在的环境的故事，并因此与我们想要设计的这个物体，以及想要创造的整体世界相联系起来。</p><h4 id="制作准则-2"><a href="#制作准则-2" class="headerlink" title="制作准则"></a><em>制作准则</em></h4><p>保持创造性，讲述一个关于该表面的故事。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;!-- ![](https://cdn.allegorithmic.com/images/academy/02bad626-27f5-4606-9908-473d67f816b8) --&gt;
+&lt;h2 id=&quot;Metal-Roughness-Workflow-总结&quot;&gt;&lt;a href=&quot;#Metal-Roughness-Workflow-总结&quot; class=&quot;headerlink&quot; title=&quot;Metal / Roughness Workflow 总结&quot;&gt;&lt;/a&gt;Metal / Roughness Workflow 总结&lt;/h2&gt;&lt;h4 id=&quot;纯金属-Metallic-gt-235&quot;&gt;&lt;a href=&quot;#纯金属-Metallic-gt-235&quot; class=&quot;headerlink&quot; title=&quot;纯金属  (Metallic &amp;gt; 235)&quot;&gt;&lt;/a&gt;纯金属  (Metallic &amp;gt; 235)&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;BaseColor上的值是金属的反射值，应当有 70-100%，或者说 180-255 sRGB&lt;/li&gt;
+&lt;li&gt;如果你得到某个金属素材，发现它的Base Color很黑，它可能是Specular/Glossiness工作流&lt;br&gt;hexo&lt;h4 id=&quot;介电质-绝缘体：&quot;&gt;&lt;a href=&quot;#介电质-绝缘体：&quot; class=&quot;headerlink&quot; title=&quot;介电质/绝缘体：&quot;&gt;&lt;/a&gt;介电质/绝缘体：&lt;/h4&gt;&lt;/li&gt;
+&lt;li&gt;BaseColor暗部&lt;strong&gt;不应低于30-50 sRGB&lt;/strong&gt;, 亮部&lt;strong&gt;不应高于 240 sRGB&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;符合PBR规则可以使素材&lt;strong&gt;在任何光照条件下都有合理的表现&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;注意,不等于不符合规则的贴图一定看起来不好（在特定光照下有可能看起也合理）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据以上原则，制作一个批量排查工具&lt;br&gt;&lt;img src=&quot;/img/graphics/pbrCheck.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>阴影代理 (Shadow Proxy)</title>
+    <link href="/2019/07/27/20190727-ShadowProxy/"/>
+    <id>/2019/07/27/20190727-ShadowProxy/</id>
+    <published>2019-07-26T16:00:00.000Z</published>
+    <updated>2019-10-20T09:04:39.108Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/graphics/ShadowProxyComarison.jpg" alt></p><p><a href="https://docs.cryengine.com/display/CEMANUAL/Shadow+Proxies" target="_blank" rel="noopener">CryEngine: Shadow Proxy</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/img/graphics/ShadowProxyComarison.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.cryengine.com/display/CEMANUAL/Shadow+Proxies&quot; target
+      
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>植被制作流程 Vegetation and SpeedTree</title>
+    <link href="/2019/07/06/20190706-Vegetation_SpeedTree/"/>
+    <id>/2019/07/06/20190706-Vegetation_SpeedTree/</id>
+    <published>2019-07-05T16:00:00.000Z</published>
+    <updated>2020-08-02T08:41:50.148Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Cluster流程（Horizon-与-Farcry-的流程）"><a href="#Cluster流程（Horizon-与-Farcry-的流程）" class="headerlink" title="Cluster流程（Horizon 与 Farcry 的流程）"></a>Cluster流程（Horizon 与 Farcry 的流程）</h3><p><img src="/img/ta/vegetation_horizon_process00.jpg" alt></p><a id="more"></a><p><img src="/img/ta/vegetation_horizon_process01.jpg" alt><br><img src="/img/ta/vegetation_horizon_process_.jpg" alt><br><img src="/img/ta/vegetation_horizon.jpg" alt></p><h3 id="将项目中的树变更为Cluster流程"><a href="#将项目中的树变更为Cluster流程" class="headerlink" title="将项目中的树变更为Cluster流程"></a>将项目中的树变更为Cluster流程</h3><p><img src="/img/ta/vegetation_cluster.jpg" alt></p><ul><li>好处是，制作周期和修改周期都大幅缩短（LOD），视觉效果更好，总体性能更好</li><li>缺点是，面数更高</li></ul><p><img src="/img/ta/vegetation_cluster_procon.jpg" alt></p><p>项目植被变更为Cluster流程后：<br>制作和修改周期缩短为Card流程的五分之一，<br>运行时性能开销下降约15%，<br>美术表现有较大提升。</p><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>Jim Thacker, <a href="https://www.gnomon.edu/blog/discover-naughty-dog-s-environment-art-workflow-for-uncharted-4" target="_blank" rel="noopener">Discover Uncharted 4’s Environment Art Workflow</a> ,2016<br>Nils Arenz, <a href="https://medium.com/@EightyLevel/preparing-realistic-grass-in-ue4-8bf54b1fa01c" target="_blank" rel="noopener">Preparing Realistic Grass in UE4</a>，2018<br>Jobye Karmaker, <a href="https://80.lv/articles/vegetation-creation-for-video-games/" target="_blank" rel="noopener">Vegetation Creation for Video Games</a>, 2016<br>Adrian Courrèges, <a href="http://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/" target="_blank" rel="noopener">GTA V - Graphics Study</a>, 2015<br>Danny Weinbaum, <a href="https://www.gamasutra.com/blogs/DannyWeinbaum/20171201/310813/Foliage_Optimization_in_Unity.php" target="_blank" rel="noopener">Foliage Optimization in Unity</a>, 2017<br>MoonChildInSky, <a href="https://zhuanlan.zhihu.com/p/39627412?utm_source=ZHShareTargetIDMore&amp;utm_medium=social&amp;utm_oi=686175245690474496" target="_blank" rel="noopener">《幽灵行动：荒野》地形技术和工具</a>, GDC 2017<br>Johan Andersson, Terrain Rendering in Frostbite Using Procedural Shader Splatting, SIGGRAPH 2007<br>Jaap van Muijden, GPU-based Procedural Placement in Horizon Zero Dawn, GDC 2017<br>, <a href="https://www.eurogamer.net/articles/digitalfoundry-2017-horizon-zero-dawn-the-making-of-ps4-pros-best-4k-game" target="_blank" rel="noopener">Horizon Zero Dawn: the making of PS4 Pro’s best 4K game Guerrilla Games on how it met the ultra HD challenge</a>, 2017<br>Théophile Lebeau, <a href="https://80.lv/articles/creating-a-forest-biome-with-photogrammetry/" target="_blank" rel="noopener">Creating a Forest Biome with Photogrammetry</a>, 2018<br>Stephen McAuley, <a href="https://www.gdcvault.com/play/1022235/Rendering-the-World-of-Far" target="_blank" rel="noopener">Rendering of the world of Far Cry 4</a>, GDC 2015</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Cluster流程（Horizon-与-Farcry-的流程）&quot;&gt;&lt;a href=&quot;#Cluster流程（Horizon-与-Farcry-的流程）&quot; class=&quot;headerlink&quot; title=&quot;Cluster流程（Horizon 与 Farcry 的流程）&quot;&gt;&lt;/a&gt;Cluster流程（Horizon 与 Farcry 的流程）&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;/img/ta/vegetation_horizon_process00.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CommandBuffer 描边</title>
+    <link href="/2019/06/15/20190615-GlowOutline/"/>
+    <id>/2019/06/15/20190615-GlowOutline/</id>
+    <published>2019-06-14T16:00:00.000Z</published>
+    <updated>2019-10-20T09:12:19.772Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/graphics/GlowOutlineCommandBuffer.png" alt></p><p>参考：<br><a href="http://xroft666.blogspot.com/2015/07/glow-highlighting-in-unity.html" target="_blank" rel="noopener">Glow highlighting in Unity</a><br><a href="https://blog.csdn.net/puppet_master/article/details/72669977" target="_blank" rel="noopener">Unity Shader-Command Buffer的使用（景深与描边效果重置版）</a></p><a id="more"></a><h3 id="Compare-Camera-Depth"><a href="#Compare-Camera-Depth" class="headerlink" title="Compare Camera Depth"></a>Compare Camera Depth</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sampler2D _CameraDepthTexture;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(UNITY_REVERSED_Z)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> COMPARE_DEPTH(a, b) step(b, a)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> COMPARE_DEPTH(a, b) step(a, b)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// in vert</span></span><br><span class="line"></span><br><span class="line">o.projPos = ComputeScreenPos(o.pos);</span><br><span class="line">o.projPos.z = COMPUTE_DEPTH_01;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// in frag</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">float</span> depth = SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos));</span><br><span class="line">depth = Linear01Depth(depth);=</span><br><span class="line"></span><br><span class="line">COMPARE_DEPTH(i.projPos.z, depth);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/graphics/GlowOutlineCommandBuffer.png&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;参考：&lt;br&gt;&lt;a href=&quot;http://xroft666.blogspot.com/2015/07/glow-highlighting-in-unity.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Glow highlighting in Unity&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://blog.csdn.net/puppet_master/article/details/72669977&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Unity Shader-Command Buffer的使用（景深与描边效果重置版）&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Fresnel</title>
+    <link href="/2019/06/14/20190614-Fresnel/"/>
+    <id>/2019/06/14/20190614-Fresnel/</id>
+    <published>2019-06-13T16:00:00.000Z</published>
+    <updated>2019-08-31T01:52:54.491Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Fresnel"><a href="#Fresnel" class="headerlink" title="Fresnel"></a>Fresnel</h3><p><img src="/img/graphics/EveryThingHasFresnel.jpg" alt></p><h2 id="Example-Water-Fresnel"><a href="#Example-Water-Fresnel" class="headerlink" title="Example Water Fresnel"></a>Example Water Fresnel</h2><p><img src="/img/graphics/waterFresnel.png" alt></p><p><img src="/img/graphics/fresnelOnly.jpg" alt></p><a id="more"></a><!--![](/img/graphics/waterFresnelComparison.jpg)-->]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Fresnel&quot;&gt;&lt;a href=&quot;#Fresnel&quot; class=&quot;headerlink&quot; title=&quot;Fresnel&quot;&gt;&lt;/a&gt;Fresnel&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;/img/graphics/EveryThingHasFresnel.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Example-Water-Fresnel&quot;&gt;&lt;a href=&quot;#Example-Water-Fresnel&quot; class=&quot;headerlink&quot; title=&quot;Example Water Fresnel&quot;&gt;&lt;/a&gt;Example Water Fresnel&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;/img/graphics/waterFresnel.png&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/graphics/fresnelOnly.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>光照探针(LightProbe) 与 球谐(Spherical Harmonics)</title>
+    <link href="/2019/06/01/20190601-SphericalHarmonics/"/>
+    <id>/2019/06/01/20190601-SphericalHarmonics/</id>
+    <published>2019-05-31T16:00:00.000Z</published>
+    <updated>2019-10-20T09:00:10.572Z</updated>
+    
+    <content type="html"><![CDATA[<p>需求：可以手动自定义，并且随Prefab保存的LightProbe</p><h4 id="球谐函数-Spherical-Harmonics"><a href="#球谐函数-Spherical-Harmonics" class="headerlink" title="球谐函数 (Spherical Harmonics)"></a>球谐函数 (Spherical Harmonics)</h4><p><img src="/img/graphics/Spherical_Harmonics.jpg" alt></p><p>正经定义：<br>球谐函数是拉普拉斯方程的球坐标系形式解的角度部分</p><p>自分白话解释：<br>球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色</p><p>Unity中使用的是二阶球谐函数 <a href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html" target="_blank" rel="noopener">SphericalHarmonicsL2</a>，保存为9个系数(27个float)，使用时转换为7个Vector4提供给Shader(参考buitin shaders中的ShadeSH9)</p><p>Unity的实现参考的是 <a href="http://www.ppsloan.org/publications/StupidSH36.pdf" target="_blank" rel="noopener">Stupid Spherical Harmonics (SH) Tricks</a></p><p>官方文档中关于光照探针的技术信息： <a href="https://docs.unity3d.com/Manual/LightProbes-TechnicalInformation.html" target="_blank" rel="noopener">Light Probes: Technical information</a></p><p>关于SH一篇非常好的文章： <a href="https://patapom.com/blog/SHPortal/" target="_blank" rel="noopener">Benoît Mayaux (Patapom), Spherical Harmonics</a></p><p>还有企鹅学院的两篇：<br>(Unity Shader球谐光照解析)[<a href="https://gameinstitute.qq.com/community/detail/124147]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/124147]</a><br>(球谐光照（spherical harmonic lighting）解析)[<a href="https://gameinstitute.qq.com/community/detail/123183]" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/123183]</a></p><h4 id="自动布置LightProbe"><a href="#自动布置LightProbe" class="headerlink" title="自动布置LightProbe"></a>自动布置LightProbe</h4><p>将需要LightProbe的位置赋值给 <a href="https://docs.unity3d.com/ScriptReference/LightProbeGroup-probePositions.html" target="_blank" rel="noopener">LightProbeGroup.probePositions</a></p><p>官方例子：<a href="https://docs.unity3d.com/Manual/LightProbes-Placing-Scripting.html" target="_blank" rel="noopener">Placing probes using scripting</a></p><h4 id="Unity中手动计算SH"><a href="#Unity中手动计算SH" class="headerlink" title="Unity中手动计算SH"></a>Unity中手动计算SH</h4><p><img src="/img/graphics/mlpDemo.jpg" alt></p><p>SphericalHarmonicsL2提供两个方法</p><ul><li>添加环境光(AddAmbientLight)</li><li>添加平行光(AddDirectionalLight)</li></ul><p>Unity官方文档提供了一个例子：[LightProbes.bakedProbes(Unity文档)]<a href="https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html</a></p><a id="more"></a><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Rendering;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ExampleClass</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Color m_Ambient;</span><br><span class="line">    <span class="keyword">public</span> Light[] m_Lights;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// On start add the contribution of the ambient light and all lights</span></span><br><span class="line">    <span class="comment">// assigned to the lights array to all baked probes.</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        SphericalHarmonicsL2[] bakedProbes = LightmapSettings.lightProbes.bakedProbes;</span><br><span class="line">        Vector3[] probePositions = LightmapSettings.lightProbes.positions;</span><br><span class="line">        <span class="keyword">int</span> probeCount = LightmapSettings.lightProbes.count;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Clear all probes</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">            bakedProbes[i].Clear();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add ambient light to all probes</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">            bakedProbes[i].AddAmbientLight(m_Ambient);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add directional and point lights' contribution to all probes</span></span><br><span class="line">        <span class="keyword">foreach</span> (Light l <span class="keyword">in</span> m_Lights)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (l.type == LightType.Directional)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">                    bakedProbes[i].AddDirectionalLight(-l.transform.forward, l.color, l.intensity);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (l.type == LightType.Point)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; probeCount; i++)</span><br><span class="line">                    SHAddPointLight(probePositions[i], l.transform.position, l.range, l.color, l.intensity, <span class="keyword">ref</span> bakedProbes[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        LightmapSettings.lightProbes.bakedProbes = bakedProbes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SHAddPointLight</span>(<span class="params">Vector3 probePosition, Vector3 position, <span class="keyword">float</span> range, Color color, <span class="keyword">float</span> intensity, <span class="keyword">ref</span> SphericalHarmonicsL2 sh</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// From the point of view of an SH probe, point light looks no different than a directional light,</span></span><br><span class="line">        <span class="comment">// just attenuated and coming from the right direction.</span></span><br><span class="line">        Vector3 probeToLight = position - probePosition;</span><br><span class="line">        <span class="keyword">float</span> attenuation = <span class="number">1.0F</span> / (<span class="number">1.0F</span> + <span class="number">25.0F</span> * probeToLight.sqrMagnitude / (range * range));</span><br><span class="line">        sh.AddDirectionalLight(probeToLight.normalized, color, intensity * attenuation);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="在已有LightProbe烘焙的环境中的指定位置获取LightProbe"><a href="#在已有LightProbe烘焙的环境中的指定位置获取LightProbe" class="headerlink" title="在已有LightProbe烘焙的环境中的指定位置获取LightProbe"></a>在已有LightProbe烘焙的环境中的指定位置获取LightProbe</h4><p>使用方法<a href="https://docs.unity3d.com/ScriptReference/LightProbes.GetInterpolatedProbe.html" target="_blank" rel="noopener">LightProbes.GetInterpolatedProbe</a></p><h4 id="LightProbe的SH差值"><a href="#LightProbe的SH差值" class="headerlink" title="LightProbe的SH差值"></a>LightProbe的SH差值</h4><p><img src="/img/graphics/Light-Probe-Interpolation-Using-Tetrahedral.png" alt><br>Unity官方在GDC 2012上的说明, <a href="https://www.gdcvault.com/play/1015312/Light-Probe-Interpolation-Using-Tetrahedral" target="_blank" rel="noopener">Light Probe Interpolation Using Tetrahedral Tessellations</a></p><p>Unity中烘焙时计算四面体网络(TetrahedronGrid)并保存，运行时根据对象在某个四面体中的位置，利用这个四面体相关的几个SH插值出一个新的SH</p><p>更多阅读:<br><a href="https://arxiv.org/abs/physics/0206007" target="_blank" rel="noopener">Spherical Harmonics Interpolation, Computation of Laplacians and Gauge Theory</a></p><h4 id="将SH系数注入Renderer"><a href="#将SH系数注入Renderer" class="headerlink" title="将SH系数注入Renderer"></a>将SH系数注入Renderer</h4><p>Unity官方的Keijiro Takahashi 写的 <a href="https://github.com/keijiro/LightProbeUtility" target="_blank" rel="noopener">LightProbeUtility</a></p><p><img src="https://camo.githubusercontent.com/bfda9b5c1438318d429440db42f88464b6214037/68747470733a2f2f34352e6d656469612e74756d626c722e636f6d2f66373934666138383130613932313463326434303065653761346162623132642f74756d626c725f6f34326f7a69614d475a3171696f3436396f315f3430302e676966" alt></p><p>注意系数的组合方式在之后的版本中有变化，正确的组合如下</p><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Constant + Linear</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    properties.SetVector(_idSHA[i], <span class="keyword">new</span> Vector4(</span><br><span class="line">        sh[i, <span class="number">3</span>], sh[i, <span class="number">1</span>], sh[i, <span class="number">2</span>], sh[i, <span class="number">0</span>] - sh[i, <span class="number">6</span>] </span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Quadratic polynomials</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    properties.SetVector(_idSHB[i], <span class="keyword">new</span> Vector4(</span><br><span class="line">        sh[i, <span class="number">4</span>], sh[i, <span class="number">5</span>], sh[i, <span class="number">6</span>] * <span class="number">3</span>, sh[i, <span class="number">7</span>]</span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Final quadratic polynomial</span></span><br><span class="line">properties.SetVector(_idSHC, <span class="keyword">new</span> Vector4(</span><br><span class="line">    sh[<span class="number">0</span>, <span class="number">8</span>], sh[<span class="number">1</span>, <span class="number">8</span>], sh[<span class="number">2</span>, <span class="number">8</span>], <span class="number">1</span></span><br><span class="line">));</span><br></pre></td></tr></table></figure><p>UnityCG.cginc中相关的代码</p><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="function">half3 <span class="title">SHEvalLinearL0L1</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    half3 x;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Linear (L1) + constant (L0) polynomial terms</span></span><br><span class="line">    x.r = dot(unity_SHAr,normal);</span><br><span class="line">    x.g = dot(unity_SHAg,normal);</span><br><span class="line">    x.b = dot(unity_SHAb,normal);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="function">half3 <span class="title">SHEvalLinearL2</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    half3 x1, x2;</span><br><span class="line">    <span class="comment">// 4 of the quadratic (L2) polynomials</span></span><br><span class="line">    half4 vB = normal.xyzz * normal.yzzx;</span><br><span class="line">    x1.r = dot(unity_SHBr,vB);</span><br><span class="line">    x1.g = dot(unity_SHBg,vB);</span><br><span class="line">    x1.b = dot(unity_SHBb,vB);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Final (5th) quadratic (L2) polynomial</span></span><br><span class="line">    half vC = normal.x*normal.x - normal.y*normal.y;</span><br><span class="line">    x2 = unity_SHC.rgb * vC;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x1 + x2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// normal should be normalized, w=1.0</span></span><br><span class="line"><span class="comment">// output in active color space</span></span><br><span class="line"><span class="function">half3 <span class="title">ShadeSH9</span> (<span class="params">half4 normal</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Linear + constant polynomial terms</span></span><br><span class="line">    half3 res = SHEvalLinearL0L1 (normal);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Quadratic polynomials</span></span><br><span class="line">    res += SHEvalLinearL2 (normal);</span><br><span class="line"></span><br><span class="line"><span class="meta">#   ifdef UNITY_COLORSPACE_GAMMA</span></span><br><span class="line">        res = LinearToGammaSpace (res);</span><br><span class="line"><span class="meta">#   <span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;需求：可以手动自定义，并且随Prefab保存的LightProbe&lt;/p&gt;
+&lt;h4 id=&quot;球谐函数-Spherical-Harmonics&quot;&gt;&lt;a href=&quot;#球谐函数-Spherical-Harmonics&quot; class=&quot;headerlink&quot; title=&quot;球谐函数 (Spherical Harmonics)&quot;&gt;&lt;/a&gt;球谐函数 (Spherical Harmonics)&lt;/h4&gt;&lt;p&gt;&lt;img src=&quot;/img/graphics/Spherical_Harmonics.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;正经定义：&lt;br&gt;球谐函数是拉普拉斯方程的球坐标系形式解的角度部分&lt;/p&gt;
+&lt;p&gt;自分白话解释：&lt;br&gt;球谐函数 - 使用少量系数定义一个球面的整个表面：输入一个方向(球面上一点)，输出该方向的颜色&lt;/p&gt;
+&lt;p&gt;Unity中使用的是二阶球谐函数 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;SphericalHarmonicsL2&lt;/a&gt;，保存为9个系数(27个float)，使用时转换为7个Vector4提供给Shader(参考buitin shaders中的ShadeSH9)&lt;/p&gt;
+&lt;p&gt;Unity的实现参考的是 &lt;a href=&quot;http://www.ppsloan.org/publications/StupidSH36.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Stupid Spherical Harmonics (SH) Tricks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官方文档中关于光照探针的技术信息： &lt;a href=&quot;https://docs.unity3d.com/Manual/LightProbes-TechnicalInformation.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Light Probes: Technical information&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;关于SH一篇非常好的文章： &lt;a href=&quot;https://patapom.com/blog/SHPortal/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Benoît Mayaux (Patapom), Spherical Harmonics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;还有企鹅学院的两篇：&lt;br&gt;(Unity Shader球谐光照解析)[&lt;a href=&quot;https://gameinstitute.qq.com/community/detail/124147]&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://gameinstitute.qq.com/community/detail/124147]&lt;/a&gt;&lt;br&gt;(球谐光照（spherical harmonic lighting）解析)[&lt;a href=&quot;https://gameinstitute.qq.com/community/detail/123183]&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://gameinstitute.qq.com/community/detail/123183]&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;自动布置LightProbe&quot;&gt;&lt;a href=&quot;#自动布置LightProbe&quot; class=&quot;headerlink&quot; title=&quot;自动布置LightProbe&quot;&gt;&lt;/a&gt;自动布置LightProbe&lt;/h4&gt;&lt;p&gt;将需要LightProbe的位置赋值给 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/LightProbeGroup-probePositions.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;LightProbeGroup.probePositions&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官方例子：&lt;a href=&quot;https://docs.unity3d.com/Manual/LightProbes-Placing-Scripting.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Placing probes using scripting&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;Unity中手动计算SH&quot;&gt;&lt;a href=&quot;#Unity中手动计算SH&quot; class=&quot;headerlink&quot; title=&quot;Unity中手动计算SH&quot;&gt;&lt;/a&gt;Unity中手动计算SH&lt;/h4&gt;&lt;p&gt;&lt;img src=&quot;/img/graphics/mlpDemo.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;SphericalHarmonicsL2提供两个方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;添加环境光(AddAmbientLight)&lt;/li&gt;
+&lt;li&gt;添加平行光(AddDirectionalLight)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Unity官方文档提供了一个例子：[LightProbes.bakedProbes(Unity文档)]&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://docs.unity3d.com/ScriptReference/LightProbes-bakedProbes.html&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>收拾东西翻出一套搁置脑洞 (Animal Boxing)</title>
+    <link href="/2019/01/12/20190112-animalBoxing/"/>
+    <id>/2019/01/12/20190112-animalBoxing/</id>
+    <published>2019-01-11T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.392Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/animalboxing/mmexport1547290455260.png" alt></p><a id="more"></a><p><img src="/img/animalboxing/mmexport1547290462270.jpg" alt><br><img src="/img/animalboxing/mmexport1547290464170.png" alt><br><img src="/img/animalboxing/mmexport1547290452146.png" alt><br><img src="/img/animalboxing/mmexport1547290457071.jpg" alt><br><img src="/img/animalboxing/mmexport1547290458742.jpg" alt><br><img src="/img/animalboxing/mmexport1547290460442.jpg" alt><br><img src="/img/animalboxing/mmexport1547290444647.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/animalboxing/mmexport1547290455260.png&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="画" scheme="/tags/%E7%94%BB/"/>
+    
+      <category term="脑洞" scheme="/tags/%E8%84%91%E6%B4%9E/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>阿西达卡与卡雅</title>
+    <link href="/2018/12/14/20181214-Axidaka_Kaya/"/>
+    <id>/2018/12/14/20181214-Axidaka_Kaya/</id>
+    <published>2018-12-13T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.392Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/drawings/mmexport1547466623253.jpg" alt></p><a id="more"></a><p><img src="/img/drawings/mmexport1547466610392.jpg" alt><br><img src="/img/drawings/mmexport1547466613324.jpg" alt><br><img src="/img/drawings/mmexport1547466615951.jpg" alt><br><img src="/img/drawings/mmexport1547466618417.jpg" alt></p><p><img src="/img/drawings/mmexport1547466631567.jpg" alt><br><img src="/img/drawings/mmexport1547466634061.jpg" alt><br><img src="/img/drawings/mmexport1547466626616.jpg" alt><br><img src="/img/drawings/mmexport1547466629138.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/drawings/mmexport1547466623253.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="画" scheme="/tags/%E7%94%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>练习</title>
+    <link href="/2018/10/26/20181026-Lianxi/"/>
+    <id>/2018/10/26/20181026-Lianxi/</id>
+    <published>2018-10-25T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/drawings/mmexport1547465582079.jpg" alt></p><a id="more"></a><p><img src="/img/drawings/mmexport1547465587685.jpg" alt></p><p><img src="/img/drawings/mmexport1547465585073.jpg" alt><br><img src="/img/drawings/mmexport1547465590268.jpg" alt></p><p><img src="/img/drawings/mmexport1547465592921.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/img/drawings/mmexport1547465582079.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="画" scheme="/tags/%E7%94%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>青海</title>
+    <link href="/2018/09/10/20180910-Qinghai/"/>
+    <id>/2018/09/10/20180910-Qinghai/</id>
+    <published>2018-09-09T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/img/drawings/mmexport1547465601926.jpg" alt><br><img src="/img/drawings/mmexport1547465611142.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/img/drawings/mmexport1547465601926.jpg&quot; alt&gt;&lt;br&gt;&lt;img src=&quot;/img/drawings/mmexport1547465611142.jpg&quot; alt&gt;&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>The Brain</title>
+    <link href="/2018/09/10/20181023-TheBrain/"/>
+    <id>/2018/09/10/20181023-TheBrain/</id>
+    <published>2018-09-09T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p>整理知识，整理思路的工具</p><p><img src="/img/thebrain.jpg" alt></p><a id="more"></a><p>thebrain.com</p><p>Pro版只能用国际信用卡买，所以在国内只能用免费版<br>感觉免费版也够用了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;整理知识，整理思路的工具&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/thebrain.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>时间力</title>
+    <link href="/2018/08/08/20180808-TimePower/"/>
+    <id>/2018/08/08/20180808-TimePower/</id>
+    <published>2018-08-07T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>动机</strong> 你需要拥有对结果的强烈渴望，才能克服自己按旧习惯做事的天生惰性。</p><a id="more"></a><h4 id="训练的效率与效果"><a href="#训练的效率与效果" class="headerlink" title="训练的效率与效果"></a>训练的效率与效果</h4><blockquote><p><em>积极的自我对话(自我暗示)</em> “我很擅长xxx”,”我是一个守时的人”<br><em>想象(形象化)/自我演练</em> 你会成为你所想象的那个人<br><em>角色扮演</em><br><em>榜样模仿</em><br><em>成为教师</em> 如果你在学习一项新知识或新技能的同时考虑如何将其教给他人，你吸收知识的速度将快得多。快速掌握新知识的方法之一就是学完以后立刻与他人分享。<br><em>成为榜样</em></p></blockquote><h4 id="自尊的三个影响因素"><a href="#自尊的三个影响因素" class="headerlink" title="自尊的三个影响因素"></a>自尊的三个影响因素</h4><blockquote><p><em>1.决定自我价值</em> 遵循自己的信念和价值观并拒绝妥协，高效利用时间<br><em>2.获得自我掌控</em><br><em>3.了解自我需要</em></p></blockquote><blockquote><p>高效的人与低效的人的一个主要差别在于前者往往非常关注产出或结果，后者只关注投入。换句话说，杰出者追求成绩，平庸者只顾努力。</p><p>你需要花21天时间来练习和重复从而形成一个新的习惯。</p></blockquote><h3 id="通过目标掌控时间"><a href="#通过目标掌控时间" class="headerlink" title="通过目标掌控时间"></a>通过目标掌控时间</h3><blockquote><p>按照优先顺序清晰的规划你的目标，然后专注地投入你能够完成的最重要的事，这是有效利用时间的关键。</p><p>如果你没有自己的目标，你注定永远为他人工作。</p><p>把目标写下来。</p></blockquote><h4 id="确立目标的基本原则"><a href="#确立目标的基本原则" class="headerlink" title="确立目标的基本原则"></a>确立目标的基本原则</h4><blockquote><p><strong>1. 要有远大的理想和志向</strong> 制定目标时将其”理想化”，应该是想做的任何事，只要心里清楚他到底是什么。<br><strong>2. 用现在时记录目标</strong> “我的体重150斤” “我的年收入是10万”，开始新的一天工作之前，重写目标<br><strong>3. 使目标保持平衡</strong> 经济目标；家庭目标；事业目标<br><strong>4. 了解自己最主要的目标</strong></p><p><strong>如何确定真正的理想</strong>:<br>如果明天中彩票一亿，你将如何改变生活，你将着手做那些现在无法做的事，停止做哪些现在正在做的事。<br>如果有机会为自己写自传，你希望在自传里写什么。<br>如果能确保任何目标都会成功，你会选择一个什么目标。<br>你在家里和工作上真正爱做的事是什么。最能带来自尊感的事情往往就是最适合做的工作。人们总是会爱做那些以天赋才能做到完美的事。<br><strong>30秒 快速列表</strong> 30秒写下最重要的三个目标，30秒写下目前最压迫的三个烦恼。<br><strong>设想零束缚</strong> 神说要有光，就有了光。花越多时间去写下每一个愿望，生活中就有越多的光明。<br>要实现你人生目标，需要采取哪些具体措施</p></blockquote><p><strong>目标的优先级</strong></p><ul><li>A：最重要的目标，能带来无上幸福和快乐的，发自内心希望实现</li><li>B：希望达成，会享受它的成果，但比不上A类重要</li><li>C：如果有固然很好的目标</li></ul><h4 id="制定详细的行动计划"><a href="#制定详细的行动计划" class="headerlink" title="制定详细的行动计划"></a>制定详细的行动计划</h4><blockquote><p>列出一张清单，记录能想到的能帮助实现目标的每一件事(应该能想到10-20件不同的事)。然后用ABC在每项前标记(“在实现目标上什么行动最有帮助？”)。</p></blockquote><h4 id="提高实现目标的能力"><a href="#提高实现目标的能力" class="headerlink" title="提高实现目标的能力"></a>提高实现目标的能力</h4><ol><li><strong>把目标看作一个事实</strong><br>想象目标什么样，实现目标后什么样，成功果实会带来怎样的愉悦。这种预想能力事人类最强有力的思维能力之一。不断想象目标实现时的画面，这个图像就会激活你的潜意识，并启动<strong>吸引力法则</strong>，你是一块”活磁铁”，会不知不觉的将那些有利于实现目标的观点、人物、资源吸收到生活中。<strong>信念法则</strong>：信仰创造真实。<strong>思维法则</strong>：思想会使自己具体化。</li><li><strong>积极肯定目标如同他们已经实现</strong> </li><li><strong>承担为实现结果的一切职责</strong><br>当你愿意为了实现自己的目标而承担全部责任时，在你通往成功的道路上就会有贵人相助。如果你在实现目标的过程中总是求助于人，得到的往往是失望。</li><li><strong>充满信心的去做每一件事</strong><br>一旦清楚想要的，下一步就是行动起来，就像这是一个不可能失败的任务。就如同在你实现梦想的过程中得到了某种伟大力量的庇佑。</li><li><strong>每天向目标迈进一步</strong></li></ol><h4 id="实现收入和事业目标"><a href="#实现收入和事业目标" class="headerlink" title="实现收入和事业目标"></a>实现收入和事业目标</h4><ol><li><strong>致力于服务对象的满意度</strong></li><li><strong>发现服务对象的需求</strong> 谁是我的服务对象，他满意的标准是什么，对他而言我的价值在哪里，我怎样才能最大限度地满足我的顾客。</li><li><strong>明确主要职能</strong> 第一，生产任务必须是具体的可测量的。 第二，一项生产任务是在你的掌控下的。 第三，一项生产任务的产出又会成为他人的投入。</li><li><strong>确定主要工作范畴</strong> 什么是只有你能做好并且能产生巨大贡献的，找到一个只有你胜任的工作。仅有20%的事情占到你工作价值的80%，需要把精力投入到体现大部分价值的这20%上去。</li><li><strong>进行目标管理</strong> 第一，清晰的描述定义目标，与有能力实现他的员工进行讨论，并就任务达成一致；第二，讨论并商定实施计划。达成该目标需要哪些步骤，应该如何去做，如何评价结果是否成功，用什么考核标准；第三，确定完成时间；第四，全权委托某个人来处理，一旦把描述清晰的工作和考核标准分配给有能力的员工，就让他以自己的方式来完成这项工作，不干涉，可以给建议支持，但明确这工作是他的责任。全权责任完成一项工作，是个人培养的最有力工具之一，并且能节省大量时间。</li></ol><h4 id="更快的实现目标"><a href="#更快的实现目标" class="headerlink" title="更快的实现目标"></a>更快的实现目标</h4><ol><li><strong>克服障碍</strong> 找出你与目标之间的障碍。写下每一个障碍，找出最大困难，集中精力下决心攻克。”每一个复杂的问题都要首先解决矛盾的主要方面，才能保证其他方面得以解决。” 找出这个最大的困难并全身心投入来解决它，防止被其他小问题分散注意力。</li><li><strong>找出你的瓶颈</strong> 几乎所有目标的实现和工作的完成都有一个步骤是整个过程的瓶颈。“目标实现受阻的原因有80%是源于你本身”。缺乏某种才能、技能往往是妨碍目标实现的主要原因。</li><li><strong>明确所需的知识和技能</strong> “要完成一件你从未完成的事，就要达到一个之前从未达到的高度。”</li><li><strong>知道你所需要的帮助</strong> 想想你需要与谁合作，这对他们来说有什么好处，他们在帮助你实现目标的同时能为自己赢得什么。</li></ol><p><strong>几个问题</strong><br>“我想要做什么？” 期望得到什么结果<br>“我打算怎么做？” 目前方法可行吗，你的假设是什么，是否有更好的方法<br>“什么是我真正的目标？” 清楚目标背后的真正目的<br>“我的人生方向在哪里？” </p><h4 id="培养绝对清晰的方向感"><a href="#培养绝对清晰的方向感" class="headerlink" title="培养绝对清晰的方向感"></a>培养绝对清晰的方向感</h4><p>“成功必备的品质是：明确的目标、扎实的知识和强烈的愿望。”</p><h3 id="卓越时间管理的本质——有序"><a href="#卓越时间管理的本质——有序" class="headerlink" title="卓越时间管理的本质——有序"></a>卓越时间管理的本质——有序</h3><p>越是肯花时间在前期计划上，之后的行动就越是万无一失。</p><p>潜意识是为目标提供动力的工具。</p><p>花在制定计划上的每1分钟都会节省执行计划时的10分钟。</p><p><strong>大多数人的失败原因</strong><br>“没有计划的行动是一切失败的原因”<br>“成功是靠自律积累起来的”</p><h4 id="个人条理的四个观念"><a href="#个人条理的四个观念" class="headerlink" title="个人条理的四个观念"></a>个人条理的四个观念</h4><ol><li><strong>整洁</strong> “秩序是天堂的第一法则”</li><li><strong>以一个旁观者的角度来评价自己</strong> “什么样的人会在这样的地方工作？” “什么样的人会有这样的包？” “什么样的人像这样生活？” 通过一个中立的第三方视角来诚实的评价自己。</li><li><strong>拒绝为自己找借口</strong> </li><li><strong>一张整洁办公桌的生产率</strong></li></ol><p><strong>如何处理文字工作</strong></p><ol><li><strong>扔掉</strong> 垃圾邮件、广告、传单，如果不看是否有消极后果；如果需要这些信息是否可以通过其他途径获得？</li><li><strong>委派给别人</strong> 这是否应该是其他人的工作；是否别人可以做的更出色？</li><li><strong>执行</strong> 准备一个“执行”文件夹，当你想到需要做什么事的时候，就立刻把它放到执行文件夹中，留待稍后处理。</li><li><strong>归档</strong> 对时间最大的浪费行为之一就是不停拿起同一份文件，读完又放下，一遍一遍重复。 </li></ol><h4 id="时间管理的工具和技巧"><a href="#时间管理的工具和技巧" class="headerlink" title="时间管理的工具和技巧"></a>时间管理的工具和技巧</h4><ol><li><strong>使用时间规划工具</strong> 主目录、日历、每日工作列表（“今日行动”）</li><li><strong>按照计划列表工作</strong> </li><li><strong>根据优先次序整理列表</strong></li><li><strong>用你喜欢的时间管理系统</strong></li></ol><h4 id="个人条理的工具"><a href="#个人条理的工具" class="headerlink" title="个人条理的工具"></a>个人条理的工具</h4><ol><li><strong>前夜的准备</strong> 有助于潜意识中开始计划，梦中闪现灵感。帮助睡眠清空脑子。</li><li><strong>规划时间</strong> </li><li><strong>早睡早起</strong> 在开展任何工作前进行几分钟安静的沉思</li><li><strong>归档系统</strong> </li><li><strong>黄金时间做最重要的工作</strong></li><li><strong>使用录音</strong></li></ol><h3 id="建立正确的优先顺序"><a href="#建立正确的优先顺序" class="headerlink" title="建立正确的优先顺序"></a>建立正确的优先顺序</h3><p><strong>从价值观着手</strong> 基于价值观选择对你来说最重要的工作。<br><strong>倾听你的直觉</strong> “内心平静检验” 如果所做的事情与自己的价值观相符，会感到有种的幸福。从事不喜欢的工作，人们容易产生这工作不对劲的想法，工作是好工作，只是不适合你，与你的价值观、天赋不匹配。<br><strong>洞悉自己</strong> 想象你可以设计一份理想的工作，可以每天只做自己喜欢的事情，这种情况下，你会做出怎样的改变。<strong>零基础思维</strong>“假设我现在没有从事这份工作，我还会选择这份工作吗。<strong>勇气</strong>会引导你对自己的生活方式和工作方式做出根本性改变。<br><strong>帕累托法则（二八定律）</strong> 在开始工作前明确最重要的20%的任务</p><p><strong>对时间最糟糕的利用就是把不需要做的事做得完美</strong></p><p><strong>创造性拖延</strong> 下决心在80%价值较低的工作上拖延。</p><p>领导者：做对的事情；执行者：把事情做对<br><strong>停下某些工作</strong></p><h4 id="个人优先事项"><a href="#个人优先事项" class="headerlink" title="个人优先事项"></a>个人优先事项</h4><ol><li>我的特长和优势，天赋才能是什么，什么是我特别擅长的事</li><li>我过去获得的最优秀成绩是什么，哪些才能使我取得这样的成就</li><li>哪些事情是对别人来说很困难，而我却得心应手的</li><li>如果我想提升自己，我可以从哪里获得这样的机会</li><li>我真正热爱的事业是什么</li></ol><p><strong>优势领域</strong> 必须在至少一个方面绝对突出。</p><h4 id="努力增值"><a href="#努力增值" class="headerlink" title="努力增值"></a>努力增值</h4><p>你贡献价值的能力决定了你的所得回报。<br>“在我做的所有事情中，我以何种方式，在什么时候的工作对公司的贡献最大？”<br>通常，只有三件事囊括了你对公司90%的贡献。</p><ol><li>“如果我可以一天只做一件事，什么事能够为我的工作带来最大价值？”</li><li>“如果再加一件事，它是什么？”</li><li>重复以上问题直到确定这三项主要活动。</li></ol><h4 id="治疗类选法"><a href="#治疗类选法" class="headerlink" title="治疗类选法"></a>治疗类选法</h4><p>胜出者：销量最好，生产稳定的聚宝盆。需要精心打理但不需即时关注；<br>幸存者：具有潜力，投入更多时间可以打造成胜出者；<br>失败者：不管如何投入都迟早要消亡。</p><p><strong>展望未来五年</strong> 设想公司在未来几年成为领跑者，然后再去定位哪些产品、服务、市场尤其是劳动力技能是在五年后成为领军者所必需的。</p><p>“永远不要让最重要的事受到最不重要的事的支配”——歌德</p><p><strong>强迫效率法则</strong><br>“如果我要离开一个月，而在走前只能完成一件事，需要完成的最重要的任务是什么？”</p><h3 id="形成高效的工作习惯"><a href="#形成高效的工作习惯" class="headerlink" title="形成高效的工作习惯"></a>形成高效的工作习惯</h3><p><strong>专注和集中</strong> 弄清目标和步骤，聚焦于当下对于实现目标最重要的事。<br>对时间最大的浪费就是把根本不需要做的事做到完美。</p><p><strong>实现高效的步骤</strong></p><ol><li>设置清楚的目标并记录下来</li><li>制定实现目标的详细行动计划</li><li>给每项行动设置优先级</li><li>不分心、不转移</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;动机&lt;/strong&gt; 你需要拥有对结果的强烈渴望，才能克服自己按旧习惯做事的天生惰性。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="读书笔记" scheme="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>三维重建与游戏制作 Reality Capture</title>
+    <link href="/2018/06/20/20180620-RealityCapture/"/>
+    <id>/2018/06/20/20180620-RealityCapture/</id>
+    <published>2018-06-19T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif" alt></p><p>今天看到Unity的一篇博客文章 <a href="https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/" target="_blank" rel="noopener">Book of the Dead: Photogrammetry Assets, Trees, VFX</a><br>三维重建渐渐的实用化了。<br>想起大学在虚国重的日子，竟然已经十年了……</p><a id="more"></a><p><img src="https://blogs.unity3d.com/wp-content/uploads/2018/06/image17.gif" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2018/06/image41.gif&quot; alt&gt;&lt;/p&gt;
+&lt;p&gt;今天看到Unity的一篇博客文章 &lt;a href=&quot;https://blogs.unity3d.com/2018/06/15/book-of-the-dead-photogrammetry-assets-trees-vfx/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Book of the Dead: Photogrammetry Assets, Trees, VFX&lt;/a&gt;&lt;br&gt;三维重建渐渐的实用化了。&lt;br&gt;想起大学在虚国重的日子，竟然已经十年了……&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
+    
+  </entry>
+  
+</feed>
