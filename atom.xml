@@ -6,10 +6,38 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2021-07-21T13:01:22.370Z</updated>
+  <updated>2021-09-01T11:39:56.385Z</updated>
   <id>/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>(搬运) Far Cry的火如何燃烧与传播</title>
+    <link href="/2021/05/01/20210330-FarCry_Fire%20-%20Copy/"/>
+    <id>/2021/05/01/20210330-FarCry_Fire - Copy/</id>
+    <published>2021-04-30T16:00:00.000Z</published>
+    <updated>2021-09-01T11:39:56.385Z</updated>
+    
+    <content type="html"><![CDATA[<p>主要是翻译与搬运，原文见参考资料中的链接。</p><p><img src="http://jflevesque.com/wp-content/uploads/2020/01/Far-Cry-3-man-on-fire.jpg" alt></p><h3 id="Far-Cry-2-背景故事"><a href="#Far-Cry-2-背景故事" class="headerlink" title="Far Cry 2 背景故事"></a>Far Cry 2 背景故事</h3><p>当年，育碧蒙特利尔的 初级Gameplay程序员Jean-Francois Lévesque，用了超过一年的时间研究并开发了Far Cry 2的火焰传播功能。以下是他接受采访的部分内容：</p><p>育碧蒙特利尔为什么决定这样一个复杂的，程序化的功能是设计上所需要的？<br>创意总监Clint Hocking在非常早期的时候就想要制造一种新的玩家沉浸。这个设计非常有野心，为了支持这个愿景开发团队需要达到一个功能上的新高度。<br>很少有游戏公司愿意让一个人全职三年就为了开发植被系统，或者让另一个人工作一年半就是为了让火更真实。这就是团队为了达到我们为自己设定的目标所付出的奉献与努力。</p><p>但是火焰功能并不是一开始就这么野心勃勃。</p><p>最初技术总监Dominic Guay指派Jean去做火焰传播的时候，Dominic预见到性能会是一个问题。<br>所以他最开始的计划是让火焰仅在小型的预先定义好的10x10m的小块草，以及一些非常小的物体上进行。<br>几周后Jean实现了Dominic想要的功能，于是制作人Louis-Pierre Pharand和Clint飞到巴黎像管理团队展示了Demo。<br>结果巴黎的管理层非常喜欢这个火，他们想要整个Savanna和每一棵树都能着火。因为Jean是个初级并且对这个东西开发起来多复杂没有概念，于是就同意去做了。</p><p>这就是火焰如何成为Far Cry主要特色的故事。</p><a id="more"></a><h3 id="基础结构"><a href="#基础结构" class="headerlink" title="基础结构"></a>基础结构</h3><p><img src="http://jflevesque.com/wp-content/uploads/2020/01/ACell1.jpg" alt><br>Far Cry的火焰传播基于平均分布的网格，对于草使用2D网格，对物体和树使用3D网格。<br>每个格子（cell）都记录了它在世界中的坐标、范围和HP（hitpoints），格子们还有很多其它属性，但是这三条是火焰延烧所必需的。</p><h3 id="点火！怎么放火？"><a href="#点火！怎么放火？" class="headerlink" title="点火！怎么放火？"></a>点火！怎么放火？</h3><p>游戏引擎记录了游戏内的所有伤害（damage），如子弹伤害，爆炸或火焰伤害。当一个游戏实体（game entity）被破坏，它会收到一个事件（event），这个伤害事件包括了伤害值，伤害类型和造成伤害的原因。如果伤害类型是基于火焰的并且该实体是可燃的（flammable），则以下两件事情会发生：</p><ul><li>首先，被伤害的实体的火焰网格（fire grid）会动态的生成。一旦生成，会一直存在。</li><li>第二，我们找到距离伤害源最近的邻接格子，它们会受到伤害，HP会相应减少。<br>当一个格子被火焰伤害并且失去了所有HP，它就着火了</li></ul><p>烧起来之后，这个格子自己就变成了伤害输出者（damager）。它会对周围的格子造成伤害。周围格子HP归零之后，就会起火。这就是火焰传播的方式。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/2DGridBiggerFire1.jpg" alt><br>最后，格子需要一个有限的持续时间（lifetime），不然它会永远烧下去。它可以看作是为可燃材质设定的能量。比如，一片纸比一块木头的持续时间短。</p><h3 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h3><p>潮湿的雨林 vs 干燥的草地<br>增加雨林格子的HP，它就变得不容易点着，火焰传播会变慢。降低持续时间所以火会变得更快熄灭</p><p>如何创建传播网格<br>草/地：实时创建一个2D的网格并投影到3D地形上。对每个格子判断它是否在水下，或者在石头、房子的下面，这些格子会被关闭并永远不会着火。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/2DGridDisabled.jpg" alt></p><p>物体：创建一个AABB完全包括物体，平均切分Bounding Box到很多小方块（方块数量取决于物体大小以及性能）。循环监测每个方块并进行碰撞检测，去掉无效的格子。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/3DGrid.jpg" alt></p><h3 id="风"><a href="#风" class="headerlink" title="风"></a>风</h3><p>风为玩家增加了一层真实性。这里我们很容易会想太多，然后去实现一套非常复杂的系统。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/1-s2.0-S1540748912001988-gr3.jpg" alt><br>火焰朝风的方向传播的更快，我们对风的方向与邻接格子的方向做一个点乘（dot product），结果越大，那个格子受到的伤害越多。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/ACellWindEffect1.jpg" alt><br>这一条就可以获得一个很好的朝风的方向传播的钟形火线</p><h3 id="向周围的东西传播以及链式反应"><a href="#向周围的东西传播以及链式反应" class="headerlink" title="向周围的东西传播以及链式反应"></a>向周围的东西传播以及链式反应</h3><p>当一个格子起火，它会发送一个消息 “我着火了然后我得燃烧范围是这些”。这个事件被范围内的其它物体、AI以及其它游戏系统获取。它们分别对这条消息作出反应，AI会吓跑，可燃物受到伤害。<br><img src="http://jflevesque.com/wp-content/uploads/2020/01/2DGridDmgZone.jpg" alt></p><h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><h5 id="植发策略（Hair-Transplant-Strategy）"><a href="#植发策略（Hair-Transplant-Strategy）" class="headerlink" title="植发策略（Hair Transplant Strategy）"></a>植发策略（Hair Transplant Strategy）</h5><p>在理想情况下，我们可以跑动很多的粒子发射器，我们可以在屏幕上显示大量的粒子。<br>不幸的是，在现实中这些数量其实都非常低。<br>我们需要把发射器放到最需要的地方，所以我们采用植发策略（Hair Transplant Strategy）！<br>在Far Cry 2中，火焰粒子发射器被不停的瞬移，最常见的是从相机远处移到相机前面。<br>并且近距离的时候发射器的密度更高，越远越稀疏。你可以把这想成一种火焰LOD。<br>如果我们需要更多发射器但是没有预算了，我们就增大粒子尺寸让它们填充更多屏幕空间。<br>使用这个策略，我们可以模拟几米宽的野火，用相对少量的粒子发射器</p><p><img src="http://jflevesque.com/wp-content/uploads/2020/01/farc2.jpg" alt></p><h5 id="事件管线"><a href="#事件管线" class="headerlink" title="事件管线"></a>事件管线</h5><p>当你有上千个格子在燃烧并向世界广播事件时，你的CPU可能就快卡死了。<br>解决方法是重组格子们为AABB组，这些组会动态的合并、分裂、变形，来跟随火焰的变化。<br>于是事件变成由AABB发送，而不是每个格子。另外事件还可以分帧发送来避免性能尖峰。</p><h5 id="可控性"><a href="#可控性" class="headerlink" title="可控性"></a>可控性</h5><p>如果不限制火焰传播，那么火焰会</p><p>烧毁全图杀死所有NPC<br>用几千个网格和发射器把内存挤爆<br>把帧率卡成PPT<br>以上所有<br>有很多方式可以解决个问题，我得方式可能不是最优解。但是我试图找到最简单可行的方案。<br>设计一个闭环系统为火焰分配传播点数（Spreading points）并且在传播的时候消耗点数。<br>举个例子，一个玩家扔了一瓶莫洛托夫到干草地上。这瓶莫洛托夫给了那小片草60点传播点数。<br>火焰燃烧草的时候，需要8点传播点数，于是这个火在结束前可以传播7个格子。<br>如果玩家扔了2瓶莫洛托夫，那个草片会有120点，使它能够消耗15个格子。</p><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li>GDC Speaker Q&amp;A, <a href="https://gdconf.com/news/qa-remi-quenin-discusses-data-pipeline-farcry-5" target="_blank" rel="noopener">Speaker Q&amp;A: Ubisoft’s Remi Quenin Discusses The Data Pipeline Of FarCry 5</a>, GDC 2017</li><li>M Müller, <a href="https://hdms.bsz-bw.de/frontdoor/index/index/docId/6419" target="_blank" rel="noopener">Developing a Fire Propagation System for a Massively Multiplayer Online Game</a>, Masterarbeit 2018</li><li>Jean-Francois Levesque, <a href="http://jflevesque.com/2012/12/06/far-cry-how-the-fire-burns-and-spreads/" target="_blank" rel="noopener">Far Cry : How the Fire Burns and Spreads</a>, 2012.</li><li>Chris Remo，<a href="https://www.gamasutra.com/view/news/111851/Interview_How_Far_Cry_2s_Fire_Fuels_Spreads.php" target="_blank" rel="noopener">Interview: How Far Cry 2’s Fire Fuels, Spreads</a>，2008</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;主要是翻译与搬运，原文见参考资料中的链接。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://jflevesque.com/wp-content/uploads/2020/01/Far-Cry-3-man-on-fire.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Far-Cry-2-背景故事&quot;&gt;&lt;a href=&quot;#Far-Cry-2-背景故事&quot; class=&quot;headerlink&quot; title=&quot;Far Cry 2 背景故事&quot;&gt;&lt;/a&gt;Far Cry 2 背景故事&lt;/h3&gt;&lt;p&gt;当年，育碧蒙特利尔的 初级Gameplay程序员Jean-Francois Lévesque，用了超过一年的时间研究并开发了Far Cry 2的火焰传播功能。以下是他接受采访的部分内容：&lt;/p&gt;
+&lt;p&gt;育碧蒙特利尔为什么决定这样一个复杂的，程序化的功能是设计上所需要的？&lt;br&gt;创意总监Clint Hocking在非常早期的时候就想要制造一种新的玩家沉浸。这个设计非常有野心，为了支持这个愿景开发团队需要达到一个功能上的新高度。&lt;br&gt;很少有游戏公司愿意让一个人全职三年就为了开发植被系统，或者让另一个人工作一年半就是为了让火更真实。这就是团队为了达到我们为自己设定的目标所付出的奉献与努力。&lt;/p&gt;
+&lt;p&gt;但是火焰功能并不是一开始就这么野心勃勃。&lt;/p&gt;
+&lt;p&gt;最初技术总监Dominic Guay指派Jean去做火焰传播的时候，Dominic预见到性能会是一个问题。&lt;br&gt;所以他最开始的计划是让火焰仅在小型的预先定义好的10x10m的小块草，以及一些非常小的物体上进行。&lt;br&gt;几周后Jean实现了Dominic想要的功能，于是制作人Louis-Pierre Pharand和Clint飞到巴黎像管理团队展示了Demo。&lt;br&gt;结果巴黎的管理层非常喜欢这个火，他们想要整个Savanna和每一棵树都能着火。因为Jean是个初级并且对这个东西开发起来多复杂没有概念，于是就同意去做了。&lt;/p&gt;
+&lt;p&gt;这就是火焰如何成为Far Cry主要特色的故事。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
   
   <entry>
     <title>Substance Painter - Unity 效果还原的一种方法</title>
@@ -438,27 +466,6 @@
   </entry>
   
   <entry>
-    <title>The Brain</title>
-    <link href="/2018/09/10/20181023-TheBrain/"/>
-    <id>/2018/09/10/20181023-TheBrain/</id>
-    <published>2018-09-09T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.391Z</updated>
-    
-    <content type="html"><![CDATA[<p>整理知识，整理思路的工具</p><p><img src="/img/thebrain.jpg" alt></p><a id="more"></a><p>thebrain.com</p><p>Pro版只能用国际信用卡买，所以在国内只能用免费版<br>感觉免费版也够用了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;整理知识，整理思路的工具&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/img/thebrain.jpg&quot; alt&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
-    
-  </entry>
-  
-  <entry>
     <title>青海</title>
     <link href="/2018/09/10/20180910-Qinghai/"/>
     <id>/2018/09/10/20180910-Qinghai/</id>
@@ -474,6 +481,27 @@
         &lt;p&gt;&lt;img src=&quot;/img/drawings/mmexport1547465601926.jpg&quot; alt&gt;&lt;br&gt;&lt;img src=&quot;/img/drawings/mmexport1547465611142.jpg&quot; alt&gt;&lt;/p&gt;
 
       
+    
+    </summary>
+    
+    
+      <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>The Brain</title>
+    <link href="/2018/09/10/20181023-TheBrain/"/>
+    <id>/2018/09/10/20181023-TheBrain/</id>
+    <published>2018-09-09T16:00:00.000Z</published>
+    <updated>2019-05-31T02:20:59.391Z</updated>
+    
+    <content type="html"><![CDATA[<p>整理知识，整理思路的工具</p><p><img src="/img/thebrain.jpg" alt></p><a id="more"></a><p>thebrain.com</p><p>Pro版只能用国际信用卡买，所以在国内只能用免费版<br>感觉免费版也够用了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;整理知识，整理思路的工具&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/thebrain.jpg&quot; alt&gt;&lt;/p&gt;
     
     </summary>
     
@@ -499,32 +527,6 @@
     
     
       <category term="读书笔记" scheme="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HUNTERxHUNTER(猎人) 观后感</title>
-    <link href="/2018/06/20/20180620-HunterXHunter/"/>
-    <id>/2018/06/20/20180620-HunterXHunter/</id>
-    <published>2018-06-19T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.390Z</updated>
-    
-    <content type="html"><![CDATA[<p>关于世界</p><p>关于角色</p><p>塑造一个角色，应当将自己完全投射到这个角色中，他是怎样的性格，有怎样的经历，</p><p>Gon Freecss<br>Kurapika<br>小麦(コムギ, Komugi, 哥姆琪)<br>梅路艾姆(Meruem)<br>尼飛彼多(Neferpitou)<br>奇路亚(Killua Zaoldyeck) </p><p>关于故事</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;关于世界&lt;/p&gt;
-&lt;p&gt;关于角色&lt;/p&gt;
-&lt;p&gt;塑造一个角色，应当将自己完全投射到这个角色中，他是怎样的性格，有怎样的经历，&lt;/p&gt;
-&lt;p&gt;Gon Freecss&lt;br&gt;Kurapika&lt;br&gt;小麦(コムギ, Komugi, 哥姆琪)&lt;br&gt;梅路艾姆(Meruem)&lt;br&gt;
-      
-    
-    </summary>
-    
-    
-      <category term="观后感" scheme="/tags/%E8%A7%82%E5%90%8E%E6%84%9F/"/>
     
   </entry>
   
