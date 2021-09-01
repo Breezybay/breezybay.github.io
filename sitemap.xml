@@ -135,13 +135,6 @@
   </url>
   
   <url>
-    <loc>/2018/06/20/20180620-RealityCapture/</loc>
-    
-    <lastmod>2019-05-31T02:20:59.391Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>/2018/08/08/20180808-TimePower/</loc>
     
     <lastmod>2019-05-31T02:20:59.391Z</lastmod>
@@ -149,7 +142,7 @@
   </url>
   
   <url>
-    <loc>/2018/09/10/20180910-Qinghai/</loc>
+    <loc>/2018/06/20/20180620-RealityCapture/</loc>
     
     <lastmod>2019-05-31T02:20:59.391Z</lastmod>
     
@@ -157,6 +150,13 @@
   
   <url>
     <loc>/2018/09/10/20181023-TheBrain/</loc>
+    
+    <lastmod>2019-05-31T02:20:59.391Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/2018/09/10/20180910-Qinghai/</loc>
     
     <lastmod>2019-05-31T02:20:59.391Z</lastmod>
     
@@ -184,14 +184,14 @@
   </url>
   
   <url>
-    <loc>/2018/04/25/20180425-RulesofPlay/</loc>
+    <loc>/2018/04/19/20180419-TAThoughts/</loc>
     
     <lastmod>2019-05-31T02:20:59.389Z</lastmod>
     
   </url>
   
   <url>
-    <loc>/2018/04/19/20180419-TAThoughts/</loc>
+    <loc>/2018/04/25/20180425-RulesofPlay/</loc>
     
     <lastmod>2019-05-31T02:20:59.389Z</lastmod>
     
@@ -275,7 +275,7 @@
   </url>
   
   <url>
-    <loc>/2017/06/05/20170605-ShaderGUI/</loc>
+    <loc>/2017/05/24/20170524-HairScheuermann/</loc>
     
     <lastmod>2019-05-31T02:20:59.380Z</lastmod>
     
@@ -289,16 +289,9 @@
   </url>
   
   <url>
-    <loc>/2017/05/24/20170524-HairScheuermann/</loc>
+    <loc>/2017/06/05/20170605-ShaderGUI/</loc>
     
     <lastmod>2019-05-31T02:20:59.380Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/2017/03/24/20170324-normal-map/</loc>
-    
-    <lastmod>2019-05-31T02:20:59.379Z</lastmod>
     
   </url>
   
@@ -311,6 +304,13 @@
   
   <url>
     <loc>/2014/07/31/20140731-PhotoshopUnityPipeline/</loc>
+    
+    <lastmod>2019-05-31T02:20:59.379Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/2017/03/24/20170324-normal-map/</loc>
     
     <lastmod>2019-05-31T02:20:59.379Z</lastmod>
     
