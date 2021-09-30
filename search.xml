@@ -44,6 +44,27 @@
     
     
     <entry>
+      <title>工程目录结构 Project Folder Structure</title>
+      <link href="/2020/08/09/20200809-ProjectFolderStructure/"/>
+      <url>/2020/08/09/20200809-ProjectFolderStructure/</url>
+      
+        <content type="html"><![CDATA[<p>游戏工程的目录结构不是一个非常显性并且被重视的事情，但对于具备一定规模的项目，不合理的工程目录结构会导致一些问题，比如：</p><ul><li>场景间耦合，A场景引用了存在B场景的资源</li><li>迭代速度慢，难以持续集成，资源打包时间变长（须打包大目录下的较大Bundle）</li><li>整体资源量失控，更新包数据量变大</li></ul><h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>随便猜的一些目录结构的例子，不代表实际情况</p><table><thead><tr><th style="text-align:center">好的</th><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center">不太好的</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/pipeline/folderStructure_Borderlands3.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_ROE.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Valorant.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Fortnite.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_PUBG.png" alt></td></tr></tbody></table><a id="more"></a><h3 id="一个方案"><a href="#一个方案" class="headerlink" title="一个方案"></a>一个方案</h3><p><img src="/img/pipeline/folderStructure_SharedRes3.png" alt></p><ul><li><strong>通用资源库</strong>，如果一个资源被多个场景引用，该资源应该位于通用资源库中<ul><li>可以设置一个<strong>通用材质库</strong>，类似调色板</li></ul></li><li><strong>资源素材位置统一</strong>，同一<strong>组</strong>（如Bricks）/ 同一<strong>个</strong>（Brick001A）资源的相关素材（网格、材制、贴图）放在同一个目录下<ul><li>按同一<strong>组</strong>资源进行管理，可以更方便管理有局部共用资源的情况，如某场景的共用贴图和材质，可以在本地目录中共用，不需要放入通用资源库</li><li>按同一<strong>个</strong>资源进行管理，可以以更小的单位分离资源，当变体(Brick001A)与原型(Brick001)有共用素材的时候，仅关联原型的素材</li></ul></li><li><strong>公共资源</strong>修改流程/权限。明确一个修改是修改地图，还是修改（公共）资源；如果是修改公共资源，需要先确认该资源修改会造成什么影响，被哪些场景使用，是应该修改，还是应该新增一个资源<ul><li>确须修改某个地图内的公共资源，但又不能修改其它受影响的地图的情况，可以考虑新增资源，如新增某一资源的v2、v3版本</li></ul></li><li>场景地图<strong>分工程</strong>，<strong>分版本库</strong>，仅关联本地图实际用到的通用资源目录</li><li>地形资源按照<strong>生态</strong>进行分类</li></ul><table><thead><tr><th style="text-align:center">通用材质库</th><th style="text-align:center">通用预制库</th><th style="text-align:center">生态分类</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/pipeline/folderStructure_SharedMaterials.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_SharedProps.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Biome.png" alt></td></tr></tbody></table><h5 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h5><ul><li>美术能够<strong>持续集成</strong></li><li>资源<strong>打包时间</strong>缩短</li><li><strong>更新包</strong>数据量变小（通常仅需更新该资源本身）</li><li>整体<strong>资源量</strong>得到控制</li><li>场景工程可以<strong>独立开发</strong>（可以整包某个单独场景）</li><li><strong>迭代</strong>效率提升（更轻量灵活，减少冲突）</li></ul><p>更合理的目录结构，优化打包及加载性能<br>美术成本更可控：内部研发，核对策划需求，资产控制都更可控</p><h5 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h5><p>如果是在项目中期进行结构变更，可能面临以下风险：</p><ul><li>需要一段较长时间（1~2个月）的修复期</li><li>以目录路径为前提的脚本工具等需要更新</li><li>美术需要时间熟悉适应新的目录结构及相关规范</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Game Dev </tag>
+            
+            <tag> Unity </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</title>
       <link href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/"/>
       <url>/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/</url>
@@ -120,6 +141,27 @@
             <tag> Game Dev </tag>
             
             <tag> Unity </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>美术用简单性能讲解 Explanation of performance for Artists</title>
+      <link href="/2019/10/01/20191001-Performance4Artists/"/>
+      <url>/2019/10/01/20191001-Performance4Artists/</url>
+      
+        <content type="html"><![CDATA[<h3 id="贴图对性能的影响"><a href="#贴图对性能的影响" class="headerlink" title="贴图对性能的影响"></a>贴图对性能的影响</h3><p><img src="/img/performance/textureRAM.png" alt></p><a id="more"></a><ul><li>CPU：所有载入的物体，CPU都要管理，并且告诉GPU哪些要绘制，给GPU准备好相应的资源</li><li>内存：所有场景内载入的资源都要进内存</li><li>GPU：画东西的</li><li>显存带宽：去往显存的路。当显存装不下当前绘制所需的所有资源时，就会每帧都可能发生需要去显存的东西太多，这时候就会堵，可能导致帧率大幅下降（比如70-&gt;20）</li><li>显存：GPU储存绘制相关资源的地方，比如贴图，Mesh，Shader</li><li>Tex Cache：GPU画每个Drawcall时拿在手头的资源，画东西的时候用手上的材料最快，如果手上没有，就得去显存找，这样就慢了。</li><li>Shader：怎么画</li></ul><h3 id="为什么要合理设置LOD"><a href="#为什么要合理设置LOD" class="headerlink" title="为什么要合理设置LOD"></a>为什么要合理设置LOD</h3><h4 id="辛苦的GPU"><a href="#辛苦的GPU" class="headerlink" title="辛苦的GPU"></a>辛苦的GPU</h4><p>GPU就像一个画家，每一帧，他都要画满一屏的画。</p><p>为了绘制一个物体，他要先把箱子的网格、贴图等等拿在手上，就像准备颜料盘和画笔一样。（如果需要拿的东西太多，一次拿不下了，那就只能先拿一部分画一画，再拿起另一部分画一画，极大降低绘制速度）</p><p>每一个物体，他都要这样做。</p><table><thead><tr><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center"></th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/performance/lod1.png" alt></td><td style="text-align:center">-</td><td style="text-align:center"><img src="/img/performance/lod2.png" alt></td></tr></tbody></table><p>所以，如果场景里有成百上千个实际上不需要绘制的物体，我们应该把它们从需要绘制的物体列表中去掉，否则GPU就要每帧每帧都付出成百上千次不必要的辛苦。</p><p>如果一个离得很远的物体，我们应该把它的精度降低到适合屏幕的程度，否则GPU就要每帧付出不必要的辛苦。</p><p>不止在绘制这个物体的色彩时，在绘制阴影、ZPrePass阶段也要一个一个全部来一遍</p><h5 id="想一想"><a href="#想一想" class="headerlink" title="想一想"></a>想一想</h5><p>要维持单位面积的三角面密度（相同屏幕面积内的三角面数一致），如果LOD1的面数是LOD0的50%，LOD0的切换高度是100%，问：LOD1的切换高度是多少？</p><p><img src="/img/performance/lod3.png" alt><br>答案：70%</p><h4 id="辛苦的CPU"><a href="#辛苦的CPU" class="headerlink" title="辛苦的CPU"></a>辛苦的CPU</h4><p>每一帧，CPU都要把需要GPU画出来的东西整理好，一个一个交给GPU。</p><p>如果有很多东西是实际上并不需要画出来的，CPU就要每帧都付出不必要的辛苦。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Game Dev </tag>
+            
+            <tag> Graphics </tag>
             
         </tags>
       
@@ -414,6 +456,25 @@
     
     
     <entry>
+      <title>HUNTERxHUNTER(猎人) 观后感</title>
+      <link href="/2018/06/20/20180620-HunterXHunter/"/>
+      <url>/2018/06/20/20180620-HunterXHunter/</url>
+      
+        <content type="html"><![CDATA[<p>关于世界</p><p>关于角色</p><p>塑造一个角色，应当将自己完全投射到这个角色中，他是怎样的性格，有怎样的经历，</p><p>Gon Freecss<br>Kurapika<br>小麦(コムギ, Komugi, 哥姆琪)<br>梅路艾姆(Meruem)<br>尼飛彼多(Neferpitou)<br>奇路亚(Killua Zaoldyeck) </p><p>关于故事</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 观后感 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>三维重建与游戏制作 Reality Capture</title>
       <link href="/2018/06/20/20180620-RealityCapture/"/>
       <url>/2018/06/20/20180620-RealityCapture/</url>
@@ -429,25 +490,6 @@
             <tag> Unity </tag>
             
             <tag> Graphics </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>HUNTERxHUNTER(猎人) 观后感</title>
-      <link href="/2018/06/20/20180620-HunterXHunter/"/>
-      <url>/2018/06/20/20180620-HunterXHunter/</url>
-      
-        <content type="html"><![CDATA[<p>关于世界</p><p>关于角色</p><p>塑造一个角色，应当将自己完全投射到这个角色中，他是怎样的性格，有怎样的经历，</p><p>Gon Freecss<br>Kurapika<br>小麦(コムギ, Komugi, 哥姆琪)<br>梅路艾姆(Meruem)<br>尼飛彼多(Neferpitou)<br>奇路亚(Killua Zaoldyeck) </p><p>关于故事</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 观后感 </tag>
             
         </tags>
       

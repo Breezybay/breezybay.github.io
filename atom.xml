@@ -64,6 +64,54 @@
   </entry>
   
   <entry>
+    <title>工程目录结构 Project Folder Structure</title>
+    <link href="/2020/08/09/20200809-ProjectFolderStructure/"/>
+    <id>/2020/08/09/20200809-ProjectFolderStructure/</id>
+    <published>2020-08-08T16:00:00.000Z</published>
+    <updated>2021-09-29T12:34:41.539Z</updated>
+    
+    <content type="html"><![CDATA[<p>游戏工程的目录结构不是一个非常显性并且被重视的事情，但对于具备一定规模的项目，不合理的工程目录结构会导致一些问题，比如：</p><ul><li>场景间耦合，A场景引用了存在B场景的资源</li><li>迭代速度慢，难以持续集成，资源打包时间变长（须打包大目录下的较大Bundle）</li><li>整体资源量失控，更新包数据量变大</li></ul><h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>随便猜的一些目录结构的例子，不代表实际情况</p><table><thead><tr><th style="text-align:center">好的</th><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center">不太好的</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/pipeline/folderStructure_Borderlands3.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_ROE.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Valorant.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Fortnite.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_PUBG.png" alt></td></tr></tbody></table><a id="more"></a><h3 id="一个方案"><a href="#一个方案" class="headerlink" title="一个方案"></a>一个方案</h3><p><img src="/img/pipeline/folderStructure_SharedRes3.png" alt></p><ul><li><strong>通用资源库</strong>，如果一个资源被多个场景引用，该资源应该位于通用资源库中<ul><li>可以设置一个<strong>通用材质库</strong>，类似调色板</li></ul></li><li><strong>资源素材位置统一</strong>，同一<strong>组</strong>（如Bricks）/ 同一<strong>个</strong>（Brick001A）资源的相关素材（网格、材制、贴图）放在同一个目录下<ul><li>按同一<strong>组</strong>资源进行管理，可以更方便管理有局部共用资源的情况，如某场景的共用贴图和材质，可以在本地目录中共用，不需要放入通用资源库</li><li>按同一<strong>个</strong>资源进行管理，可以以更小的单位分离资源，当变体(Brick001A)与原型(Brick001)有共用素材的时候，仅关联原型的素材</li></ul></li><li><strong>公共资源</strong>修改流程/权限。明确一个修改是修改地图，还是修改（公共）资源；如果是修改公共资源，需要先确认该资源修改会造成什么影响，被哪些场景使用，是应该修改，还是应该新增一个资源<ul><li>确须修改某个地图内的公共资源，但又不能修改其它受影响的地图的情况，可以考虑新增资源，如新增某一资源的v2、v3版本</li></ul></li><li>场景地图<strong>分工程</strong>，<strong>分版本库</strong>，仅关联本地图实际用到的通用资源目录</li><li>地形资源按照<strong>生态</strong>进行分类</li></ul><table><thead><tr><th style="text-align:center">通用材质库</th><th style="text-align:center">通用预制库</th><th style="text-align:center">生态分类</th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/pipeline/folderStructure_SharedMaterials.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_SharedProps.png" alt></td><td style="text-align:center"><img src="/img/pipeline/folderStructure_Biome.png" alt></td></tr></tbody></table><h5 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h5><ul><li>美术能够<strong>持续集成</strong></li><li>资源<strong>打包时间</strong>缩短</li><li><strong>更新包</strong>数据量变小（通常仅需更新该资源本身）</li><li>整体<strong>资源量</strong>得到控制</li><li>场景工程可以<strong>独立开发</strong>（可以整包某个单独场景）</li><li><strong>迭代</strong>效率提升（更轻量灵活，减少冲突）</li></ul><p>更合理的目录结构，优化打包及加载性能<br>美术成本更可控：内部研发，核对策划需求，资产控制都更可控</p><h5 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h5><p>如果是在项目中期进行结构变更，可能面临以下风险：</p><ul><li>需要一段较长时间（1~2个月）的修复期</li><li>以目录路径为前提的脚本工具等需要更新</li><li>美术需要时间熟悉适应新的目录结构及相关规范</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;游戏工程的目录结构不是一个非常显性并且被重视的事情，但对于具备一定规模的项目，不合理的工程目录结构会导致一些问题，比如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;场景间耦合，A场景引用了存在B场景的资源&lt;/li&gt;
+&lt;li&gt;迭代速度慢，难以持续集成，资源打包时间变长（须打包大目录下的较大Bundle）&lt;/li&gt;
+&lt;li&gt;整体资源量失控，更新包数据量变大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;例子&quot;&gt;&lt;a href=&quot;#例子&quot; class=&quot;headerlink&quot; title=&quot;例子&quot;&gt;&lt;/a&gt;例子&lt;/h3&gt;&lt;p&gt;随便猜的一些目录结构的例子，不代表实际情况&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;好的&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align:center&quot;&gt;不太好的&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/pipeline/folderStructure_Borderlands3.png&quot; alt&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/pipeline/folderStructure_ROE.png&quot; alt&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/pipeline/folderStructure_Valorant.png&quot; alt&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/pipeline/folderStructure_Fortnite.png&quot; alt&gt;&lt;/td&gt;
+&lt;td style=&quot;text-align:center&quot;&gt;&lt;img src=&quot;/img/pipeline/folderStructure_PUBG.png&quot; alt&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Unity 基于图层的非破坏性（Non-Destructive Layer-Based ）地形工具</title>
     <link href="/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/"/>
     <id>/2020/05/01/20200501-NonDestructive_LayerBased_Terrain/</id>
@@ -165,6 +213,28 @@
       <category term="Game Dev" scheme="/tags/Game-Dev/"/>
     
       <category term="Unity" scheme="/tags/Unity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>美术用简单性能讲解 Explanation of performance for Artists</title>
+    <link href="/2019/10/01/20191001-Performance4Artists/"/>
+    <id>/2019/10/01/20191001-Performance4Artists/</id>
+    <published>2019-09-30T16:00:00.000Z</published>
+    <updated>2021-09-19T08:09:29.323Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="贴图对性能的影响"><a href="#贴图对性能的影响" class="headerlink" title="贴图对性能的影响"></a>贴图对性能的影响</h3><p><img src="/img/performance/textureRAM.png" alt></p><a id="more"></a><ul><li>CPU：所有载入的物体，CPU都要管理，并且告诉GPU哪些要绘制，给GPU准备好相应的资源</li><li>内存：所有场景内载入的资源都要进内存</li><li>GPU：画东西的</li><li>显存带宽：去往显存的路。当显存装不下当前绘制所需的所有资源时，就会每帧都可能发生需要去显存的东西太多，这时候就会堵，可能导致帧率大幅下降（比如70-&gt;20）</li><li>显存：GPU储存绘制相关资源的地方，比如贴图，Mesh，Shader</li><li>Tex Cache：GPU画每个Drawcall时拿在手头的资源，画东西的时候用手上的材料最快，如果手上没有，就得去显存找，这样就慢了。</li><li>Shader：怎么画</li></ul><h3 id="为什么要合理设置LOD"><a href="#为什么要合理设置LOD" class="headerlink" title="为什么要合理设置LOD"></a>为什么要合理设置LOD</h3><h4 id="辛苦的GPU"><a href="#辛苦的GPU" class="headerlink" title="辛苦的GPU"></a>辛苦的GPU</h4><p>GPU就像一个画家，每一帧，他都要画满一屏的画。</p><p>为了绘制一个物体，他要先把箱子的网格、贴图等等拿在手上，就像准备颜料盘和画笔一样。（如果需要拿的东西太多，一次拿不下了，那就只能先拿一部分画一画，再拿起另一部分画一画，极大降低绘制速度）</p><p>每一个物体，他都要这样做。</p><table><thead><tr><th style="text-align:center"></th><th style="text-align:center"></th><th style="text-align:center"></th></tr></thead><tbody><tr><td style="text-align:center"><img src="/img/performance/lod1.png" alt></td><td style="text-align:center">-</td><td style="text-align:center"><img src="/img/performance/lod2.png" alt></td></tr></tbody></table><p>所以，如果场景里有成百上千个实际上不需要绘制的物体，我们应该把它们从需要绘制的物体列表中去掉，否则GPU就要每帧每帧都付出成百上千次不必要的辛苦。</p><p>如果一个离得很远的物体，我们应该把它的精度降低到适合屏幕的程度，否则GPU就要每帧付出不必要的辛苦。</p><p>不止在绘制这个物体的色彩时，在绘制阴影、ZPrePass阶段也要一个一个全部来一遍</p><h5 id="想一想"><a href="#想一想" class="headerlink" title="想一想"></a>想一想</h5><p>要维持单位面积的三角面密度（相同屏幕面积内的三角面数一致），如果LOD1的面数是LOD0的50%，LOD0的切换高度是100%，问：LOD1的切换高度是多少？</p><p><img src="/img/performance/lod3.png" alt><br>答案：70%</p><h4 id="辛苦的CPU"><a href="#辛苦的CPU" class="headerlink" title="辛苦的CPU"></a>辛苦的CPU</h4><p>每一帧，CPU都要把需要GPU画出来的东西整理好，一个一个交给GPU。</p><p>如果有很多东西是实际上并不需要画出来的，CPU就要每帧都付出不必要的辛苦。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;贴图对性能的影响&quot;&gt;&lt;a href=&quot;#贴图对性能的影响&quot; class=&quot;headerlink&quot; title=&quot;贴图对性能的影响&quot;&gt;&lt;/a&gt;贴图对性能的影响&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;/img/performance/textureRAM.png&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Game Dev" scheme="/tags/Game-Dev/"/>
+    
+      <category term="Graphics" scheme="/tags/Graphics/"/>
     
   </entry>
   
@@ -485,47 +555,6 @@
     
     
       <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>The Brain</title>
-    <link href="/2018/09/10/20181023-TheBrain/"/>
-    <id>/2018/09/10/20181023-TheBrain/</id>
-    <published>2018-09-09T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.391Z</updated>
-    
-    <content type="html"><![CDATA[<p>整理知识，整理思路的工具</p><p><img src="/img/thebrain.jpg" alt></p><a id="more"></a><p>thebrain.com</p><p>Pro版只能用国际信用卡买，所以在国内只能用免费版<br>感觉免费版也够用了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;整理知识，整理思路的工具&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/img/thebrain.jpg&quot; alt&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="照片" scheme="/tags/%E7%85%A7%E7%89%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>时间力</title>
-    <link href="/2018/08/08/20180808-TimePower/"/>
-    <id>/2018/08/08/20180808-TimePower/</id>
-    <published>2018-08-07T16:00:00.000Z</published>
-    <updated>2019-05-31T02:20:59.391Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>动机</strong> 你需要拥有对结果的强烈渴望，才能克服自己按旧习惯做事的天生惰性。</p><a id="more"></a><h4 id="训练的效率与效果"><a href="#训练的效率与效果" class="headerlink" title="训练的效率与效果"></a>训练的效率与效果</h4><blockquote><p><em>积极的自我对话(自我暗示)</em> “我很擅长xxx”,”我是一个守时的人”<br><em>想象(形象化)/自我演练</em> 你会成为你所想象的那个人<br><em>角色扮演</em><br><em>榜样模仿</em><br><em>成为教师</em> 如果你在学习一项新知识或新技能的同时考虑如何将其教给他人，你吸收知识的速度将快得多。快速掌握新知识的方法之一就是学完以后立刻与他人分享。<br><em>成为榜样</em></p></blockquote><h4 id="自尊的三个影响因素"><a href="#自尊的三个影响因素" class="headerlink" title="自尊的三个影响因素"></a>自尊的三个影响因素</h4><blockquote><p><em>1.决定自我价值</em> 遵循自己的信念和价值观并拒绝妥协，高效利用时间<br><em>2.获得自我掌控</em><br><em>3.了解自我需要</em></p></blockquote><blockquote><p>高效的人与低效的人的一个主要差别在于前者往往非常关注产出或结果，后者只关注投入。换句话说，杰出者追求成绩，平庸者只顾努力。</p><p>你需要花21天时间来练习和重复从而形成一个新的习惯。</p></blockquote><h3 id="通过目标掌控时间"><a href="#通过目标掌控时间" class="headerlink" title="通过目标掌控时间"></a>通过目标掌控时间</h3><blockquote><p>按照优先顺序清晰的规划你的目标，然后专注地投入你能够完成的最重要的事，这是有效利用时间的关键。</p><p>如果你没有自己的目标，你注定永远为他人工作。</p><p>把目标写下来。</p></blockquote><h4 id="确立目标的基本原则"><a href="#确立目标的基本原则" class="headerlink" title="确立目标的基本原则"></a>确立目标的基本原则</h4><blockquote><p><strong>1. 要有远大的理想和志向</strong> 制定目标时将其”理想化”，应该是想做的任何事，只要心里清楚他到底是什么。<br><strong>2. 用现在时记录目标</strong> “我的体重150斤” “我的年收入是10万”，开始新的一天工作之前，重写目标<br><strong>3. 使目标保持平衡</strong> 经济目标；家庭目标；事业目标<br><strong>4. 了解自己最主要的目标</strong></p><p><strong>如何确定真正的理想</strong>:<br>如果明天中彩票一亿，你将如何改变生活，你将着手做那些现在无法做的事，停止做哪些现在正在做的事。<br>如果有机会为自己写自传，你希望在自传里写什么。<br>如果能确保任何目标都会成功，你会选择一个什么目标。<br>你在家里和工作上真正爱做的事是什么。最能带来自尊感的事情往往就是最适合做的工作。人们总是会爱做那些以天赋才能做到完美的事。<br><strong>30秒 快速列表</strong> 30秒写下最重要的三个目标，30秒写下目前最压迫的三个烦恼。<br><strong>设想零束缚</strong> 神说要有光，就有了光。花越多时间去写下每一个愿望，生活中就有越多的光明。<br>要实现你人生目标，需要采取哪些具体措施</p></blockquote><p><strong>目标的优先级</strong></p><ul><li>A：最重要的目标，能带来无上幸福和快乐的，发自内心希望实现</li><li>B：希望达成，会享受它的成果，但比不上A类重要</li><li>C：如果有固然很好的目标</li></ul><h4 id="制定详细的行动计划"><a href="#制定详细的行动计划" class="headerlink" title="制定详细的行动计划"></a>制定详细的行动计划</h4><blockquote><p>列出一张清单，记录能想到的能帮助实现目标的每一件事(应该能想到10-20件不同的事)。然后用ABC在每项前标记(“在实现目标上什么行动最有帮助？”)。</p></blockquote><h4 id="提高实现目标的能力"><a href="#提高实现目标的能力" class="headerlink" title="提高实现目标的能力"></a>提高实现目标的能力</h4><ol><li><strong>把目标看作一个事实</strong><br>想象目标什么样，实现目标后什么样，成功果实会带来怎样的愉悦。这种预想能力事人类最强有力的思维能力之一。不断想象目标实现时的画面，这个图像就会激活你的潜意识，并启动<strong>吸引力法则</strong>，你是一块”活磁铁”，会不知不觉的将那些有利于实现目标的观点、人物、资源吸收到生活中。<strong>信念法则</strong>：信仰创造真实。<strong>思维法则</strong>：思想会使自己具体化。</li><li><strong>积极肯定目标如同他们已经实现</strong> </li><li><strong>承担为实现结果的一切职责</strong><br>当你愿意为了实现自己的目标而承担全部责任时，在你通往成功的道路上就会有贵人相助。如果你在实现目标的过程中总是求助于人，得到的往往是失望。</li><li><strong>充满信心的去做每一件事</strong><br>一旦清楚想要的，下一步就是行动起来，就像这是一个不可能失败的任务。就如同在你实现梦想的过程中得到了某种伟大力量的庇佑。</li><li><strong>每天向目标迈进一步</strong></li></ol><h4 id="实现收入和事业目标"><a href="#实现收入和事业目标" class="headerlink" title="实现收入和事业目标"></a>实现收入和事业目标</h4><ol><li><strong>致力于服务对象的满意度</strong></li><li><strong>发现服务对象的需求</strong> 谁是我的服务对象，他满意的标准是什么，对他而言我的价值在哪里，我怎样才能最大限度地满足我的顾客。</li><li><strong>明确主要职能</strong> 第一，生产任务必须是具体的可测量的。 第二，一项生产任务是在你的掌控下的。 第三，一项生产任务的产出又会成为他人的投入。</li><li><strong>确定主要工作范畴</strong> 什么是只有你能做好并且能产生巨大贡献的，找到一个只有你胜任的工作。仅有20%的事情占到你工作价值的80%，需要把精力投入到体现大部分价值的这20%上去。</li><li><strong>进行目标管理</strong> 第一，清晰的描述定义目标，与有能力实现他的员工进行讨论，并就任务达成一致；第二，讨论并商定实施计划。达成该目标需要哪些步骤，应该如何去做，如何评价结果是否成功，用什么考核标准；第三，确定完成时间；第四，全权委托某个人来处理，一旦把描述清晰的工作和考核标准分配给有能力的员工，就让他以自己的方式来完成这项工作，不干涉，可以给建议支持，但明确这工作是他的责任。全权责任完成一项工作，是个人培养的最有力工具之一，并且能节省大量时间。</li></ol><h4 id="更快的实现目标"><a href="#更快的实现目标" class="headerlink" title="更快的实现目标"></a>更快的实现目标</h4><ol><li><strong>克服障碍</strong> 找出你与目标之间的障碍。写下每一个障碍，找出最大困难，集中精力下决心攻克。”每一个复杂的问题都要首先解决矛盾的主要方面，才能保证其他方面得以解决。” 找出这个最大的困难并全身心投入来解决它，防止被其他小问题分散注意力。</li><li><strong>找出你的瓶颈</strong> 几乎所有目标的实现和工作的完成都有一个步骤是整个过程的瓶颈。“目标实现受阻的原因有80%是源于你本身”。缺乏某种才能、技能往往是妨碍目标实现的主要原因。</li><li><strong>明确所需的知识和技能</strong> “要完成一件你从未完成的事，就要达到一个之前从未达到的高度。”</li><li><strong>知道你所需要的帮助</strong> 想想你需要与谁合作，这对他们来说有什么好处，他们在帮助你实现目标的同时能为自己赢得什么。</li></ol><p><strong>几个问题</strong><br>“我想要做什么？” 期望得到什么结果<br>“我打算怎么做？” 目前方法可行吗，你的假设是什么，是否有更好的方法<br>“什么是我真正的目标？” 清楚目标背后的真正目的<br>“我的人生方向在哪里？” </p><h4 id="培养绝对清晰的方向感"><a href="#培养绝对清晰的方向感" class="headerlink" title="培养绝对清晰的方向感"></a>培养绝对清晰的方向感</h4><p>“成功必备的品质是：明确的目标、扎实的知识和强烈的愿望。”</p><h3 id="卓越时间管理的本质——有序"><a href="#卓越时间管理的本质——有序" class="headerlink" title="卓越时间管理的本质——有序"></a>卓越时间管理的本质——有序</h3><p>越是肯花时间在前期计划上，之后的行动就越是万无一失。</p><p>潜意识是为目标提供动力的工具。</p><p>花在制定计划上的每1分钟都会节省执行计划时的10分钟。</p><p><strong>大多数人的失败原因</strong><br>“没有计划的行动是一切失败的原因”<br>“成功是靠自律积累起来的”</p><h4 id="个人条理的四个观念"><a href="#个人条理的四个观念" class="headerlink" title="个人条理的四个观念"></a>个人条理的四个观念</h4><ol><li><strong>整洁</strong> “秩序是天堂的第一法则”</li><li><strong>以一个旁观者的角度来评价自己</strong> “什么样的人会在这样的地方工作？” “什么样的人会有这样的包？” “什么样的人像这样生活？” 通过一个中立的第三方视角来诚实的评价自己。</li><li><strong>拒绝为自己找借口</strong> </li><li><strong>一张整洁办公桌的生产率</strong></li></ol><p><strong>如何处理文字工作</strong></p><ol><li><strong>扔掉</strong> 垃圾邮件、广告、传单，如果不看是否有消极后果；如果需要这些信息是否可以通过其他途径获得？</li><li><strong>委派给别人</strong> 这是否应该是其他人的工作；是否别人可以做的更出色？</li><li><strong>执行</strong> 准备一个“执行”文件夹，当你想到需要做什么事的时候，就立刻把它放到执行文件夹中，留待稍后处理。</li><li><strong>归档</strong> 对时间最大的浪费行为之一就是不停拿起同一份文件，读完又放下，一遍一遍重复。 </li></ol><h4 id="时间管理的工具和技巧"><a href="#时间管理的工具和技巧" class="headerlink" title="时间管理的工具和技巧"></a>时间管理的工具和技巧</h4><ol><li><strong>使用时间规划工具</strong> 主目录、日历、每日工作列表（“今日行动”）</li><li><strong>按照计划列表工作</strong> </li><li><strong>根据优先次序整理列表</strong></li><li><strong>用你喜欢的时间管理系统</strong></li></ol><h4 id="个人条理的工具"><a href="#个人条理的工具" class="headerlink" title="个人条理的工具"></a>个人条理的工具</h4><ol><li><strong>前夜的准备</strong> 有助于潜意识中开始计划，梦中闪现灵感。帮助睡眠清空脑子。</li><li><strong>规划时间</strong> </li><li><strong>早睡早起</strong> 在开展任何工作前进行几分钟安静的沉思</li><li><strong>归档系统</strong> </li><li><strong>黄金时间做最重要的工作</strong></li><li><strong>使用录音</strong></li></ol><h3 id="建立正确的优先顺序"><a href="#建立正确的优先顺序" class="headerlink" title="建立正确的优先顺序"></a>建立正确的优先顺序</h3><p><strong>从价值观着手</strong> 基于价值观选择对你来说最重要的工作。<br><strong>倾听你的直觉</strong> “内心平静检验” 如果所做的事情与自己的价值观相符，会感到有种的幸福。从事不喜欢的工作，人们容易产生这工作不对劲的想法，工作是好工作，只是不适合你，与你的价值观、天赋不匹配。<br><strong>洞悉自己</strong> 想象你可以设计一份理想的工作，可以每天只做自己喜欢的事情，这种情况下，你会做出怎样的改变。<strong>零基础思维</strong>“假设我现在没有从事这份工作，我还会选择这份工作吗。<strong>勇气</strong>会引导你对自己的生活方式和工作方式做出根本性改变。<br><strong>帕累托法则（二八定律）</strong> 在开始工作前明确最重要的20%的任务</p><p><strong>对时间最糟糕的利用就是把不需要做的事做得完美</strong></p><p><strong>创造性拖延</strong> 下决心在80%价值较低的工作上拖延。</p><p>领导者：做对的事情；执行者：把事情做对<br><strong>停下某些工作</strong></p><h4 id="个人优先事项"><a href="#个人优先事项" class="headerlink" title="个人优先事项"></a>个人优先事项</h4><ol><li>我的特长和优势，天赋才能是什么，什么是我特别擅长的事</li><li>我过去获得的最优秀成绩是什么，哪些才能使我取得这样的成就</li><li>哪些事情是对别人来说很困难，而我却得心应手的</li><li>如果我想提升自己，我可以从哪里获得这样的机会</li><li>我真正热爱的事业是什么</li></ol><p><strong>优势领域</strong> 必须在至少一个方面绝对突出。</p><h4 id="努力增值"><a href="#努力增值" class="headerlink" title="努力增值"></a>努力增值</h4><p>你贡献价值的能力决定了你的所得回报。<br>“在我做的所有事情中，我以何种方式，在什么时候的工作对公司的贡献最大？”<br>通常，只有三件事囊括了你对公司90%的贡献。</p><ol><li>“如果我可以一天只做一件事，什么事能够为我的工作带来最大价值？”</li><li>“如果再加一件事，它是什么？”</li><li>重复以上问题直到确定这三项主要活动。</li></ol><h4 id="治疗类选法"><a href="#治疗类选法" class="headerlink" title="治疗类选法"></a>治疗类选法</h4><p>胜出者：销量最好，生产稳定的聚宝盆。需要精心打理但不需即时关注；<br>幸存者：具有潜力，投入更多时间可以打造成胜出者；<br>失败者：不管如何投入都迟早要消亡。</p><p><strong>展望未来五年</strong> 设想公司在未来几年成为领跑者，然后再去定位哪些产品、服务、市场尤其是劳动力技能是在五年后成为领军者所必需的。</p><p>“永远不要让最重要的事受到最不重要的事的支配”——歌德</p><p><strong>强迫效率法则</strong><br>“如果我要离开一个月，而在走前只能完成一件事，需要完成的最重要的任务是什么？”</p><h3 id="形成高效的工作习惯"><a href="#形成高效的工作习惯" class="headerlink" title="形成高效的工作习惯"></a>形成高效的工作习惯</h3><p><strong>专注和集中</strong> 弄清目标和步骤，聚焦于当下对于实现目标最重要的事。<br>对时间最大的浪费就是把根本不需要做的事做到完美。</p><p><strong>实现高效的步骤</strong></p><ol><li>设置清楚的目标并记录下来</li><li>制定实现目标的详细行动计划</li><li>给每项行动设置优先级</li><li>不分心、不转移</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;strong&gt;动机&lt;/strong&gt; 你需要拥有对结果的强烈渴望，才能克服自己按旧习惯做事的天生惰性。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="读书笔记" scheme="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
